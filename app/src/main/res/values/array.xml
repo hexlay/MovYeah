@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="movies">
+        <item name="0">@string/menu_movies</item>
+        <item name="1">@string/menu_series</item>
+    </string-array>
+
+    <string-array name="movies_value">
+        <item name="0">0</item>
+        <item name="1">1</item>
+    </string-array>
+
+    <string-array name="quality">
+        <item name="MEDIUM">@string/full_qual_low</item>
+        <item name="HIGH">@string/full_qual_hd</item>
+    </string-array>
+
+    <string-array name="quality_value">
+        <item name="MEDIUM">MEDIUM</item>
+        <item name="HIGH">HIGH</item>
+    </string-array>
+
+    <string-array name="language">
+        <item name="GEO">@string/full_geo</item>
+        <item name="ENG">@string/full_eng</item>
+        <item name="RUS">@string/full_rus</item>
+    </string-array>
+
+    <string-array name="language_value">
+        <item name="GEO">GEO</item>
+        <item name="ENG">ENG</item>
+        <item name="RUS">RUS</item>
+    </string-array>
+
+    <string-array name="seek">
+        <item name="5000">@string/settings_main_seek_5</item>
+        <item name="10000">@string/settings_main_seek_10</item>
+        <item name="15000">@string/settings_main_seek_15</item>
+        <item name="20000">@string/settings_main_seek_20</item>
+    </string-array>
+
+    <string-array name="seek_value">
+        <item name="5000">5000</item>
+        <item name="10000">10000</item>
+        <item name="15000">15000</item>
+        <item name="20000">20000</item>
+    </string-array>
+
+    <string-array name="darkmode">
+        <item name="0">@string/settings_light</item>
+        <item name="1">@string/settings_dark</item>
+        <item name="2">@string/settings_auto</item>
+    </string-array>
+
+    <string-array name="darkmode_value">
+        <item name="0">0</item>
+        <item name="1">1</item>
+        <item name="2">2</item>
+    </string-array>
+
+</resources>

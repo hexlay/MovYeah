@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="@string/settings_main">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:enabled="false"
+            android:icon="@drawable/ic_pip"
+            android:key="pip"
+            android:summary="@string/settings_main_pip_sum"
+            android:title="@string/settings_main_pip_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_pref_brightness"
+            android:key="brightness"
+            android:summary="@string/settings_main_maxbr_sum"
+            android:title="@string/settings_main_maxbr_title" />
+
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/darkmode"
+            android:entryValues="@array/darkmode_value"
+            android:icon="@drawable/ic_pref_darkmode"
+            android:key="darknet"
+            android:title="@string/settings_main_dark_mode" />
+
+        <Preference
+            android:icon="@drawable/ic_pref_info"
+            android:key="about_pref"
+            android:title="@string/settings_about" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_player">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_pref_auto"
+            android:key="autostart"
+            android:summary="@string/settings_main_autostart_sum"
+            android:title="@string/settings_main_autostart_title" />
+
+        <ListPreference
+            android:defaultValue="5000"
+            android:entries="@array/seek"
+            android:entryValues="@array/seek_value"
+            android:icon="@drawable/ic_pref_seek"
+            android:key="seek_value"
+            android:title="@string/settings_main_seek_title" />
+
+        <ListPreference
+            android:defaultValue="MEDIUM"
+            android:entries="@array/quality"
+            android:entryValues="@array/quality_value"
+            android:icon="@drawable/ic_pref_quality"
+            android:key="qual_value"
+            android:title="@string/settings_main_qual_title" />
+
+        <ListPreference
+            android:defaultValue="GEO"
+            android:entries="@array/language"
+            android:entryValues="@array/language_value"
+            android:icon="@drawable/ic_pref_language"
+            android:key="lang_value"
+            android:title="@string/settings_main_lang_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_notification">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:enabled="false"
+            android:disableDependentsState="false"
+            android:icon="@drawable/ic_pref_notification"
+            android:key="notifications"
+            android:title="@string/settings_notification" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:dependency="notifications"
+            android:entries="@array/movies"
+            android:entryValues="@array/movies_value"
+            android:key="service_value"
+            android:title="@string/settings_notification_value" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

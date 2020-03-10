@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_primary">#1976D2</color>
+    <color name="color_primary_dark">#1976D2</color>
+    <color name="color_accent">#1976D2</color>
+    <color name="background_splash">#121212</color>
+
+    <!-- Background colors -->
+    <color name="background">#FFFFFF</color>
+    <color name="background_card">#FCFCFC</color>
+
+    <!-- Transparents -->
+    <color name="transparent_95">#F2FFFFFF</color>
+    <color name="transparent_85">#D9FFFFFF</color>
+    <color name="transparent_50">#80FFFFFF</color>
+    <color name="black_transparent_60">#99000000</color>
+
+    <!-- More... -->
+    <color name="overlay_starter">#D9000000</color>
+    <color name="overlay_center">#A6000000</color>
+    <color name="fontWhiteEnable">#EEEEEE</color>
+    <color name="fontBlackEnable">#424242</color>
+</resources>

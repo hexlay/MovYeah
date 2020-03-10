@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/info"
+        android:icon="@drawable/ic_info_f"
+        android:title="@string/menu_info" />
+
+    <item
+        android:id="@+id/episodes"
+        android:icon="@drawable/ic_list"
+        android:enabled="false"
+        android:title="@string/menu_series" />
+
+    <item
+        android:id="@+id/cast"
+        android:icon="@drawable/ic_cast"
+        android:enabled="false"
+        android:title="@string/menu_cast" />
+
+</menu>
