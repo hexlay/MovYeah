@@ -10,7 +10,6 @@ import hexlay.movyeah.adapters.view_holders.LibraryViewHolder
 import hexlay.movyeah.models.Library
 import kotlinx.android.synthetic.main.activity_about.*
 import org.jetbrains.anko.browse
-import org.jetbrains.anko.email
 
 class AboutActivity : AppCompatActivity() {
 
@@ -29,8 +28,11 @@ class AboutActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             finish()
         }
+        version_holder.setOnClickListener {
+            browse("https://github.com/hexlay/MovYeah", true)
+        }
         author_holder.setOnClickListener {
-            email("h3xlay@gmail.com", "MovYeah", "")
+            browse("https://github.com/hexlay", true)
         }
     }
 
