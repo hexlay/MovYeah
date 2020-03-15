@@ -82,8 +82,9 @@ class SeasonFragment : Fragment() {
                             title(text = title.text.toString())
                             listItems(items = dialogItems) { _, index, _ ->
                                 runWithPermissions(Permission.WRITE_EXTERNAL_STORAGE) {
-                                    val title = "${title.text} ${dialogItems[index]}"
-                                    dataDownload[index].src?.let { it1 -> downloadMovie(it1, title) }
+                                    val languages = dialogItems[index].replace(" (", ", ").replace(")", "")
+                                    val title = "${title.text} (${languages})"
+                                    dataDownload[index].src?.let { url -> downloadMovie(url, title) }
                                 }
                             }
                         }

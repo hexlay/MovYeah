@@ -122,8 +122,8 @@ class WatchFragment : Fragment() {
     private var seekSecBackward: Long = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        reference = WeakReference(activity as AbsWatchModeActivity)
-        preferenceHelper = PreferenceHelper(reference.get()!!)
+        reference = WeakReference(requireActivity() as AbsWatchModeActivity)
+        preferenceHelper = PreferenceHelper(requireActivity())
         EventBus.getDefault().register(this)
         return inflater.inflate(R.layout.fragment_watch, container, false)
     }
@@ -165,11 +165,11 @@ class WatchFragment : Fragment() {
     private fun initActivityProperties() {
         if (!isInNightMode())
             removeLightStatusBar()
-        getWindow()?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         if (preferenceHelper.maxBrightness) {
-            val layoutParams = getWindow()?.attributes
+            val layoutParams = getWindow().attributes
             layoutParams?.screenBrightness = 100 / 100.0f
-            getWindow()?.attributes = layoutParams
+            getWindow().attributes = layoutParams
         }
     }
 
@@ -590,7 +590,8 @@ class WatchFragment : Fragment() {
         }
         button_download.setOnClickListener {
             runWithPermissions(Permission.WRITE_EXTERNAL_STORAGE) {
-                downloadMovie(generatePlayerUrl(), "${title_text.text} ($languageKey, $qualityKey)")
+                val languages = "(${languageKey.translateLanguage(requireContext())}, ${qualityKey.translateQuality(requireContext())})"
+                downloadMovie(generatePlayerUrl(), "${title_text.text} $languages")
             }
         }
         button_quality.setOnClickListener {
@@ -787,13 +788,13 @@ class WatchFragment : Fragment() {
 
     private fun releaseActivityProperties() {
         requestPortraitForever()
-        getWindow()?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         if (!isInNightMode())
             setLightStatusBar()
         if (preferenceHelper.maxBrightness) {
-            val layoutParams = getWindow()?.attributes
+            val layoutParams = getWindow().attributes
             layoutParams?.screenBrightness = -1f
-            getWindow()?.attributes = layoutParams
+            getWindow().attributes = layoutParams
         }
     }
 
@@ -839,7 +840,7 @@ class WatchFragment : Fragment() {
             val remoteAction = RemoteAction(icon, movie.getTitle(), movie.getTitle(), intent)
             pipActions.add(remoteAction)
             pipBuild!!.setActions(pipActions)
-            reference.get()!!.setPictureInPictureParams(pipBuild!!.build())
+            reference.get()?.setPictureInPictureParams(pipBuild!!.build())
         }
     }
 

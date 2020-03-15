@@ -75,6 +75,7 @@ data class Movie(
         result = 31 * result + isTvShow.hashCode()
         result = 31 * result + (primaryName?.hashCode() ?: 0)
         result = 31 * result + (originalName?.hashCode() ?: 0)
+        result = 31 * result + (secondaryName?.hashCode() ?: 0)
         result = 31 * result + (imdbUrl?.hashCode() ?: 0)
         result = 31 * result + (poster?.hashCode() ?: 0)
         result = 31 * result + (posters?.hashCode() ?: 0)
@@ -83,6 +84,7 @@ data class Movie(
         result = 31 * result + (plots?.hashCode() ?: 0)
         result = 31 * result + (languages?.hashCode() ?: 0)
         result = 31 * result + (genres?.hashCode() ?: 0)
+        result = 31 * result + (seasons?.hashCode() ?: 0)
         return result
     }
 

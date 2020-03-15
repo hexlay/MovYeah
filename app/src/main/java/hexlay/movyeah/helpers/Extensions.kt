@@ -247,8 +247,8 @@ fun Fragment.isInNightMode(): Boolean = requireActivity().isInNightMode()
 
 fun Fragment.getScreenWidth(): Int = resources.displayMetrics.widthPixels
 
-fun Fragment.getWindow(): Window? = requireActivity().window
+fun Fragment.getWindow(): Window = requireActivity().window
 
-fun Fragment.getDecorView(): View? = getWindow()?.decorView
+fun Fragment.getDecorView(): View = getWindow().decorView
 
-fun Fragment.onBackPressed(): Unit? = requireActivity().onBackPressed()
+fun Fragment.onBackPressed(): Unit = requireActivity().onBackPressed()

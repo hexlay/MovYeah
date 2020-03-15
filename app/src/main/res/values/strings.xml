@@ -20,16 +20,18 @@
     <string name="full_cast">მონაწილე მსახიობები</string>
     <string name="full_qual_low">დაბალი</string>
     <string name="full_qual_hd">მაღალი</string>
+    <string name="full_cats_not_found">კატეგორიები ვერ მოიძებნა</string>
+    <string name="full_error_movie">ფილმის ჩვენება შეუძლებელია</string>
+    <string name="full_error_show">სერიალის ჩვენება შეუძლებელია</string>
+    <string name="full_error_button">დახურვა</string>
+
+    <!-- Languages -->
     <string name="full_geo">ქართული</string>
     <string name="full_eng">ინგლისური</string>
     <string name="full_rus">რუსული</string>
     <string name="full_jpn">იაპონური</string>
     <string name="full_ger">გერმანული</string>
     <string name="full_tur">თურქული</string>
-    <string name="full_cats_not_found">კატეგორიები ვერ მოიძებნა</string>
-    <string name="full_error_movie">ფილმის ჩვენება შეუძლებელია</string>
-    <string name="full_error_show">სერიალის ჩვენება შეუძლებელია</string>
-    <string name="full_error_button">დახურვა</string>
 
     <!-- News -->
     <string name="news_year">გამოშვების წელი: %s</string>
