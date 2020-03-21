@@ -454,7 +454,6 @@ class WatchFragment : Fragment() {
         }
         button_lang.text = languageKey.translateLanguage(requireContext())
         button_quality.text = qualityKey.translateQuality(requireContext())
-        button_download.isVisible = true
         setupMovieSubtitles()
         setupSource()
     }
