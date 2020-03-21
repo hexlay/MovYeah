@@ -47,11 +47,7 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun initReloader() {
-        movies_reloader.setProgressViewOffset(false, 0, getStatusBarHeight() + getActionBarSize() + dpOf(5))
-        movies_reloader.setOnRefreshListener {
-            loadMovies()
-            movies_reloader.isRefreshing = false
-        }
+        movies_reloader.isEnabled = false
     }
 
     private fun loadMovies() {
