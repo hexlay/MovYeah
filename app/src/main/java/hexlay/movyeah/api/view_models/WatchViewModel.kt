@@ -1,5 +1,6 @@
 package hexlay.movyeah.api.view_models
 
+import android.app.Application
 import android.util.SparseArray
 import androidx.core.util.set
 import androidx.lifecycle.MutableLiveData
@@ -11,7 +12,7 @@ import hexlay.movyeah.models.movie.attributes.show.Episode
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
-class WatchViewModel : AbsAdjaraViewModel() {
+class WatchViewModel(application: Application) : AbsAdjaraViewModel(application) {
 
     val movie = MutableLiveData<Movie>()
     val movieData = MutableLiveData<Episode>()

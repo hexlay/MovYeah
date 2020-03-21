@@ -1,5 +1,6 @@
 package hexlay.movyeah.api.view_models
 
+import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import hexlay.movyeah.api.view_models.base.AbsAdjaraViewModel
 import hexlay.movyeah.models.events.NetworkErrorEvent
@@ -7,7 +8,7 @@ import hexlay.movyeah.models.movie.Movie
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
-class MainViewModel : AbsAdjaraViewModel() {
+class MainViewModel(application: Application) : AbsAdjaraViewModel(application) {
 
     val geoMovies = MutableLiveData<List<Movie>>()
     val topMovies = MutableLiveData<List<Movie>>()

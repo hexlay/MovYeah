@@ -20,6 +20,7 @@ import android.view.animation.AnimationUtils
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.util.isNotEmpty
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -66,6 +67,9 @@ import hexlay.movyeah.models.movie.attributes.show.EpisodeCache
 import hexlay.movyeah.models.movie.attributes.show.EpisodeFileData
 import kotlinx.android.synthetic.main.exo_playback_control_view.*
 import kotlinx.android.synthetic.main.fragment_watch.*
+import kotlinx.android.synthetic.main.piece_cast.*
+import kotlinx.android.synthetic.main.piece_episodes.*
+import kotlinx.android.synthetic.main.piece_info.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.jetbrains.anko.noAnimation
@@ -495,10 +499,10 @@ class WatchFragment : Fragment() {
                     }
                 }
             }
-            button_subtitles.isVisible = true
+            button_subtitles.isGone = false
         } else {
             subtitleKey = "NONE"
-            button_subtitles.isVisible = false
+            button_subtitles.isGone = true
         }
     }
 
@@ -700,7 +704,7 @@ class WatchFragment : Fragment() {
     }
 
     private fun layoutFullScreen() {
-        getDecorView()?.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        getDecorView().systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -709,8 +713,8 @@ class WatchFragment : Fragment() {
     }
 
     private fun layoutStable() {
-        getDecorView()?.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-        getDecorView()?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        getDecorView().systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+        getDecorView().systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
     }
 
     private fun setupSource() {

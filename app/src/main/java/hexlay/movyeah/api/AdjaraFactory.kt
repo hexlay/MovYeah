@@ -1,6 +1,8 @@
 package hexlay.movyeah.api
 
-import com.google.gson.GsonBuilder
+import android.content.Context
+import hexlay.movyeah.api.interceptors.ConnectionInterceptor
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -9,21 +11,23 @@ import zerobranch.androidremotedebugger.logging.NetLoggingInterceptor
 
 object AdjaraFactory {
 
-    private fun buildRetrofit(): Retrofit {
+    private fun buildRetrofit(context: Context): Retrofit {
+        val cache = Cache(context.cacheDir, 5242880) // 5 * 1024 * 1024
         val client = OkHttpClient.Builder()
                 .addInterceptor(NetLoggingInterceptor())
+                .addInterceptor(ConnectionInterceptor(context))
+                .cache(cache)
                 .build()
-        val gson = GsonBuilder().setLenient().create()
         return Retrofit.Builder()
                 .client(client)
                 .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(AdjaraAPI.BASE_URL)
                 .build()
     }
 
-    fun createService(): AdjaraAPI {
-        return buildRetrofit().create(AdjaraAPI::class.java)
+    fun createService(context: Context): AdjaraAPI {
+        return buildRetrofit(context).create(AdjaraAPI::class.java)
     }
 
 }
