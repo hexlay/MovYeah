@@ -7,7 +7,7 @@ import hexlay.movyeah.models.movie.attributes.Category
 
 class DbCategoryViewModel(application: Application) : AndroidViewModel(application) {
 
-    private var repository: DbCategoryRepository = DbCategoryRepository(application.applicationContext)
+    private var repository = DbCategoryRepository(application.applicationContext)
 
     fun getCategories() = repository.getCategories()
 

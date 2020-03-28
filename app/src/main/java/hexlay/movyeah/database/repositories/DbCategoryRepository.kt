@@ -8,11 +8,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.coroutines.CoroutineContext
 
 class DbCategoryRepository(context: Context) : CoroutineScope {
 
-    override val coroutineContext: CoroutineContext
+    override val coroutineContext
         get() = Dispatchers.Main
 
     private var dao: CategoriesDao? = null

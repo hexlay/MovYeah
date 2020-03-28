@@ -5,12 +5,10 @@ import android.util.SparseArray
 import androidx.core.util.set
 import androidx.lifecycle.MutableLiveData
 import hexlay.movyeah.api.view_models.base.AbsAdjaraViewModel
-import hexlay.movyeah.models.events.NetworkErrorEvent
 import hexlay.movyeah.models.movie.Movie
 import hexlay.movyeah.models.movie.attributes.Actor
 import hexlay.movyeah.models.movie.attributes.show.Episode
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 
 class WatchViewModel(application: Application) : AbsAdjaraViewModel(application) {
 
@@ -23,9 +21,7 @@ class WatchViewModel(application: Application) : AbsAdjaraViewModel(application)
         scope.launch {
             try {
                 movieData.postValue(repository.getEpisodeList(id, 0)?.get(0))
-            } catch (t: Throwable) {
-                EventBus.getDefault().post(NetworkErrorEvent())
-            }
+            } catch (t: Throwable) {}
         }
     }
 
@@ -33,9 +29,7 @@ class WatchViewModel(application: Application) : AbsAdjaraViewModel(application)
         scope.launch {
             try {
                 actorList.postValue(repository.getMovieActors(id))
-            } catch (t: Throwable) {
-                EventBus.getDefault().post(NetworkErrorEvent())
-            }
+            } catch (t: Throwable) {}
         }
     }
 
@@ -43,9 +37,7 @@ class WatchViewModel(application: Application) : AbsAdjaraViewModel(application)
         scope.launch {
             try {
                 movie.postValue(repository.getMovie(id))
-            } catch (t: Throwable) {
-                EventBus.getDefault().post(NetworkErrorEvent())
-            }
+            } catch (t: Throwable) {}
         }
     }
 
@@ -57,9 +49,7 @@ class WatchViewModel(application: Application) : AbsAdjaraViewModel(application)
                     map[season] = repository.getEpisodeList(id, season)!!
                 }
                 tvShowEpisodes.postValue(map)
-            } catch (t: Throwable) {
-                EventBus.getDefault().post(NetworkErrorEvent())
-            }
+            } catch (t: Throwable) {}
         }
     }
 

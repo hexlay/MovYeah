@@ -2,47 +2,47 @@ package hexlay.movyeah.database.repositories
 
 import android.content.Context
 import hexlay.movyeah.database.AdjaraDatabase
-import hexlay.movyeah.database.dao.MoviesDao
-import hexlay.movyeah.models.movie.Movie
+import hexlay.movyeah.database.dao.DownloadMoviesDao
+import hexlay.movyeah.models.movie.DownloadMovie
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class DbMoviesRepository(context: Context) : CoroutineScope {
+class DbDownloadMoviesRepository(context: Context) : CoroutineScope {
 
     override val coroutineContext
         get() = Dispatchers.Main
 
-    private var dao: MoviesDao? = null
+    private var dao: DownloadMoviesDao? = null
 
     init {
-        dao = AdjaraDatabase.getInstance(context).moviesDao()
+        dao = AdjaraDatabase.getInstance(context).downloadMovieDao()
     }
 
     fun getMovies() = dao?.getAll()
 
     fun getMovie(id: Int) = dao?.getOne(id)
 
-    fun insertMovie(movie: Movie) {
+    fun insertMovie(movie: DownloadMovie) {
         launch {
             insert(movie)
         }
     }
 
-    fun deleteMovie(movie: Movie) {
+    fun deleteMovie(movie: DownloadMovie) {
         launch {
             delete(movie)
         }
     }
 
-    private suspend fun insert(movie: Movie) {
+    private suspend fun insert(movie: DownloadMovie) {
         withContext(Dispatchers.IO) {
             dao?.insert(movie)
         }
     }
 
-    private suspend fun delete(movie: Movie) {
+    private suspend fun delete(movie: DownloadMovie) {
         withContext(Dispatchers.IO) {
             dao?.delete(movie)
         }

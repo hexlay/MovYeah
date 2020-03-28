@@ -3,10 +3,8 @@ package hexlay.movyeah.api.view_models
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import hexlay.movyeah.api.view_models.base.AbsAdjaraViewModel
-import hexlay.movyeah.models.events.NetworkErrorEvent
 import hexlay.movyeah.models.movie.Movie
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 
 class MovieListViewModel(application: Application) : AbsAdjaraViewModel(application) {
 
@@ -22,9 +20,7 @@ class MovieListViewModel(application: Application) : AbsAdjaraViewModel(applicat
         scope.launch {
             try {
                 movies.postValue(repository.getMainMovies(page, filtersType, filtersLanguage, filtersGenres, filtersYears, filtersSort))
-            } catch (t: Throwable) {
-                EventBus.getDefault().post(NetworkErrorEvent())
-            }
+            } catch (t: Throwable) {}
         }
         return movies
     }
@@ -37,9 +33,7 @@ class MovieListViewModel(application: Application) : AbsAdjaraViewModel(applicat
         scope.launch {
             try {
                 movies.postValue(repository.searchMovie(page, keywords))
-            } catch (t: Throwable) {
-                EventBus.getDefault().post(NetworkErrorEvent())
-            }
+            } catch (t: Throwable) {}
         }
         return movies
     }

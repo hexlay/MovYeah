@@ -12,24 +12,23 @@ import android.os.Build
 import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.MainActivity
-import hexlay.movyeah.helpers.PreferenceHelper
+import hexlay.movyeah.database.view_models.DbMovieViewModel
 import hexlay.movyeah.models.movie.Movie
 import org.jetbrains.anko.intentFor
 
 // TODO:
 class NotificationService : JobService() {
 
-    private var lastId = "0"
-    private lateinit var preferenceHelper: PreferenceHelper
+    private lateinit var moviesDb: DbMovieViewModel
 
     override fun onStartJob(jobParameters: JobParameters): Boolean {
-        preferenceHelper = PreferenceHelper(this)
-        lastId = preferenceHelper.lastNotificationId
+        moviesDb = ViewModelProvider.NewInstanceFactory().create(DbMovieViewModel::class.java)
         sync()
         return false
     }
@@ -39,7 +38,7 @@ class NotificationService : JobService() {
     }
 
     private fun sync() {
-        lastId = preferenceHelper.lastNotificationId
+
     }
 
     private fun createNotificationChannel(name: String, description: String) {
@@ -47,7 +46,7 @@ class NotificationService : JobService() {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel("Movyeah", name, importance)
             channel.description = description
-            val notificationManager = getSystemService<NotificationManager>(NotificationManager::class.java)
+            val notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager?.createNotificationChannel(channel)
         }
     }

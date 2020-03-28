@@ -2,7 +2,6 @@ package hexlay.movyeah.api.interceptors
 
 import android.content.Context
 import android.net.NetworkCapabilities
-import android.util.Log
 import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -22,7 +21,6 @@ class ConnectionInterceptor(private val context: Context) : Interceptor {
                     .cacheControl(cacheControl)
                     .build()
         }
-        Log.e("sdsda", request.body.toString())
         return chain.proceed(request)
     }
 

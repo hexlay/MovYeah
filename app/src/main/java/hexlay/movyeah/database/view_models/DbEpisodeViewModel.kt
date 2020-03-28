@@ -7,7 +7,7 @@ import hexlay.movyeah.models.movie.attributes.show.EpisodeCache
 
 class DbEpisodeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private var repository: DbEpisodesRepository = DbEpisodesRepository(application.applicationContext)
+    private var repository = DbEpisodesRepository(application.applicationContext)
 
     fun getEpisode(id: Int) = repository.getEpisode(id)
 

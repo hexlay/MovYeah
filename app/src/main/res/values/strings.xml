@@ -2,11 +2,19 @@
 
     <string name="app_name">MovYeah</string>
     <string name="loading">იტვირთება…</string>
+    <string name="loading_net_fail">საჭიროა ინტერნეტთან კავშირი, თუმცა შენი გადმოწერილი ფილმები შეგიძლია ნახო აქვე ინტერნეტის გარეშე</string>
     <string name="loading_news_fail">ფილმები ვერ მოიძებნა</string>
     <string name="loading_favs_fail">ფავორიტები ვერ მოიძებნა</string>
+    <string name="loading_dows_fail">გადმოწერები ვერ მოიძებნა</string>
     <string name="scroll_up">ზემოთ ასვლა</string>
     <string name="search">ძებნა</string>
     <string name="search_text">შეიყვანეთ საძიებო სიტყვა</string>
+    <string name="yes">კი</string>
+    <string name="no">არა</string>
+
+    <string name="offline_remove">წაშლა</string>
+    <string name="offline_remove_confirm">ნამდვილად გსურთ წაშლა?</string>
+    <string name="offline_download">გადმოწერა</string>
 
     <!-- About -->
     <string name="about_developer">Hexlay</string>
@@ -32,6 +40,7 @@
     <string name="full_jpn">იაპონური</string>
     <string name="full_ger">გერმანული</string>
     <string name="full_tur">თურქული</string>
+    <string name="full_spa">ესპანური</string>
 
     <!-- News -->
     <string name="news_year">გამოშვების წელი: %s</string>
@@ -58,6 +67,7 @@
     <string name="menu_series">სერიები</string>
     <string name="menu_movies">ფილმები</string>
     <string name="menu_favorites">ფავორიტები</string>
+    <string name="menu_downloads">გადმოწერები</string>
     <string name="menu_main">მთავარი</string>
     <string name="menu_cast">მსახიობები</string>
     <string name="menu_sort">ფილტრი</string>

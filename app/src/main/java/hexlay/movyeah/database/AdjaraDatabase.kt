@@ -7,13 +7,15 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import hexlay.movyeah.database.converters.*
 import hexlay.movyeah.database.dao.CategoriesDao
+import hexlay.movyeah.database.dao.DownloadMoviesDao
 import hexlay.movyeah.database.dao.EpisodesDao
 import hexlay.movyeah.database.dao.MoviesDao
+import hexlay.movyeah.models.movie.DownloadMovie
 import hexlay.movyeah.models.movie.Movie
 import hexlay.movyeah.models.movie.attributes.Category
 import hexlay.movyeah.models.movie.attributes.show.EpisodeCache
 
-@Database(entities = [Movie::class, Category::class, EpisodeCache::class], version = 4)
+@Database(entities = [Movie::class, Category::class, EpisodeCache::class, DownloadMovie::class], version = 5)
 @TypeConverters(
         StringMapConverter::class,
         RatingMapConverter::class,
@@ -27,6 +29,7 @@ abstract class AdjaraDatabase : RoomDatabase() {
     abstract fun moviesDao(): MoviesDao
     abstract fun categoriesDao(): CategoriesDao
     abstract fun episodesDao(): EpisodesDao
+    abstract fun downloadMovieDao(): DownloadMoviesDao
 
     companion object {
         @Volatile

@@ -8,9 +8,11 @@ import android.app.DownloadManager
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Environment
 import android.os.Handler
+import android.provider.Settings
 import android.text.Html
 import android.text.Spanned
 import android.view.*
@@ -24,6 +26,8 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import hexlay.movyeah.R
 import org.apache.commons.collections4.CollectionUtils
+import org.jetbrains.anko.connectivityManager
+import java.io.File
 import java.util.*
 
 fun View.setMargins(left: Int? = null, top: Int? = null, right: Int? = null, bottom: Int? = null) {
@@ -180,13 +184,13 @@ fun Activity.isInLandscape(): Boolean {
 @SuppressLint("SourceLockedOrientationActivity")
 fun Activity.requestPortrait() {
     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-    Handler().postDelayed({ requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR }, 2000)
+    Handler().postDelayed({ requestSensorForever() }, 2000)
 }
 
 @SuppressLint("SourceLockedOrientationActivity")
 fun Activity.requestLandscape() {
     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-    Handler().postDelayed({ requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR }, 2000)
+    Handler().postDelayed({ requestSensorForever() }, 2000)
 }
 
 @SuppressLint("SourceLockedOrientationActivity")
@@ -195,7 +199,9 @@ fun Activity.requestPortraitForever() {
 }
 
 fun Activity.requestSensorForever() {
-    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+    if (Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0) == 1) {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+    }
 }
 
 fun Activity.getStatusBarHeight(): Int {
@@ -210,15 +216,35 @@ fun Activity.getActionBarSize(): Int {
     return dimension
 }
 
-fun Fragment.downloadMovie(url: String, title: String) {
+fun Fragment.downloadMovie(url: String, title: String): Long {
     val request = DownloadManager.Request(Uri.parse(url))
     request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
     request.setAllowedOverRoaming(false)
     request.setTitle(title)
-    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.mp4")
-    val downloadManager = requireActivity().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-    downloadManager.enqueue(request)
+    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+    request.setDestinationInExternalFilesDir(requireContext(), Environment.DIRECTORY_DOWNLOADS, "$title.mp4")
+    val downloadManager = requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+    return downloadManager.enqueue(request)
+}
+
+fun Fragment.getOfflineMovie(id: Int): File {
+    val downloadDirectory = requireContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.absolutePath
+    val path = "${downloadDirectory}/${id}.mp4"
+    return File(path)
+}
+
+fun Fragment.downloadExists(id: Int): Boolean {
+    return getOfflineMovie(id).exists()
+}
+
+fun Activity.isNetworkAvailable(): Boolean {
+    val network = connectivityManager.activeNetwork
+    val capabilities = connectivityManager.getNetworkCapabilities(network)
+    return capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR))
+}
+
+fun Fragment.isNetworkAvailable(): Boolean {
+    return requireActivity().isNetworkAvailable()
 }
 
 fun Fragment.getStatusBarHeight(): Int = requireActivity().getStatusBarHeight()

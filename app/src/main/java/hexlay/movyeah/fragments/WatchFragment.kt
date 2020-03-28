@@ -55,10 +55,12 @@ import hexlay.movyeah.activities.base.AbsWatchModeActivity
 import hexlay.movyeah.adapters.SeasonPageAdapter
 import hexlay.movyeah.adapters.view_holders.CastViewHolder
 import hexlay.movyeah.api.view_models.WatchViewModel
+import hexlay.movyeah.database.view_models.DbDownloadMovieViewModel
 import hexlay.movyeah.database.view_models.DbEpisodeViewModel
 import hexlay.movyeah.database.view_models.DbMovieViewModel
 import hexlay.movyeah.helpers.*
 import hexlay.movyeah.models.events.ChooseEpisodeEvent
+import hexlay.movyeah.models.movie.DownloadMovie
 import hexlay.movyeah.models.movie.Movie
 import hexlay.movyeah.models.movie.attributes.Actor
 import hexlay.movyeah.models.movie.attributes.Subtitle
@@ -76,12 +78,14 @@ import org.jetbrains.anko.noAnimation
 import org.jetbrains.anko.support.v4.browse
 import org.jetbrains.anko.support.v4.intentFor
 import org.jetbrains.anko.support.v4.share
+import org.jetbrains.anko.support.v4.toast
 import smartdevelop.ir.eram.showcaseviewlib.GuideView
 import smartdevelop.ir.eram.showcaseviewlib.config.DismissType
 import smartdevelop.ir.eram.showcaseviewlib.config.Gravity
 import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class WatchFragment : Fragment() {
 
@@ -90,19 +94,22 @@ class WatchFragment : Fragment() {
 
     private val watchViewModel by viewModels<WatchViewModel>()
     private val dbMovie by viewModels<DbMovieViewModel>()
+    private val dbDownloadMovie by viewModels<DbDownloadMovieViewModel>()
     private val dbEpisodes by viewModels<DbEpisodeViewModel>()
 
     // Movie attributes
     private lateinit var movie: Movie
-    private lateinit var qualityKey: String
-    private lateinit var languageKey: String
+    private var qualityKey: String = "NONE"
+    private var languageKey: String = "NONE"
     private var subtitleKey = "NONE"
     private var currentSeason = 1
     private var genres = ""
 
-    private lateinit var fileData: Map<String, List<EpisodeFileData>>
-    private lateinit var subtitleData: Map<String, List<Subtitle>>
-    private lateinit var tvShowSeasons: SparseArray<List<Episode>>
+    private var fileData: Map<String, List<EpisodeFileData>> = HashMap()
+    private var subtitleData: Map<String, List<Subtitle>> = HashMap()
+    private var tvShowSeasons: SparseArray<List<Episode>> = SparseArray()
+
+    private var isNetworkAvailable = true
 
     private var pipBuild: PictureInPictureParams.Builder? = null
     var isInPIP = false
@@ -140,6 +147,7 @@ class WatchFragment : Fragment() {
         if (savedInstanceState != null && savedInstanceState.containsKey("movie")) {
             movie = savedInstanceState.getParcelable("movie")!!
         }
+        isNetworkAvailable = isNetworkAvailable()
         safeCheckMovie()
         initLayout()
         initFavorite()
@@ -358,16 +366,27 @@ class WatchFragment : Fragment() {
             })
         } else {
             navigation.menu.removeItem(R.id.episodes)
-            watchViewModel.fetchMovieFileData(id)
-            watchViewModel.movieData.observeOnce(viewLifecycleOwner, Observer { episode ->
-                if (episode != null) {
-                    fileData = episode.files.map { it.lang!! to it.files }.toMap()
-                    subtitleData = episode.files.map { it.lang!! to it.subtitles }.toMap()
-                    setupMovie()
-                } else {
-                    showMovieError(R.string.full_error_movie)
-                }
-            })
+            if (!isNetworkAvailable) {
+                navigation.menu.removeItem(R.id.cast)
+                setupSource()
+            } else {
+                watchViewModel.fetchMovieFileData(id)
+                watchViewModel.movieData.observeOnce(viewLifecycleOwner, Observer { episode ->
+                    if (episode != null) {
+                        fileData = episode.files.map { it.lang!! to it.files }.toMap()
+                        subtitleData = episode.files.map { it.lang!! to it.subtitles }.toMap()
+                        setupMovie()
+                    } else {
+                        showMovieError(R.string.full_error_movie)
+                    }
+                })
+            }
+        }
+        if (!isNetworkAvailable) {
+            button_lang.isVisible = false
+            button_quality.isVisible = false
+            button_subtitles.isVisible = false
+            button_comment.isVisible = false
         }
         loadIndependentData()
     }
@@ -410,7 +429,13 @@ class WatchFragment : Fragment() {
         }
         button_lang.text = languageKey.translateLanguage(requireContext())
         button_quality.text = qualityKey.translateQuality(requireContext())
-        button_download.isVisible = true
+        if (isNetworkAvailable) {
+            dbDownloadMovie.getMovie(movie.id)?.observeOnce(viewLifecycleOwner, Observer {
+                if (it == null) {
+                    button_download.isVisible = true
+                }
+            })
+        }
         if (isInLandscape())
             modeLandscape()
         setupMovieSubtitles()
@@ -574,11 +599,14 @@ class WatchFragment : Fragment() {
     }
 
     private fun generatePlayerUrl(): String {
-        return fileData[languageKey]?.first { it.quality == qualityKey }?.src!!
+        if (!isNetworkAvailable && downloadExists(movie.id)) {
+            return getOfflineMovie(movie.id).absolutePath
+        }
+        return fileData[languageKey]?.first { it.quality == qualityKey }?.src.toString()
     }
 
     private fun generateSubtitleUrl(): String {
-        return subtitleData[languageKey]?.first { it.lang == subtitleKey.toLowerCase(Locale.ENGLISH) }?.url!!
+        return subtitleData[languageKey]?.first { it.lang == subtitleKey.toLowerCase(Locale.ENGLISH) }?.url.toString()
     }
 
     private fun initLayoutActions() {
@@ -593,8 +621,10 @@ class WatchFragment : Fragment() {
         }
         button_download.setOnClickListener {
             runWithPermissions(Permission.WRITE_EXTERNAL_STORAGE) {
-                val languages = "(${languageKey.translateLanguage(requireContext())}, ${qualityKey.translateQuality(requireContext())})"
-                downloadMovie(generatePlayerUrl(), "${title_text.text} $languages")
+                val downloadId = downloadMovie(generatePlayerUrl(), movie.id.toString())
+                dbDownloadMovie.insertMovie(DownloadMovie(movie.id, generatePlayerUrl(), downloadId, movie))
+                toast("Download has been started")
+                button_download.isVisible = false
             }
         }
         button_quality.setOnClickListener {

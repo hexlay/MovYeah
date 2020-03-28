@@ -22,15 +22,12 @@ import hexlay.movyeah.adapters.MainPageAdapter
 import hexlay.movyeah.database.view_models.DbCategoryViewModel
 import hexlay.movyeah.fragments.*
 import hexlay.movyeah.helpers.*
-import hexlay.movyeah.models.events.ConnectionRestoreEvent
-import hexlay.movyeah.models.events.NetworkErrorEvent
 import hexlay.movyeah.models.movie.Movie
 import hexlay.movyeah.models.movie.attributes.Category
 import hexlay.movyeah.services.NotificationService
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.navigation
 import kotlinx.android.synthetic.main.fragment_watch.*
-import org.greenrobot.eventbus.Subscribe
 
 class MainActivity : AbsWatchModeActivity() {
 
@@ -172,6 +169,7 @@ class MainActivity : AbsWatchModeActivity() {
                 R.id.nav_movies -> fragment_pager.currentItem = 1
                 R.id.nav_series -> fragment_pager.currentItem = 2
                 R.id.nav_favorites -> fragment_pager.currentItem = 3
+                R.id.nav_downloads -> fragment_pager.currentItem = 4
             }
             true
         }
@@ -201,21 +199,6 @@ class MainActivity : AbsWatchModeActivity() {
         }
     }
 
-    @Subscribe
-    fun listenConnectionLost(event: NetworkErrorEvent) {
-        if (!registered) {
-            registerConReceiver()
-        }
-    }
-
-    @Subscribe
-    fun listenConnectionRestore(event: ConnectionRestoreEvent) {
-        if (registered && connectivityReceiver != null) {
-            setupViewPager()
-            unregisterConReceiver()
-        }
-    }
-
     private fun isSyncing(): Boolean {
         val scheduler = getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
         if (Constants.isAndroidN) {
@@ -239,10 +222,18 @@ class MainActivity : AbsWatchModeActivity() {
 
     private fun setupViewPager() {
         val adapter = MainPageAdapter(supportFragmentManager)
-        adapter.addFragment(MainFragment())
-        adapter.addFragment(MoviesFragment())
-        adapter.addFragment(TvShowFragment())
-        adapter.addFragment(FavoriteFragment())
+        if (isNetworkAvailable()) {
+            adapter.addFragment(MainFragment())
+            adapter.addFragment(MoviesFragment())
+            adapter.addFragment(TvShowFragment())
+            adapter.addFragment(FavoriteFragment())
+        } else {
+            navigation.menu.removeItem(R.id.nav_main)
+            navigation.menu.removeItem(R.id.nav_movies)
+            navigation.menu.removeItem(R.id.nav_series)
+            navigation.menu.removeItem(R.id.nav_favorites)
+        }
+        adapter.addFragment(DownloadFragment())
         fragment_pager.adapter = adapter
         fragment_pager.offscreenPageLimit = adapter.count
         fragment_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -261,6 +252,9 @@ class MainActivity : AbsWatchModeActivity() {
                     }
                     3 -> {
                         navigation.selectedItemId = R.id.nav_favorites
+                    }
+                    4 -> {
+                        navigation.selectedItemId = R.id.nav_downloads
                     }
                 }
             }

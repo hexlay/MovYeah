@@ -5,9 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import hexlay.movyeah.database.repositories.DbMoviesRepository
 import hexlay.movyeah.models.movie.Movie
 
-class DbMovieViewModel(application: Application) : AndroidViewModel(application) {
+class  DbMovieViewModel(application: Application) : AndroidViewModel(application) {
 
-    private var repository: DbMoviesRepository = DbMoviesRepository(application.applicationContext)
+    private var repository = DbMoviesRepository(application.applicationContext)
 
     fun getMovies() = repository.getMovies()
 
