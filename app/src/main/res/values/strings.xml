@@ -11,6 +11,7 @@
     <string name="search_text">შეიყვანეთ საძიებო სიტყვა</string>
     <string name="yes">კი</string>
     <string name="no">არა</string>
+    <string name="download_start">გადმოწერა დაწყებულია</string>
 
     <string name="offline_remove">წაშლა</string>
     <string name="offline_remove_confirm">ნამდვილად გსურთ წაშლა?</string>
@@ -86,6 +87,7 @@
     <string name="settings_main_seek_20">20 წამი</string>
     <string name="settings_main_pip_title">PictureInPicture</string>
     <string name="settings_main_pip_sum">ფილმის/სერიალის ჩვენება მინიატურულ ფანჯარაში აპლიკაციის ჩაკეცვისას (Android 8.0 და ზემოთ)</string>
+    <string name="settings_main_downl_noti_title">გადმოწერის შეტყობინება</string>
     <string name="settings_main_maxbr_title">სიკაშკაშე</string>
     <string name="settings_main_dark_mode">თემის არჩევა</string>
     <string name="settings_main_maxbr_sum">მაქსიმალური სიკაშკაშე ყურების დროს</string>

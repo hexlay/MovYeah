@@ -22,7 +22,7 @@ class DbDownloadMoviesRepository(context: Context) : CoroutineScope {
 
     fun getMovies() = dao?.getAll()
 
-    fun getMovie(id: Int) = dao?.getOne(id)
+    fun getMovie(id: String) = dao?.getOne(id)
 
     fun insertMovie(movie: DownloadMovie) {
         launch {

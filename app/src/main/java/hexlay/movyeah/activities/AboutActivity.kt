@@ -70,15 +70,12 @@ class AboutActivity : AppCompatActivity() {
                 Library("CircleImageView",
                         "Henning Dodenhof",
                         "https://github.com/hdodenhof/CircleImageView"),
-                Library("DBFlow",
-                        "Andrew Grosner",
-                        "https://github.com/agrosner/DBFlow"),
+                Library("Android Room",
+                        "Google",
+                        "https://developer.android.com/topic/libraries/architecture/room"),
                 Library("EventBus",
                         "Markus Junginger",
-                        "https://github.com/greenrobot/EventBus"),
-                Library("ShowCaseView",
-                        "Mohammad Reza Eram",
-                        "https://github.com/mreram/ShowCaseView")
+                        "https://github.com/greenrobot/EventBus")
         )
         resource_holder.setup {
             withDataSource(libraries)

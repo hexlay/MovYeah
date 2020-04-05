@@ -20,6 +20,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private lateinit var brightness: SwitchPreference
     private lateinit var autoPlay: SwitchPreference
     private lateinit var notifications: SwitchPreference
+    private lateinit var downloadNotification: SwitchPreference
     private lateinit var pipMode: SwitchPreference
     private lateinit var serviceCategory: ListPreference
     private lateinit var seek: ListPreference
@@ -62,6 +63,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         brightness = preferenceManager.findPreference("brightness")!!
         darkMode = preferenceManager.findPreference("darknet")!!
         notifications = preferenceManager.findPreference("notifications")!!
+        downloadNotification = preferenceManager.findPreference("download_notification")!!
         autoPlay = preferenceManager.findPreference("autostart")!!
         serviceCategory = preferenceManager.findPreference("service_value")!!
         seek = preferenceManager.findPreference("seek_value")!!
@@ -119,6 +121,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
             } else {
                 reference.get()!!.stopSync()
             }
+            currentCase
+        }
+
+        downloadNotification.setOnPreferenceChangeListener { _, newValue ->
+            val currentCase = newValue.toString().toBoolean()
+            downloadNotification.isChecked = currentCase
+            preferenceHelper.downloadNotification = currentCase
             currentCase
         }
 

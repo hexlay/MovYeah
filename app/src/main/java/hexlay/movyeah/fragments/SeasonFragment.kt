@@ -17,21 +17,25 @@ import com.afollestad.recyclical.setup
 import com.afollestad.recyclical.withItem
 import hexlay.movyeah.R
 import hexlay.movyeah.adapters.view_holders.EpisodeViewHolder
+import hexlay.movyeah.database.view_models.DbDownloadMovieViewModel
 import hexlay.movyeah.database.view_models.DbEpisodeViewModel
 import hexlay.movyeah.helpers.*
 import hexlay.movyeah.models.events.ChooseEpisodeEvent
+import hexlay.movyeah.models.movie.DownloadMovie
+import hexlay.movyeah.models.movie.Movie
 import hexlay.movyeah.models.movie.attributes.show.Episode
-import hexlay.movyeah.models.movie.attributes.show.EpisodeFileData
 import kotlinx.android.synthetic.main.fragment_season.*
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.support.v4.toast
 
 class SeasonFragment : Fragment() {
 
-    private var movieId : Int = 0
-    private var season : Int = 0
+    private var movie: Movie? = null
+    private var season = 0
     private var episodes = emptyDataSource()
 
     private val dbEpisodes by viewModels<DbEpisodeViewModel>()
+    private val dbDownloadMovie by viewModels<DbDownloadMovieViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_season, container, false)
@@ -40,7 +44,7 @@ class SeasonFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dbEpisodes.getEpisode(movieId)?.observeOnce(viewLifecycleOwner, Observer {
+        dbEpisodes.getEpisode(movie!!.id)?.observeOnce(viewLifecycleOwner, Observer {
             if (it != null) {
                 episode_holder.scrollToPosition(it.episode)
             } else {
@@ -53,7 +57,7 @@ class SeasonFragment : Fragment() {
                 onBind(::EpisodeViewHolder) { index, item ->
                     title.text = "${item.episode}. ${item.getEpisodeTitle()}"
                     languages.text = item.files.map { it.lang?.translateLanguage(requireContext()) }.toCommaList()
-                    dbEpisodes.getEpisode(movieId)?.observe(viewLifecycleOwner, Observer {
+                    dbEpisodes.getEpisode(movie!!.id)?.observe(viewLifecycleOwner, Observer {
                         if (it != null && it.episode == index && it.season == season) {
                             paintSelected()
                             itemView.setOnClickListener(null)
@@ -70,21 +74,39 @@ class SeasonFragment : Fragment() {
                     download.setOnClickListener {
                         val langs = item.files.map { it.lang!! to it.files }.toMap()
                         val dialogItems = ArrayList<String>()
-                        val dataDownload = ArrayList<EpisodeFileData>()
+                        val dataDownload = ArrayList<DownloadMovie>()
                         for ((langKey, langValue) in langs) {
                             val qualities = langValue.map { it.quality to it }.toMap()
                             for ((qualKey, qualValue) in qualities) {
-                                dataDownload.add(qualValue)
-                                dialogItems.add("${qualKey?.translateQuality(requireContext())} (${langKey.translateLanguage(requireContext())})")
+                                val downloadTitle = "${movie!!.id}_${qualKey}_${langKey}_${season}_${index}"
+                                if (!downloadExists(downloadTitle)) {
+                                    val download = DownloadMovie(
+                                            currentEpisode = index,
+                                            currentSeason = season,
+                                            language = langKey,
+                                            quality = qualKey,
+                                            movie = movie,
+                                            url = qualValue.src,
+                                            identifier = downloadTitle
+                                    )
+                                    dataDownload.add(download)
+                                    val rQuality = qualKey?.translateQuality(requireContext())
+                                    val rLang = langKey.translateLanguage(requireContext())
+                                    dialogItems.add("$rQuality (${rLang})")
+                                }
                             }
                         }
-                        MaterialDialog(requireContext()).show {
-                            title(text = title.text.toString())
-                            listItems(items = dialogItems) { _, index, _ ->
-                                runWithPermissions(Permission.WRITE_EXTERNAL_STORAGE) {
-                                    val languages = dialogItems[index].replace(" (", ", ").replace(")", "")
-                                    val title = "${title.text} (${languages})"
-                                    dataDownload[index].src?.let { url -> downloadMovie(url, title) }
+                        if (dialogItems.isNotEmpty()) {
+                            MaterialDialog(requireContext()).show {
+                                title(text = title.text.toString())
+                                listItems(items = dialogItems) { _, index, _ ->
+                                    runWithPermissions(Permission.WRITE_EXTERNAL_STORAGE) {
+                                        val download = dataDownload[index]
+                                        val downloadId = downloadMovie(download.url!!, download.identifier)
+                                        download.downloadId = downloadId
+                                        dbDownloadMovie.insertMovie(download)
+                                        toast(R.string.download_start)
+                                    }
                                 }
                             }
                         }
@@ -96,10 +118,10 @@ class SeasonFragment : Fragment() {
 
     companion object {
 
-        fun newInstance(season: Int, movieId: Int, episodes: List<Episode>): SeasonFragment {
+        fun newInstance(season: Int, movie: Movie, episodes: List<Episode>): SeasonFragment {
             val seasonFragment = SeasonFragment()
             seasonFragment.episodes.addAll(episodes)
-            seasonFragment.movieId = movieId
+            seasonFragment.movie = movie
             seasonFragment.season = season
             return seasonFragment
         }

@@ -43,7 +43,7 @@ class BrowserActivity : AbsWatchModeActivity() {
         })
     }
 
-    override fun startWatchMode(movie: Movie) {
+    override fun startWatchMode(movie: Movie, identifier: String) {
         if (!isInWatchMode()) {
             watchMode = true
             watchFragment = WatchFragment.newInstance(movie)

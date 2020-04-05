@@ -11,7 +11,7 @@ class  DbDownloadMovieViewModel(application: Application) : AndroidViewModel(app
 
     fun getMovies() = repository.getMovies()
 
-    fun getMovie(id: Int) = repository.getMovie(id)
+    fun getMovie(id: String) = repository.getMovie(id)
 
     fun insertMovie(movie: DownloadMovie) = repository.insertMovie(movie)
 

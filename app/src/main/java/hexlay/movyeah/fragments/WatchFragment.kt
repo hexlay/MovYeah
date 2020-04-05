@@ -79,9 +79,6 @@ import org.jetbrains.anko.support.v4.browse
 import org.jetbrains.anko.support.v4.intentFor
 import org.jetbrains.anko.support.v4.share
 import org.jetbrains.anko.support.v4.toast
-import smartdevelop.ir.eram.showcaseviewlib.GuideView
-import smartdevelop.ir.eram.showcaseviewlib.config.DismissType
-import smartdevelop.ir.eram.showcaseviewlib.config.Gravity
 import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
@@ -99,10 +96,12 @@ class WatchFragment : Fragment() {
 
     // Movie attributes
     private lateinit var movie: Movie
-    private var qualityKey: String = "NONE"
-    private var languageKey: String = "NONE"
+    private var qualityKey = "NONE"
+    private var languageKey = "NONE"
     private var subtitleKey = "NONE"
+    private var offlineIdentifier = ""
     private var currentSeason = 1
+    private var currentEpisode = 1
     private var genres = ""
 
     private var fileData: Map<String, List<EpisodeFileData>> = HashMap()
@@ -195,25 +194,6 @@ class WatchFragment : Fragment() {
         player_src.setControllerVisibilityListener { visibility ->
             controlsShown = visibility == View.VISIBLE
             toolbar.fade(if (visibility == View.VISIBLE) 1 else 0, 150)
-        }
-        if (!preferenceHelper.watchHint) {
-            GuideView.Builder(context)
-                    .setContentText("სრულ ეკრანზე ჩვენებისას შეგიძლიათ ორჯერ მარჯვნივ/მარცხნივ დაჭერით გადაახვიოთ ფილმი.\nგადახვევის დრო შეგიძლიათ შეცვალოთ პარამეტრებში")
-                    .setGravity(Gravity.auto)
-                    .setDismissType(DismissType.anywhere)
-                    .setTargetView(player_src)
-                    .setGuideListener {
-                        preferenceHelper.watchHint = true
-                        GuideView.Builder(context)
-                                .setContentText("დაჭერისას შეგიძლიათ ნახოთ ფილმის/სერიალის IMDB გვერდი")
-                                .setGravity(Gravity.auto)
-                                .setDismissType(DismissType.anywhere)
-                                .setTargetView(description_imdb)
-                                .build()
-                                .show()
-                    }
-                    .build()
-                    .show()
         }
         exoPlayer!!.playWhenReady = preferenceHelper.autoStart
         exoPlayer!!.addListener(object : Player.EventListener {
@@ -347,29 +327,35 @@ class WatchFragment : Fragment() {
     }
 
     private fun loadData(id: Int) {
-        if (movie.isTvShow) {
-            watchViewModel.fetchMovie(movie.adjaraId)
-            watchViewModel.movie.observeOnce(viewLifecycleOwner, Observer { movieExtend ->
-                if (movieExtend.seasons != null) {
-                    watchViewModel.fetchTvShowEpisodes(movie.id, movieExtend.seasons!!.data.size)
-                    watchViewModel.tvShowEpisodes.observeOnce(viewLifecycleOwner, Observer { seasons ->
-                        if (seasons.isNotEmpty()) {
-                            tvShowSeasons = seasons
-                            setupTvShow()
-                        } else {
-                            showMovieError(R.string.full_error_show)
-                        }
-                    })
-                } else {
-                    showMovieError(R.string.full_error_show)
-                }
-            })
-        } else {
+        loadIndependentData()
+        if (!isNetworkAvailable) {
+            button_lang.isVisible = false
+            button_quality.isVisible = false
+            button_subtitles.isVisible = false
+            button_comment.isVisible = false
+            navigation.menu.removeItem(R.id.cast)
             navigation.menu.removeItem(R.id.episodes)
-            if (!isNetworkAvailable) {
-                navigation.menu.removeItem(R.id.cast)
-                setupSource()
+            setupSource()
+        } else {
+            if (movie.isTvShow) {
+                watchViewModel.fetchMovie(movie.adjaraId)
+                watchViewModel.movie.observeOnce(viewLifecycleOwner, Observer { movieExtend ->
+                    if (movieExtend.seasons != null) {
+                        watchViewModel.fetchTvShowEpisodes(movie.id, movieExtend.seasons!!.data.size)
+                        watchViewModel.tvShowEpisodes.observeOnce(viewLifecycleOwner, Observer { seasons ->
+                            if (seasons.isNotEmpty()) {
+                                tvShowSeasons = seasons
+                                setupTvShow()
+                            } else {
+                                showMovieError(R.string.full_error_show)
+                            }
+                        })
+                    } else {
+                        showMovieError(R.string.full_error_show)
+                    }
+                })
             } else {
+                navigation.menu.removeItem(R.id.episodes)
                 watchViewModel.fetchMovieFileData(id)
                 watchViewModel.movieData.observeOnce(viewLifecycleOwner, Observer { episode ->
                     if (episode != null) {
@@ -382,13 +368,6 @@ class WatchFragment : Fragment() {
                 })
             }
         }
-        if (!isNetworkAvailable) {
-            button_lang.isVisible = false
-            button_quality.isVisible = false
-            button_subtitles.isVisible = false
-            button_comment.isVisible = false
-        }
-        loadIndependentData()
     }
 
     private fun showMovieError(textId: Int) {
@@ -430,11 +409,7 @@ class WatchFragment : Fragment() {
         button_lang.text = languageKey.translateLanguage(requireContext())
         button_quality.text = qualityKey.translateQuality(requireContext())
         if (isNetworkAvailable) {
-            dbDownloadMovie.getMovie(movie.id)?.observeOnce(viewLifecycleOwner, Observer {
-                if (it == null) {
-                    button_download.isVisible = true
-                }
-            })
+            button_download.isVisible = true
         }
         if (isInLandscape())
             modeLandscape()
@@ -458,6 +433,7 @@ class WatchFragment : Fragment() {
     }
 
     private fun setupTvShowEpisode(episode: Int) {
+        currentEpisode = episode
         dbEpisodes.insertEpisode(EpisodeCache(movie.id, episode, currentSeason))
         fileData = tvShowSeasons[currentSeason][episode].files.map { it.lang!! to it.files }.toMap()
         subtitleData = tvShowSeasons[currentSeason][episode].files.map { it.lang!! to it.subtitles }.toMap()
@@ -484,7 +460,7 @@ class WatchFragment : Fragment() {
     }
 
     private fun setupTvShowSeasons() {
-        episode_holder.adapter = SeasonPageAdapter(childFragmentManager, movie.id, tvShowSeasons)
+        episode_holder.adapter = SeasonPageAdapter(childFragmentManager, movie, tvShowSeasons)
         season_tabs.setupWithViewPager(episode_holder)
         episode_holder.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -599,8 +575,8 @@ class WatchFragment : Fragment() {
     }
 
     private fun generatePlayerUrl(): String {
-        if (!isNetworkAvailable && downloadExists(movie.id)) {
-            return getOfflineMovie(movie.id).absolutePath
+        if (!isNetworkAvailable && downloadExists(offlineIdentifier)) {
+            return getOfflineMovie(offlineIdentifier).absolutePath
         }
         return fileData[languageKey]?.first { it.quality == qualityKey }?.src.toString()
     }
@@ -620,11 +596,42 @@ class WatchFragment : Fragment() {
             stillInApp = true
         }
         button_download.setOnClickListener {
-            runWithPermissions(Permission.WRITE_EXTERNAL_STORAGE) {
-                val downloadId = downloadMovie(generatePlayerUrl(), movie.id.toString())
-                dbDownloadMovie.insertMovie(DownloadMovie(movie.id, generatePlayerUrl(), downloadId, movie))
-                toast("Download has been started")
-                button_download.isVisible = false
+            val dialogItems = ArrayList<String>()
+            val dataDownload = ArrayList<DownloadMovie>()
+            for ((langKey, langValue) in fileData) {
+                val qualities = langValue.map { it.quality to it }.toMap()
+                for ((qualKey, qualValue) in qualities) {
+                    val downloadTitle = "${movie.id}_${qualKey}_${langKey}"
+                    if (!downloadExists(downloadTitle)) {
+                        val download = DownloadMovie(
+                                currentEpisode = currentEpisode,
+                                currentSeason = currentSeason,
+                                language = langKey,
+                                quality = qualKey,
+                                movie = movie,
+                                url = qualValue.src,
+                                identifier = downloadTitle
+                        )
+                        dataDownload.add(download)
+                        val rQuality = qualKey?.translateQuality(requireContext())
+                        val rLang = langKey.translateLanguage(requireContext())
+                        dialogItems.add("$rQuality (${rLang})")
+                    }
+                }
+            }
+            if (dialogItems.isNotEmpty()) {
+                MaterialDialog(requireContext()).show {
+                    title(text = movie.getTitle())
+                    listItems(items = dialogItems) { _, index, _ ->
+                        runWithPermissions(Permission.WRITE_EXTERNAL_STORAGE) {
+                            val download = dataDownload[index]
+                            val downloadId = downloadMovie(download.url!!, download.identifier)
+                            download.downloadId = downloadId
+                            dbDownloadMovie.insertMovie(download)
+                            toast(R.string.download_start)
+                        }
+                    }
+                }
             }
         }
         button_quality.setOnClickListener {
@@ -921,9 +928,10 @@ class WatchFragment : Fragment() {
 
     companion object {
 
-        fun newInstance(movie: Movie): WatchFragment {
+        fun newInstance(movie: Movie, identifier: String = ""): WatchFragment {
             val watchFragment = WatchFragment()
             watchFragment.movie = movie
+            watchFragment.offlineIdentifier = identifier
             return watchFragment
         }
 

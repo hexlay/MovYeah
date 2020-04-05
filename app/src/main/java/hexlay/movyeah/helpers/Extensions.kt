@@ -217,23 +217,28 @@ fun Activity.getActionBarSize(): Int {
 }
 
 fun Fragment.downloadMovie(url: String, title: String): Long {
+    val visibleNotification = if (PreferenceHelper(requireContext()).downloadNotification) {
+        DownloadManager.Request.VISIBILITY_VISIBLE
+    } else {
+        DownloadManager.Request.VISIBILITY_HIDDEN
+    }
     val request = DownloadManager.Request(Uri.parse(url))
     request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
     request.setAllowedOverRoaming(false)
     request.setTitle(title)
-    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+    request.setNotificationVisibility(visibleNotification)
     request.setDestinationInExternalFilesDir(requireContext(), Environment.DIRECTORY_DOWNLOADS, "$title.mp4")
     val downloadManager = requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
     return downloadManager.enqueue(request)
 }
 
-fun Fragment.getOfflineMovie(id: Int): File {
+fun Fragment.getOfflineMovie(id: String): File {
     val downloadDirectory = requireContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.absolutePath
     val path = "${downloadDirectory}/${id}.mp4"
     return File(path)
 }
 
-fun Fragment.downloadExists(id: Int): Boolean {
+fun Fragment.downloadExists(id: String): Boolean {
     return getOfflineMovie(id).exists()
 }
 

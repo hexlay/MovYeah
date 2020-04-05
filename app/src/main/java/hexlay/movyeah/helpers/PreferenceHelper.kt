@@ -48,11 +48,11 @@ class PreferenceHelper(private val context: Context) {
             }
         }
 
-    var watchHint: Boolean
-        get() = settings.getBoolean("adj_watch_hint", false)
+    var downloadNotification: Boolean
+        get() = settings.getBoolean("adj_download_notification", false)
         set(value) {
             settings.edit {
-                putBoolean("adj_watch_hint", value)
+                putBoolean("adj_download_notification", value)
             }
         }
 

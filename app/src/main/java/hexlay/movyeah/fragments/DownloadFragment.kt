@@ -83,10 +83,15 @@ class DownloadFragment : Fragment() {
                     val downloadProgress = DownloadProgress(item.downloadId, progress)
                     if (movie != null) {
                         title.isSelected = true
-                        title.text = movie.getTitle()
+                        val titleTrue = if (movie.isTvShow) {
+                            "${movie.getTitle()} s${item.currentSeason}e${item.currentEpisode + 1} (${item.language}, ${item.quality})"
+                        } else {
+                            "${movie.getTitle()} (${item.language}, ${item.quality})"
+                        }
+                        title.text = titleTrue
                         movie.getTruePoster()?.let { image.setUrl(it) }
                         Handler().postDelayed({
-                            if (downloadExists(movie.id)) {
+                            if (downloadExists(item.identifier)) {
                                 download.isVisible = false
                                 downloadProgress.start()
                             } else {
@@ -100,7 +105,7 @@ class DownloadFragment : Fragment() {
                                 positiveButton(R.string.yes) {
                                     downloadProgress.interrupt()
                                     downloadManager?.remove(item.downloadId)
-                                    getOfflineMovie(movie.id).delete()
+                                    getOfflineMovie(item.identifier).delete()
                                     dbDownloadMovies.deleteMovie(item)
                                 }
                                 negativeButton(R.string.no) {
@@ -109,7 +114,11 @@ class DownloadFragment : Fragment() {
                             }
                         }
                         download.setOnClickListener {
-                            item.downloadId = downloadMovie(item.url!!, movie.id.toString())
+                            downloadManager?.remove(item.downloadId)
+                            if (downloadExists(item.identifier)) {
+                                getOfflineMovie(item.identifier).delete()
+                            }
+                            item.downloadId = downloadMovie(item.url!!, item.identifier)
                             downloadProgress.setDownloadId(item.downloadId)
                             downloadProgress.start()
                             download.isVisible = false
@@ -117,7 +126,7 @@ class DownloadFragment : Fragment() {
                     }
                 }
                 onClick {
-                    item.movie?.let { movie -> EventBus.getDefault().post(StartWatchingEvent(movie)) }
+                    item.movie?.let { movie -> EventBus.getDefault().post(StartWatchingEvent(movie, item.identifier)) }
 
                 }
                 onLongClick {

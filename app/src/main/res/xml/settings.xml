@@ -19,6 +19,12 @@
             android:summary="@string/settings_main_maxbr_sum"
             android:title="@string/settings_main_maxbr_title" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_download"
+            android:key="download_notification"
+            android:title="@string/settings_main_downl_noti_title" />
+
         <ListPreference
             android:defaultValue="1"
             android:entries="@array/darkmode"

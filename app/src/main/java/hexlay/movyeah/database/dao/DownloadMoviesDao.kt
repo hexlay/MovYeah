@@ -10,8 +10,8 @@ interface DownloadMoviesDao {
     @Query("SELECT * FROM downloadmovie")
     fun getAll(): LiveData<List<DownloadMovie>>
 
-    @Query("SELECT * FROM downloadmovie WHERE id = :id")
-    fun getOne(id: Int): LiveData<DownloadMovie>
+    @Query("SELECT * FROM downloadmovie WHERE identifier = :id")
+    fun getOne(id: String): LiveData<DownloadMovie>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(movie: DownloadMovie)

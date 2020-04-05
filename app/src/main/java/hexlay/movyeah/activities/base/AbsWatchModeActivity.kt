@@ -33,13 +33,13 @@ abstract class AbsWatchModeActivity : AppCompatActivity() {
 
     @Subscribe
     fun listenWatch(event: StartWatchingEvent) {
-        startWatchMode(event.item)
+        startWatchMode(event.item, event.identifier)
     }
 
-    protected open fun startWatchMode(movie: Movie) {
+    protected open fun startWatchMode(movie: Movie, identifier: String = "") {
         if (!isInWatchMode()) {
             watchMode = true
-            watchFragment = WatchFragment.newInstance(movie)
+            watchFragment = WatchFragment.newInstance(movie, identifier)
             supportFragmentManager.commit {
                 setCustomAnimations(R.anim.anim_enter, R.anim.anim_exit)
                 add(android.R.id.content, watchFragment!!, "watch_mode")
