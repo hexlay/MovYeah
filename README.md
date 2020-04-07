@@ -17,3 +17,4 @@
 - Picture In Picture (Android O+)
 - ორჯერ სწაფი დაჭერით გადახვევა
 - ფილტრი
+- Offline რეჟიმი
