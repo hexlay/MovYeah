@@ -3,8 +3,8 @@ package hexlay.movyeah.api
 import hexlay.movyeah.models.movie.Movie
 import hexlay.movyeah.models.movie.attributes.Actor
 import hexlay.movyeah.models.movie.attributes.show.Episode
-import hexlay.movyeah.models.movie.helpers.ExtendedMovieHelper
 import hexlay.movyeah.models.movie.generics.GenericList
+import hexlay.movyeah.models.movie.helpers.ExtendedMovieHelper
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -41,6 +41,7 @@ interface AdjaraAPI {
             @Query("filters[init]") filtersInit: String = "true",
             @Query("filters[with_actors]") filtersActors: Int = 3,
             @Query("filters[with_directors]") filtersDirectors: Int = 1,
+            @Query("filters[with_files]") filtersFiles: String = "yes",
             @Query("page") page: Int = 1,
             @Query("per_page") perPage: Int = 20,
             @Query("source") source: String = "adjaranet"
@@ -49,13 +50,13 @@ interface AdjaraAPI {
     @GET("movies/premiere-day?page=1&per_page=20&filters=&source=adjaranet")
     suspend fun getPremieresAsync(): Response<GenericList<Movie>>
 
-    @GET("movies/top?type=movie&period=day&page=1&per_page=20&filters[with_actors]=3&filters[with_directors]=1&source=adjaranet")
+    @GET("movies/top?type=movie&period=day&page=1&per_page=20&filters[with_actors]=3&filters[with_files]=yes&filters[with_directors]=1&source=adjaranet")
     suspend fun getTopMoviesAsync(): Response<GenericList<Movie>>
 
     @GET("movies?page=1&per_page=20&filters[language]=GEO&filters[type]=movie&filters[with_actors]=3&filters[with_directors]=1&filters[with_files]=yes&sort=-upload_date&source=adjaranet")
     suspend fun getGeoMoviesAsync(): Response<GenericList<Movie>>
 
-    @GET("movies/top?type=series&period=day&page=1&per_page=20&filters[with_actors]=3&filters[with_directors]=1&source=adjaranet")
+    @GET("movies/top?type=series&period=day&page=1&per_page=20&filters[with_actors]=3&filters[with_files]=yes&filters[with_directors]=1&source=adjaranet")
     suspend fun getTopTvShowsAsync(): Response<GenericList<Movie>>
 
     @GET("movies?page=1&per_page=20&filters[language]=GEO&filters[type]=series&filters[with_actors]=3&filters[with_directors]=1&filters[with_files]=yes&sort=-upload_date&source=adjaranet")

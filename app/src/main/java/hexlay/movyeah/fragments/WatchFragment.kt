@@ -335,10 +335,10 @@ class WatchFragment : Fragment() {
             if (movie.isTvShow) {
                 watchViewModel.fetchMovie(movie.adjaraId)
                 watchViewModel.movie.observeOnce(viewLifecycleOwner, Observer { movieExtend ->
-                    if (movieExtend.seasons != null) {
+                    if (movieExtend?.seasons != null) {
                         watchViewModel.fetchTvShowEpisodes(movie.id, movieExtend.seasons!!.data.size)
                         watchViewModel.tvShowEpisodes.observeOnce(viewLifecycleOwner, Observer { seasons ->
-                            if (seasons.isNotEmpty()) {
+                            if (seasons != null && seasons.isNotEmpty()) {
                                 tvShowSeasons = seasons
                                 setupTvShow()
                             } else {

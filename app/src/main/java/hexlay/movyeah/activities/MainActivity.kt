@@ -106,7 +106,7 @@ class MainActivity : AbsWatchModeActivity() {
     }
 
     private fun startSearchMode() {
-        if (!searchMode) {
+        if (!searchMode && isNetworkAvailable()) {
             searchMode = true
             searchFragment = SearchFragment()
             supportFragmentManager.commit {
