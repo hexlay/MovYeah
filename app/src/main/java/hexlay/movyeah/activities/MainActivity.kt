@@ -35,6 +35,7 @@ class MainActivity : AbsWatchModeActivity() {
 
     private var searchFragment: SearchFragment? = null
     private var searchMode = false
+    private var searchAdapter: ArrayAdapter<String>? = null
 
     private val dbCategories by viewModels<DbCategoryViewModel>()
 
@@ -83,8 +84,8 @@ class MainActivity : AbsWatchModeActivity() {
     }
 
     private fun initHistory() {
-        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, preferenceHelper?.searchHistory!!.toTypedArray())
-        toolbar_search.setAdapter(adapter)
+        searchAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, preferenceHelper?.searchHistory!!.toTypedArray())
+        toolbar_search.setAdapter(searchAdapter)
     }
 
     private fun initToolbar() {
@@ -128,7 +129,7 @@ class MainActivity : AbsWatchModeActivity() {
                         val searchText = toolbar_search.text.toString()
                         searchFragment?.search(searchText)
                         preferenceHelper?.addSearchHistory(searchText)
-                        initHistory()
+                        searchAdapter?.add(searchText)
                         toolbar_search.hideKeyboard()
                         return@setOnEditorActionListener true
                     }
