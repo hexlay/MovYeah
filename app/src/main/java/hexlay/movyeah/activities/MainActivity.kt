@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import hexlay.movyeah.R
@@ -69,7 +70,7 @@ class MainActivity : AbsWatchModeActivity() {
     }
 
     fun initDarkMode() {
-        when(preferenceHelper?.darkMode) {
+        when (preferenceHelper?.darkMode) {
             0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             2 -> if (Constants.isAndroidQ) {
@@ -107,12 +108,11 @@ class MainActivity : AbsWatchModeActivity() {
         if (!searchMode) {
             searchMode = true
             searchFragment = SearchFragment()
-            supportFragmentManager
-                    .beginTransaction()
-                    .setCustomAnimations(R.anim.anim_enter, R.anim.anim_exit)
-                    .add(R.id.searcher, searchFragment!!, "search_mode")
-                    .addToBackStack("")
-                    .commit()
+            supportFragmentManager.commit {
+                setCustomAnimations(R.anim.anim_enter, R.anim.anim_exit)
+                add(R.id.searcher, searchFragment!!, "search_mode")
+                addToBackStack("")
+            }
             navigation.isVisible = false
             button_settings.isGone = true
             toolbar_search.isFocusable = true
@@ -148,12 +148,12 @@ class MainActivity : AbsWatchModeActivity() {
         if (searchMode) {
             searchMode = false
             val fragment = supportFragmentManager.findFragmentByTag("search_mode")
-            if (fragment != null)
-                supportFragmentManager
-                        .beginTransaction()
-                        .setCustomAnimations(R.anim.anim_enter, R.anim.anim_exit)
-                        .remove(fragment)
-                        .commit()
+            if (fragment != null) {
+                supportFragmentManager.commit {
+                    setCustomAnimations(R.anim.anim_enter, R.anim.anim_exit)
+                    remove(fragment)
+                }
+            }
             searchFragment = null
             navigation.isVisible = true
             button_settings.isGone = false
@@ -292,12 +292,11 @@ class MainActivity : AbsWatchModeActivity() {
 
     private fun enterPreference() {
         if (supportFragmentManager.findFragmentByTag("settings") == null) {
-            supportFragmentManager
-                    .beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .add(android.R.id.content, SettingsFragment(), "settings")
-                    .addToBackStack("")
-                    .commit()
+            supportFragmentManager.commit {
+                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                add(android.R.id.content, SettingsFragment(), "settings")
+                addToBackStack("")
+            }
         }
     }
 

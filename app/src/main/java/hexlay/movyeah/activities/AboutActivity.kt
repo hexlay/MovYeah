@@ -73,6 +73,9 @@ class AboutActivity : AppCompatActivity() {
                 Library("Android Room",
                         "Google",
                         "https://developer.android.com/topic/libraries/architecture/room"),
+                Library("Leak Canary",
+                        "Square",
+                        "https://github.com/square/leakcanary"),
                 Library("EventBus",
                         "Markus Junginger",
                         "https://github.com/greenrobot/EventBus")
