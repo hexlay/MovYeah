@@ -96,4 +96,18 @@ class PreferenceHelper(private val context: Context) {
             }
         }
 
+    var searchHistory: MutableSet<String>
+        get() = settings.getStringSet("adj_search_history", mutableSetOf())!!
+        set(value) {
+            settings.edit {
+                putStringSet("adj_search_history", value)
+            }
+        }
+
+    fun addSearchHistory(value: String) {
+        val current = searchHistory
+        current.add(value)
+        searchHistory = current
+    }
+
 }

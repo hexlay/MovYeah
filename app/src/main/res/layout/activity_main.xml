@@ -39,7 +39,7 @@
             app:layout_constraintTop_toTopOf="parent"
             style="?attr/actionButtonStyle" />
 
-        <EditText
+        <com.google.android.material.textview.MaterialAutoCompleteTextView
             android:id="@+id/toolbar_search"
             android:layout_width="0dp"
             android:layout_height="match_parent"

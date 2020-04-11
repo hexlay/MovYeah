@@ -67,10 +67,6 @@
             android:screenOrientation="portrait"
             android:supportsPictureInPicture="true"
             tools:targetApi="o" />
-        <activity
-            android:name=".activities.CommentsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeTranslucent" />
 
         <service
             android:name=".services.NotificationService"

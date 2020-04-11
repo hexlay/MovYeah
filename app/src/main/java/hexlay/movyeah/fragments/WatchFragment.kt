@@ -50,7 +50,6 @@ import com.google.android.exoplayer2.util.MimeTypes
 import com.google.android.exoplayer2.util.Util
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.ActorActivity
-import hexlay.movyeah.activities.CommentsActivity
 import hexlay.movyeah.activities.base.AbsWatchModeActivity
 import hexlay.movyeah.adapters.SeasonPageAdapter
 import hexlay.movyeah.adapters.view_holders.CastViewHolder
@@ -74,7 +73,6 @@ import kotlinx.android.synthetic.main.piece_episodes.*
 import kotlinx.android.synthetic.main.piece_info.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import org.jetbrains.anko.noAnimation
 import org.jetbrains.anko.support.v4.browse
 import org.jetbrains.anko.support.v4.intentFor
 import org.jetbrains.anko.support.v4.share
@@ -220,7 +218,6 @@ class WatchFragment : Fragment() {
                     button_quality.isEnabled = true
                     if (subtitleData.isNotEmpty())
                         button_subtitles.isEnabled = true
-                    button_comment.isEnabled = true
                     exo_fullscreen.isEnabled = true
                     isPreparing = false
                     enableDoubleTapSeek()
@@ -260,7 +257,6 @@ class WatchFragment : Fragment() {
                 button_lang.isEnabled = false
                 button_quality.isEnabled = false
                 button_subtitles.isEnabled = false
-                button_comment.isEnabled = false
             }
 
             override fun onPositionDiscontinuity(reason: Int) {}
@@ -332,7 +328,6 @@ class WatchFragment : Fragment() {
             button_lang.isVisible = false
             button_quality.isVisible = false
             button_subtitles.isVisible = false
-            button_comment.isVisible = false
             navigation.menu.removeItem(R.id.cast)
             navigation.menu.removeItem(R.id.episodes)
             setupSource()
@@ -382,8 +377,12 @@ class WatchFragment : Fragment() {
 
     private fun loadIndependentData() {
         watchViewModel.fetchActors(movie.adjaraId)
-        watchViewModel.actorList.observeOnce(viewLifecycleOwner, Observer {
-            setupCast(it)
+        watchViewModel.actorList.observeOnce(viewLifecycleOwner, Observer { cast ->
+            if (cast != null) {
+                setupCast(cast)
+            } else {
+                navigation.menu.removeItem(R.id.cast)
+            }
         })
         genres = movie.genres?.data?.map { it.primaryName }?.toCommaList().toString()
         setupMovieInformation()
@@ -659,10 +658,6 @@ class WatchFragment : Fragment() {
                     restartPlayer()
                 }
             }
-        }
-        button_comment.setOnClickListener {
-            stillInApp = true
-            startActivity(intentFor<CommentsActivity>("id" to movie.id).noAnimation())
         }
         navigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {

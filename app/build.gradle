@@ -127,5 +127,5 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:3.1.1'
     implementation 'com.afollestad.assent:core:3.0.0-RC4'
     implementation 'com.github.zerobranch:android-remote-debugger:1.0.0'
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
+    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 }

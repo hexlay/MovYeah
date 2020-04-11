@@ -135,14 +135,6 @@
                             android:src="@drawable/ic_download"
                             android:visibility="gone" />
 
-                        <ImageButton
-                            android:id="@+id/button_comment"
-                            style="?attr/actionButtonStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_comments"
-                            android:visibility="gone" />
-
                     </LinearLayout>
 
                     <TextView

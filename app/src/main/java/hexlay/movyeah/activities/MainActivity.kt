@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
+import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
@@ -51,6 +52,7 @@ class MainActivity : AbsWatchModeActivity() {
         initSync()
         initDarkMode()
         initStarterData()
+        initHistory()
     }
 
     private fun initCategories() {
@@ -77,6 +79,11 @@ class MainActivity : AbsWatchModeActivity() {
             }
         }
         delegate.applyDayNight()
+    }
+
+    private fun initHistory() {
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, preferenceHelper?.searchHistory!!.toTypedArray())
+        toolbar_search.setAdapter(adapter)
     }
 
     private fun initToolbar() {
@@ -120,6 +127,8 @@ class MainActivity : AbsWatchModeActivity() {
                     if (event == null || !event.isShiftPressed) {
                         val searchText = toolbar_search.text.toString()
                         searchFragment?.search(searchText)
+                        preferenceHelper?.addSearchHistory(searchText)
+                        initHistory()
                         toolbar_search.hideKeyboard()
                         return@setOnEditorActionListener true
                     }
