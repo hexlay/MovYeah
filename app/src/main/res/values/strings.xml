@@ -51,9 +51,9 @@
     <string name="news_watch">ნახვები: %s</string>
 
     <!-- Filter -->
-    <string name="filter_year">აირჩიეთ წელი</string>
-    <string name="filter_category">აირჩიეთ კატეგორია</string>
-    <string name="filter_change_lang">ენის შეცვლა</string>
+    <string name="filter_change_year">აირჩიეთ წელი</string>
+    <string name="filter_change_category">აირჩიეთ კატეგორია</string>
+    <string name="filter_change_lang">აირჩიეთ ენა</string>
     <string name="filter_change_sort">სორტირება</string>
 
     <!-- Fragment: Main -->
@@ -65,7 +65,7 @@
 
     <!-- Menus -->
     <string name="menu_info">ინფორმაცია</string>
-    <string name="menu_series">სერიები</string>
+    <string name="menu_series">სერიალები</string>
     <string name="menu_movies">ფილმები</string>
     <string name="menu_favorites">ფავორიტები</string>
     <string name="menu_downloads">გადმოწერები</string>

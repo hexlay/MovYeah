@@ -62,7 +62,7 @@ class FilterFragment : BottomSheetDialogFragment() {
         start_year.text = startYear.toString()
         start_year.setOnClickListener {
             MaterialDialog(requireContext()).show {
-                title(R.string.filter_year)
+                title(R.string.filter_change_year)
                 listItems(items = yearList) { _, index, _ ->
                     startYear = yearList[index].toInt()
                     setStartYear(yearList[index])
@@ -75,7 +75,7 @@ class FilterFragment : BottomSheetDialogFragment() {
         end_year.text = endYear.toString()
         end_year.setOnClickListener {
             MaterialDialog(requireContext()).show {
-                title(R.string.filter_year)
+                title(R.string.filter_change_year)
                 listItems(items = endYears) { _, index, _ ->
                     endYear = endYears[index].toInt()
                     setEndYear(endYears[index])

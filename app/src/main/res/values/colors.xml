@@ -20,4 +20,17 @@
     <color name="overlay_center">#A6000000</color>
     <color name="fontWhiteEnable">#EEEEEE</color>
     <color name="fontBlackEnable">#424242</color>
+
+    <!-- Android TV -->
+    <color name="background_gradient_start">#000000</color>
+    <color name="background_gradient_end">#DDDDDD</color>
+    <color name="fastlane_background">#B31976D2</color>
+    <color name="search_opaque">#1976D2</color>
+    <color name="default_background">#3d3d3d</color>
+    <color name="default_background2">#9E9E9E</color>
+    <color name="icon_background">#4A4F51</color>
+    <color name="icon_alt_background">#2A2F51</color>
+    <color name="guidance_title">#ffffa657</color>
+    <color name="guidance_breadcrumb">#DDDDDD</color>
+    <color name="guidance_description">#DDDDDD</color>
 </resources>

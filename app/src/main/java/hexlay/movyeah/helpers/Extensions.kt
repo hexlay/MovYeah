@@ -266,7 +266,7 @@ fun Fragment.requestPortrait() = requireActivity().requestPortrait()
 
 fun Fragment.requestLandscape() = requireActivity().requestLandscape()
 
-fun Fragment.requestPortraitForever()  = requireActivity().requestPortraitForever()
+fun Fragment.requestPortraitForever() = requireActivity().requestPortraitForever()
 
 fun Fragment.requestSensorForever() = requireActivity().requestSensorForever()
 

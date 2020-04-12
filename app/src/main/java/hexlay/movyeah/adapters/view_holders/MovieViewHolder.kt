@@ -4,7 +4,6 @@ import android.app.Activity
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.view.isVisible
 import com.afollestad.recyclical.ViewHolder
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.DetailActivity
@@ -32,10 +31,7 @@ class MovieViewHolder(itemView: View) : ViewHolder(itemView) {
         title.isSelected = true
         title.text = movie.getTitle()
         year.text = movie.year.toString()
-        if (movie.getRating("imdb").score > 0)
-            imdb.text = movie.getRating("imdb").score.toString()
-        else
-            imdb.isVisible = false
+        imdb.text = movie.getRating("imdb").score.toString()
         movie.getTruePoster()?.let { image.setUrl(it) }
         itemView.setOnClickListener {
             EventBus.getDefault().post(StartWatchingEvent(movie))
