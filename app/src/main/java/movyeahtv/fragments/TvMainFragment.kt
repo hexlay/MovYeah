@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
@@ -16,9 +17,15 @@ import hexlay.movyeah.helpers.getWindow
 import hexlay.movyeah.helpers.observeOnce
 import hexlay.movyeah.helpers.setDrawableFromUrl
 import hexlay.movyeah.models.movie.Movie
+import movyeahtv.fragments.preferences.LanguagePreferenceFragment
+import movyeahtv.fragments.preferences.YearPreferenceFragment
 import movyeahtv.models.PreferenceModel
+import movyeahtv.models.events.LanguageChangeEvent
+import movyeahtv.models.events.YearChangeEvent
 import movyeahtv.presenters.MoviePresenter
 import movyeahtv.presenters.PreferencePresenter
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import org.jetbrains.anko.support.v4.toast
 import java.util.*
 import kotlin.collections.ArrayList
@@ -29,7 +36,7 @@ class TvMainFragment : BrowseSupportFragment() {
     private val movieListViewModel by viewModels<MovieListViewModel>()
     private val dbMovieViewModel by viewModels<DbMovieViewModel>()
     private var mainPosition = 0
-    private var mainRow = 0
+    private var mainRow = 0L
     private var backgroundManager: BackgroundManager? = null
 
     private var mainAdapter: ArrayObjectAdapter? = null
@@ -37,17 +44,16 @@ class TvMainFragment : BrowseSupportFragment() {
     private var tvShowAdapter: ArrayObjectAdapter? = null
     private var favoriteAdapter: ArrayObjectAdapter? = null
 
-    private var moviesLoadOffset = 0
-    private var tvsLoadOffset = 0
+    private val perPage = 20
     private var moviesPage = 1
     private var tvsPage = 1
 
     // Filter attributes
-    var sortingMethod = "-upload_date"
-    var endYear = 0
-    var startYear = 0
-    var categories = ArrayList<String>()
-    var language: String? = null
+    private var sortingMethod = "-upload_date"
+    private var endYear = 0
+    private var startYear = 0
+    private var categories = ArrayList<String>()
+    private var language: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,11 +62,13 @@ class TvMainFragment : BrowseSupportFragment() {
         backgroundManager = BackgroundManager.getInstance(requireActivity())
         if (!backgroundManager!!.isAttached)
             backgroundManager!!.attach(getWindow())
+        EventBus.getDefault().register(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initUi()
+        initAdapters()
         initRows()
         initData()
     }
@@ -92,7 +100,7 @@ class TvMainFragment : BrowseSupportFragment() {
         })
     }
 
-    private fun fetchTvs() {
+    private fun fetchSeries() {
         movieListViewModel.fetchMovies(
                 page = tvsPage,
                 filtersType = "series",
@@ -111,21 +119,23 @@ class TvMainFragment : BrowseSupportFragment() {
 
     private fun initData() {
         fetchMovies()
-        fetchTvs()
+        fetchSeries()
         onItemViewSelectedListener = OnItemViewSelectedListener { _, item, _, row ->
-            mainRow = row.id.toInt()
+            mainRow = row.id
             when (mainRow) {
-                0 -> {
+                0L -> {
                     val position = movieAdapter?.indexOf(item)!!
-                    if (position > moviesLoadOffset - 5) {
+                    val page = ((position + 1) / perPage) + 1
+                    if (position > 0 && page == moviesPage) {
                         fetchMovies()
                     }
                     mainPosition = position
                 }
-                1 -> {
+                1L -> {
                     val position = tvShowAdapter?.indexOf(item)!!
-                    if (position > tvsLoadOffset - 5) {
-                        fetchTvs()
+                    val page = ((position + 1) / perPage) + 1
+                    if (position > 0 && page == tvsPage) {
+                        fetchSeries()
                     }
                     mainPosition = position
                 }
@@ -139,7 +149,6 @@ class TvMainFragment : BrowseSupportFragment() {
     }
 
     private fun initRows() {
-        initAdapters()
         val movieHeader = HeaderItem(0, getString(R.string.menu_movies))
         val tvsHeader = HeaderItem(1, getString(R.string.menu_series))
         val preferenceHeader = HeaderItem(2, getString(R.string.settings_title))
@@ -164,42 +173,90 @@ class TvMainFragment : BrowseSupportFragment() {
     }
 
     private fun setupPreferenceAdapter(): ArrayObjectAdapter {
+        val preferences = arrayOf(
+                PreferenceModel(
+                        getString(R.string.filter_change_lang),
+                        "preference_language",
+                        LanguagePreferenceFragment.newInstance(getString(R.string.filter_change_lang))
+                ),
+                PreferenceModel(
+                        getString(R.string.filter_change_category),
+                        "preference_category",
+                        Fragment()
+                ),
+                PreferenceModel(
+                        getString(R.string.filter_change_year),
+                        "preference_year",
+                        YearPreferenceFragment.newInstance(getString(R.string.filter_change_year))
+                ),
+                PreferenceModel(
+                        getString(R.string.filter_change_sort),
+                        "preference_sort",
+                        Fragment()
+                ),
+                PreferenceModel(
+                        getString(R.string.settings_about),
+                        "preference_about",
+                        AboutFragment()
+                )
+        )
         val preferenceAdapter = ArrayObjectAdapter(PreferencePresenter(requireContext()))
-        preferenceAdapter.add(PreferenceModel(getString(R.string.filter_change_lang), 1))
-        preferenceAdapter.add(PreferenceModel(getString(R.string.filter_change_category), 2))
-        preferenceAdapter.add(PreferenceModel(getString(R.string.filter_change_year), 3))
-        preferenceAdapter.add(PreferenceModel(getString(R.string.filter_change_sort), 4))
+        preferences.forEach {
+            preferenceAdapter.add(it)
+        }
         return preferenceAdapter
+    }
+
+    @Subscribe
+    fun listenYearChange(event: YearChangeEvent) {
+        val pStartYear = startYear
+        val pEndYear = endYear
+        startYear = event.startYear
+        endYear = event.endYear
+        if (pStartYear != startYear || pEndYear != endYear) {
+            resetList()
+        }
+    }
+
+    @Subscribe
+    fun listenLanguageChange(event: LanguageChangeEvent) {
+        val pLanguage = language
+        language = if (event.language == "ALL") {
+            null
+        } else {
+            event.language
+        }
+        if (pLanguage != language) {
+            resetList()
+        }
+    }
+
+    private fun resetList() {
+        moviesPage = 1
+        tvsPage = 1
+        movieAdapter?.clear()
+        tvShowAdapter?.clear()
+        fetchMovies()
+        fetchSeries()
     }
 
     private fun handleMovies(dataList: List<Movie>) {
         if (dataList.isNotEmpty()) {
-            for (model in dataList) {
-                movieAdapter?.add(model)
-            }
-            if (moviesLoadOffset > 0) {
-                val listRow = mainAdapter?.get(0) as ListRow
-                val listRowAdapter = listRow.adapter as ArrayObjectAdapter
-                listRowAdapter.notifyArrayItemRangeChanged(moviesLoadOffset, listRowAdapter.size())
-            }
+            movieAdapter?.addAll(movieAdapter!!.size(), dataList)
             moviesPage++
-            moviesLoadOffset += 20
         }
     }
 
     private fun handleTvs(dataList: List<Movie>) {
         if (dataList.isNotEmpty()) {
-            for (model in dataList) {
-                tvShowAdapter?.add(model)
-            }
-            if (tvsLoadOffset > 0) {
-                val listRow = mainAdapter?.get(1) as ListRow
-                val listRowAdapter = listRow.adapter as ArrayObjectAdapter
-                listRowAdapter.notifyArrayItemRangeChanged(moviesLoadOffset, listRowAdapter.size())
-            }
+            tvShowAdapter?.addAll(tvShowAdapter!!.size(), dataList)
             tvsPage++
-            tvsLoadOffset += 20
         }
+    }
+
+    override fun onDestroyView() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroyView()
     }
 
 }

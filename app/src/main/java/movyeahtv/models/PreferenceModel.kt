@@ -1,3 +1,5 @@
 package movyeahtv.models
 
-data class PreferenceModel(var title: String, var type: Int)
+import androidx.fragment.app.Fragment
+
+data class PreferenceModel(val title: String, val key: String, val fragment: Fragment)

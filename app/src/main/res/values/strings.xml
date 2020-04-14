@@ -8,6 +8,7 @@
     <string name="loading_dows_fail">გადმოწერები ვერ მოიძებნა</string>
     <string name="scroll_up">ზემოთ ასვლა</string>
     <string name="search">ძებნა</string>
+    <string name="back">უკან</string>
     <string name="search_text">შეიყვანეთ საძიებო სიტყვა</string>
     <string name="yes">კი</string>
     <string name="no">არა</string>
@@ -20,6 +21,7 @@
     <!-- About -->
     <string name="about_developer">Hexlay</string>
     <string name="about_resources">Made possible with ↓</string>
+    <string name="about_resources_tv">Made possible with →</string>
 
     <!-- Fragment: Watch -->
     <string name="full_comments">კომენტარები</string>

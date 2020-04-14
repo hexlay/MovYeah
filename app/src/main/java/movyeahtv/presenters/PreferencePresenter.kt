@@ -9,6 +9,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.leanback.widget.Presenter
 import movyeahtv.models.PreferenceModel
+import movyeahtv.models.events.StartPreferenceEvent
+import org.greenrobot.eventbus.EventBus
 
 
 class PreferencePresenter(private val context: Context) : Presenter() {
@@ -32,16 +34,14 @@ class PreferencePresenter(private val context: Context) : Presenter() {
 
     override fun onBindViewHolder(viewHolder: Presenter.ViewHolder, item: Any?) {
         val holder = viewHolder as ViewHolder
-        val (title, type) = item as PreferenceModel
-        holder.preference.text = title
+        val preference = item as PreferenceModel
+        holder.preference.text = preference.title
         holder.preference.setOnClickListener {
-
+            EventBus.getDefault().post(StartPreferenceEvent(preference.key, preference.fragment))
         }
     }
 
-    override fun onUnbindViewHolder(viewHolder: Presenter.ViewHolder) {
-        TODO("Not yet implemented")
-    }
+    override fun onUnbindViewHolder(viewHolder: Presenter.ViewHolder) {}
 
 
 }
