@@ -5,19 +5,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
 import hexlay.movyeah.R
-import movyeahtv.fragments.TvMainFragment
 import movyeahtv.models.events.StartPreferenceEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
-
-class TvMainActivity : FragmentActivity() {
+class TvWatchActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.tv_activity)
+        val watchFragment = Fragment()
         supportFragmentManager.commit {
-            replace(android.R.id.content, TvMainFragment(), "main")
+            replace(android.R.id.content, watchFragment, "watch")
         }
     }
 
@@ -29,7 +28,7 @@ class TvMainActivity : FragmentActivity() {
 
     private fun addFragment(key: String, fragment: Fragment) {
         supportFragmentManager.commit {
-            addToBackStack("main")
+            addToBackStack("watch")
             add(android.R.id.content, fragment, key)
         }
     }

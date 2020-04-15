@@ -16,7 +16,7 @@ import hexlay.movyeah.models.movie.Movie
 import movyeahtv.presenters.MoviePresenter
 
 
-class SearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchResultProvider {
+class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchResultProvider {
 
     private val movieListViewModel by viewModels<MovieListViewModel>()
     private var backgroundManager: BackgroundManager? = null

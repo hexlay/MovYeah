@@ -6,7 +6,7 @@ import androidx.leanback.widget.GuidanceStylist.Guidance
 import androidx.leanback.widget.GuidedAction
 import hexlay.movyeah.R
 
-class AboutFragment : GuidedStepSupportFragment() {
+class TvAboutFragment : GuidedStepSupportFragment() {
 
     override fun onCreateGuidance(savedInstanceState: Bundle?): Guidance {
         return Guidance(getString(R.string.app_name), getString(R.string.about_resources_tv), getString(R.string.about_developer), null)

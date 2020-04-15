@@ -201,7 +201,7 @@ class TvMainFragment : BrowseSupportFragment() {
                 PreferenceModel(
                         getString(R.string.settings_about),
                         "preference_about",
-                        AboutFragment()
+                        TvAboutFragment()
                 )
         )
         val preferenceAdapter = ArrayObjectAdapter(PreferencePresenter(requireContext()))
