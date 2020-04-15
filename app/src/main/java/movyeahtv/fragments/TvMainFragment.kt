@@ -12,29 +12,32 @@ import androidx.leanback.widget.*
 import androidx.lifecycle.Observer
 import hexlay.movyeah.R
 import hexlay.movyeah.api.view_models.MovieListViewModel
+import hexlay.movyeah.database.view_models.DbCategoryViewModel
 import hexlay.movyeah.database.view_models.DbMovieViewModel
-import hexlay.movyeah.helpers.getWindow
-import hexlay.movyeah.helpers.observeOnce
-import hexlay.movyeah.helpers.setDrawableFromUrl
+import hexlay.movyeah.helpers.*
 import hexlay.movyeah.models.movie.Movie
+import hexlay.movyeah.models.movie.attributes.Category
+import movyeahtv.fragments.preferences.CategoryPreferenceFragment
 import movyeahtv.fragments.preferences.LanguagePreferenceFragment
+import movyeahtv.fragments.preferences.SortPreferenceFragment
 import movyeahtv.fragments.preferences.YearPreferenceFragment
 import movyeahtv.models.PreferenceModel
+import movyeahtv.models.events.CategoryChangeEvent
 import movyeahtv.models.events.LanguageChangeEvent
+import movyeahtv.models.events.SortChangeEvent
 import movyeahtv.models.events.YearChangeEvent
 import movyeahtv.presenters.MoviePresenter
 import movyeahtv.presenters.PreferencePresenter
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.jetbrains.anko.support.v4.toast
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 class TvMainFragment : BrowseSupportFragment() {
 
     private val movieListViewModel by viewModels<MovieListViewModel>()
     private val dbMovieViewModel by viewModels<DbMovieViewModel>()
+    private val dbCategories by viewModels<DbCategoryViewModel>()
     private var mainPosition = 0
     private var mainRow = 0L
     private var backgroundManager: BackgroundManager? = null
@@ -57,8 +60,8 @@ class TvMainFragment : BrowseSupportFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startYear = 1900
-        endYear = Calendar.getInstance().get(Calendar.YEAR)
+        startYear = Constants.START_YEAR
+        endYear = Constants.END_YEAR
         backgroundManager = BackgroundManager.getInstance(requireActivity())
         if (!backgroundManager!!.isAttached)
             backgroundManager!!.attach(getWindow())
@@ -187,12 +190,12 @@ class TvMainFragment : BrowseSupportFragment() {
                 PreferenceModel(
                         getString(R.string.filter_change_year),
                         "preference_year",
-                        YearPreferenceFragment.newInstance(getString(R.string.filter_change_year))
+                        YearPreferenceFragment.newInstance(getString(R.string.filter_change_year), startYear, endYear)
                 ),
                 PreferenceModel(
                         getString(R.string.filter_change_sort),
                         "preference_sort",
-                        Fragment()
+                        SortPreferenceFragment.newInstance(getString(R.string.filter_change_sort))
                 ),
                 PreferenceModel(
                         getString(R.string.settings_about),
@@ -202,6 +205,14 @@ class TvMainFragment : BrowseSupportFragment() {
         )
         val preferenceAdapter = ArrayObjectAdapter(PreferencePresenter(requireContext()))
         preferences.forEach {
+            // Very bad approach. IDK any other way for GuidedFragment actions :(
+            if (it.key == "preference_category") {
+                dbCategories.getCategories()?.observeOnce(viewLifecycleOwner, Observer { dbCats ->
+                    val list = ArrayList<Category>()
+                    list.addAll(dbCats)
+                    it.fragment = CategoryPreferenceFragment.newInstance(getString(R.string.filter_change_category), categories, list)
+                })
+            }
             preferenceAdapter.add(it)
         }
         return preferenceAdapter
@@ -227,6 +238,24 @@ class TvMainFragment : BrowseSupportFragment() {
             event.language
         }
         if (pLanguage != language) {
+            resetList()
+        }
+    }
+
+    @Subscribe
+    fun listenSortChange(event: SortChangeEvent) {
+        val pSort = sortingMethod
+        sortingMethod = event.sort
+        if (pSort != sortingMethod) {
+            resetList()
+        }
+    }
+
+    @Subscribe
+    fun listenCategoryChange(event: CategoryChangeEvent) {
+        val pCategories = categories
+        categories = event.categories
+        if (pCategories.differsFrom(categories)) {
             resetList()
         }
     }

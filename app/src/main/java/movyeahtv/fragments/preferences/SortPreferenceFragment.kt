@@ -4,62 +4,53 @@ import android.os.Bundle
 import androidx.leanback.app.GuidedStepSupportFragment
 import androidx.leanback.widget.GuidanceStylist
 import androidx.leanback.widget.GuidedAction
-import hexlay.movyeah.R
-import hexlay.movyeah.helpers.translateLanguage
-import movyeahtv.models.events.LanguageChangeEvent
+import movyeahtv.models.events.SortChangeEvent
 import org.greenrobot.eventbus.EventBus
 
 
-class LanguagePreferenceFragment : GuidedStepSupportFragment() {
+class SortPreferenceFragment : GuidedStepSupportFragment() {
 
     private var title: String? = null
-    private var language = "ALL"
+    private var sort = "-upload_date"
 
     override fun onCreateGuidance(savedInstanceState: Bundle?): GuidanceStylist.Guidance {
-        return GuidanceStylist.Guidance(title, language.translateLanguage(requireContext()), "", null)
+        return GuidanceStylist.Guidance(title, "", "", null)
     }
 
     override fun onCreateActions(actions: MutableList<GuidedAction>, savedInstanceState: Bundle?) {
         actions.add(
                 GuidedAction.Builder(requireActivity())
                         .id(1L)
-                        .title("ყველა")
+                        .title("დამატების თარიღი")
                         .build()
         )
         actions.add(
                 GuidedAction.Builder(requireActivity())
                         .id(2L)
-                        .title(getString(R.string.full_geo))
+                        .title("IMDB რეიტინგი")
                         .build()
         )
         actions.add(
                 GuidedAction.Builder(requireActivity())
                         .id(3L)
-                        .title(getString(R.string.full_eng))
-                        .build()
-        )
-        actions.add(
-                GuidedAction.Builder(requireActivity())
-                        .id(4L)
-                        .title(getString(R.string.full_rus))
+                        .title("გამოშვების წელი")
                         .build()
         )
     }
 
     override fun onGuidedActionClicked(action: GuidedAction) {
-        language = when(action.id) {
-            2L -> "GEO"
-            3L -> "ENG"
-            4L -> "RUS"
-            else -> "ALL"
+        sort = when(action.id) {
+            2L -> "-imdb_rating"
+            3L -> "-year"
+            else -> "-upload_date"
         }
-        EventBus.getDefault().post(LanguageChangeEvent(language))
+        EventBus.getDefault().post(SortChangeEvent(sort))
         parentFragmentManager.popBackStack()
     }
 
     companion object {
-        fun newInstance(title: String): LanguagePreferenceFragment {
-            val fragment = LanguagePreferenceFragment()
+        fun newInstance(title: String): SortPreferenceFragment {
+            val fragment = SortPreferenceFragment()
             fragment.title = title
             return fragment
         }

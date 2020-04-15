@@ -5,9 +5,9 @@ import androidx.leanback.app.GuidedStepSupportFragment
 import androidx.leanback.widget.GuidanceStylist
 import androidx.leanback.widget.GuidedAction
 import hexlay.movyeah.R
+import hexlay.movyeah.helpers.Constants
 import movyeahtv.models.events.YearChangeEvent
 import org.greenrobot.eventbus.EventBus
-import java.util.*
 
 
 class YearPreferenceFragment : GuidedStepSupportFragment() {
@@ -18,11 +18,11 @@ class YearPreferenceFragment : GuidedStepSupportFragment() {
     private var endYear = 0
 
     override fun onCreateGuidance(savedInstanceState: Bundle?): GuidanceStylist.Guidance {
-        return GuidanceStylist.Guidance(getString(R.string.app_name), "", "", null)
+        return GuidanceStylist.Guidance(title, "", "", null)
     }
 
     override fun onCreateActions(actions: MutableList<GuidedAction>, savedInstanceState: Bundle?) {
-        val yearList = listOf(1900..Calendar.getInstance().get(Calendar.YEAR)).flatten().map {
+        val yearList = listOf(Constants.START_YEAR..Constants.END_YEAR).flatten().map {
             GuidedAction.Builder(requireActivity())
                     .id(it.toLong())
                     .title(it.toString())
@@ -31,21 +31,21 @@ class YearPreferenceFragment : GuidedStepSupportFragment() {
         actions.add(
                 GuidedAction.Builder(requireActivity())
                         .id(1L)
-                        .title("დასაწყისი")
+                        .title(startYear.toString())
                         .subActions(yearList)
                         .build()
         )
         actions.add(
                 GuidedAction.Builder(requireActivity())
                         .id(2L)
-                        .title("დასასრული")
+                        .title(endYear.toString())
                         .subActions(yearList.reversed())
                         .build()
         )
         actions.add(
                 GuidedAction.Builder(requireActivity())
                         .id(3L)
-                        .title("დადასტურება")
+                        .title(getString(R.string.done))
                         .build()
         )
     }
@@ -53,8 +53,12 @@ class YearPreferenceFragment : GuidedStepSupportFragment() {
     override fun onSubGuidedActionClicked(action: GuidedAction): Boolean {
         if (yearMode == 1) {
             startYear = action.id.toInt()
+            actions[0].title = startYear.toString()
+            notifyActionChanged(0)
         } else {
             endYear = action.id.toInt()
+            actions[1].title = endYear.toString()
+            notifyActionChanged(1)
         }
         return true
     }
@@ -69,9 +73,11 @@ class YearPreferenceFragment : GuidedStepSupportFragment() {
     }
 
     companion object {
-        fun newInstance(title: String): YearPreferenceFragment {
+        fun newInstance(title: String, startYear: Int, endYear: Int): YearPreferenceFragment {
             val fragment = YearPreferenceFragment()
             fragment.title = title
+            fragment.startYear = startYear
+            fragment.endYear = endYear
             return fragment
         }
     }

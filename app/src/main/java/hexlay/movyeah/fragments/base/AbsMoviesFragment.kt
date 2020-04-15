@@ -21,8 +21,6 @@ import hexlay.movyeah.helpers.*
 import hexlay.movyeah.models.movie.Movie
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.piece_scroll_up.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 abstract class AbsMoviesFragment : Fragment() {
 
@@ -54,8 +52,8 @@ abstract class AbsMoviesFragment : Fragment() {
     }
 
     protected open fun initFragment() {
-        startYear = 1900
-        endYear = Calendar.getInstance().get(Calendar.YEAR)
+        startYear = Constants.START_YEAR
+        endYear = Constants.END_YEAR
         initReloader()
         initRecyclerView()
         initFilter()

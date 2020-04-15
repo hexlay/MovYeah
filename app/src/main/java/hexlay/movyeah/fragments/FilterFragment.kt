@@ -17,11 +17,10 @@ import hexlay.movyeah.R
 import hexlay.movyeah.adapters.view_holders.CategoryViewHolder
 import hexlay.movyeah.database.view_models.DbCategoryViewModel
 import hexlay.movyeah.fragments.base.AbsMoviesFragment
+import hexlay.movyeah.helpers.Constants
 import hexlay.movyeah.helpers.observeOnce
 import hexlay.movyeah.models.movie.attributes.Category
 import kotlinx.android.synthetic.main.fragment_filter.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 class FilterFragment : BottomSheetDialogFragment() {
 
@@ -46,8 +45,8 @@ class FilterFragment : BottomSheetDialogFragment() {
     }
 
     private fun setupFilter() {
-        startYear = 1900
-        endYear = Calendar.getInstance().get(Calendar.YEAR)
+        startYear = Constants.START_YEAR
+        endYear = Constants.END_YEAR
         onFilterOpen()
     }
 
@@ -58,7 +57,7 @@ class FilterFragment : BottomSheetDialogFragment() {
 
     private fun setupYears() {
         // Start year
-        val yearList = listOf(1900..Calendar.getInstance().get(Calendar.YEAR)).flatten().map { it.toString() }
+        val yearList = listOf(Constants.START_YEAR..Constants.END_YEAR).flatten().map { it.toString() }
         start_year.text = startYear.toString()
         start_year.setOnClickListener {
             MaterialDialog(requireContext()).show {

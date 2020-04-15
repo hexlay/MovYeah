@@ -1,8 +1,12 @@
 package hexlay.movyeah.helpers
 
 import android.os.Build
+import java.util.*
 
 object Constants {
+
+    const val START_YEAR = 1920
+    val END_YEAR = Calendar.getInstance().get(Calendar.YEAR)
 
     // PIP
     const val CONTROL_TYPE_PLAY = 1
