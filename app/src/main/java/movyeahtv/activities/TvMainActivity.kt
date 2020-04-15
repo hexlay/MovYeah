@@ -1,6 +1,7 @@
 package movyeahtv.activities
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
 import hexlay.movyeah.R
@@ -23,9 +24,13 @@ class TvMainActivity : FragmentActivity() {
     @Subscribe
     fun listenPreferenceAdd(event: StartPreferenceEvent) {
         removeFragment(event.key)
+        addFragment(event.key, event.fragment)
+    }
+
+    private fun addFragment(key: String, fragment: Fragment) {
         supportFragmentManager.commit {
             addToBackStack("main")
-            add(android.R.id.content, event.fragment, event.key)
+            add(android.R.id.content, fragment, key)
         }
     }
 
@@ -44,11 +49,6 @@ class TvMainActivity : FragmentActivity() {
         } else {
             super.onBackPressed()
         }
-    }
-
-    override fun onSearchRequested(): Boolean {
-        //startActivity(new Intent(this, SearchActivity.class));
-        return true
     }
 
     public override fun onStart() {

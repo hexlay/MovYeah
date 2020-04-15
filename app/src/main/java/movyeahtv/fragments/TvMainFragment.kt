@@ -17,6 +17,7 @@ import hexlay.movyeah.database.view_models.DbMovieViewModel
 import hexlay.movyeah.helpers.*
 import hexlay.movyeah.models.movie.Movie
 import hexlay.movyeah.models.movie.attributes.Category
+import movyeahtv.activities.TvSearchActivity
 import movyeahtv.fragments.preferences.CategoryPreferenceFragment
 import movyeahtv.fragments.preferences.LanguagePreferenceFragment
 import movyeahtv.fragments.preferences.SortPreferenceFragment
@@ -30,7 +31,7 @@ import movyeahtv.presenters.MoviePresenter
 import movyeahtv.presenters.PreferencePresenter
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import org.jetbrains.anko.support.v4.toast
+import org.jetbrains.anko.support.v4.startActivity
 
 
 class TvMainFragment : BrowseSupportFragment() {
@@ -44,7 +45,7 @@ class TvMainFragment : BrowseSupportFragment() {
 
     private var mainAdapter: ArrayObjectAdapter? = null
     private var movieAdapter: ArrayObjectAdapter? = null
-    private var tvShowAdapter: ArrayObjectAdapter? = null
+    private var seriesAdapter: ArrayObjectAdapter? = null
     private var favoriteAdapter: ArrayObjectAdapter? = null
 
     private val perPage = 20
@@ -83,7 +84,7 @@ class TvMainFragment : BrowseSupportFragment() {
         brandColor = ContextCompat.getColor(requireContext(), R.color.fastlane_background)
         searchAffordanceColor = Color.DKGRAY
         setOnSearchClickedListener {
-            toast("Soon, eh")
+            startActivity<TvSearchActivity>()
         }
     }
 
@@ -135,7 +136,7 @@ class TvMainFragment : BrowseSupportFragment() {
                     mainPosition = position
                 }
                 1L -> {
-                    val position = tvShowAdapter?.indexOf(item)!!
+                    val position = seriesAdapter?.indexOf(item)!!
                     val page = ((position + 1) / perPage) + 1
                     if (position > 0 && page == tvsPage) {
                         fetchSeries()
@@ -162,7 +163,7 @@ class TvMainFragment : BrowseSupportFragment() {
             }
         })
         mainAdapter?.add(ListRow(movieHeader, movieAdapter))
-        mainAdapter?.add(ListRow(tvsHeader, tvShowAdapter))
+        mainAdapter?.add(ListRow(tvsHeader, seriesAdapter))
         mainAdapter?.add(ListRow(favoriteHeader, favoriteAdapter))
         mainAdapter?.add(ListRow(preferenceHeader, setupPreferenceAdapter()))
         adapter = mainAdapter
@@ -171,7 +172,7 @@ class TvMainFragment : BrowseSupportFragment() {
     private fun initAdapters() {
         mainAdapter = ArrayObjectAdapter(ListRowPresenter())
         movieAdapter = ArrayObjectAdapter(MoviePresenter(requireContext()))
-        tvShowAdapter = ArrayObjectAdapter(MoviePresenter(requireContext()))
+        seriesAdapter = ArrayObjectAdapter(MoviePresenter(requireContext()))
         favoriteAdapter = ArrayObjectAdapter(MoviePresenter(requireContext()))
     }
 
@@ -264,7 +265,7 @@ class TvMainFragment : BrowseSupportFragment() {
         moviesPage = 1
         tvsPage = 1
         movieAdapter?.clear()
-        tvShowAdapter?.clear()
+        seriesAdapter?.clear()
         fetchMovies()
         fetchSeries()
     }
@@ -278,7 +279,7 @@ class TvMainFragment : BrowseSupportFragment() {
 
     private fun handleTvs(dataList: List<Movie>) {
         if (dataList.isNotEmpty()) {
-            tvShowAdapter?.addAll(tvShowAdapter!!.size(), dataList)
+            seriesAdapter?.addAll(seriesAdapter!!.size(), dataList)
             tvsPage++
         }
     }
