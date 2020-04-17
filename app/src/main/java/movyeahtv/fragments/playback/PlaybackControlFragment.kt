@@ -85,7 +85,7 @@ class PlaybackControlFragment : PlaybackSupportFragment() {
                     reference.get()!!.startLanguageFragment()
                 }
                 3L -> {
-                    reference.get()!!.startLanguageFragment()
+                    reference.get()!!.startSubtitleFragment()
                 }
             }
         }

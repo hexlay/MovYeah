@@ -51,6 +51,12 @@ class TvAboutFragment : GuidedStepSupportFragment() {
         )
         actions.add(
                 GuidedAction.Builder(requireActivity())
+                        .title("Inline Activity Result")
+                        .description("Aidan Follestad")
+                        .build()
+        )
+        actions.add(
+                GuidedAction.Builder(requireActivity())
                         .title("EventBus")
                         .description("Markus Junginger")
                         .build()

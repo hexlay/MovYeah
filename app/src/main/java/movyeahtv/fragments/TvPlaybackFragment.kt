@@ -31,12 +31,15 @@ import kotlinx.android.synthetic.main.tv_fragment_playback.*
 import movyeahtv.fragments.playback.PlaybackControlFragment
 import movyeahtv.fragments.watch.LanguageWatchFragment
 import movyeahtv.fragments.watch.QualityWatchFragment
+import movyeahtv.fragments.watch.SubtitleWatchFragment
 import movyeahtv.models.PlaybackModel
 import movyeahtv.models.events.StartFragmentEvent
 import movyeahtv.models.events.watch.WatchLanguageChangeEvent
 import movyeahtv.models.events.watch.WatchQualityChangeEvent
+import movyeahtv.models.events.watch.WatchSubtitleChangeEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.jetbrains.anko.support.v4.toast
 import java.util.*
 
 class TvPlaybackFragment : Fragment() {
@@ -223,11 +226,17 @@ class TvPlaybackFragment : Fragment() {
         EventBus.getDefault().post(StartFragmentEvent("full_quality", QualityWatchFragment.newInstance(qualityKey, list)))
     }
 
+    fun startSubtitleFragment() {
+        val list = subtitleData[languageKey] ?: listOf()
+        if (list.isNotEmpty()) {
+            EventBus.getDefault().post(StartFragmentEvent("full_quality", SubtitleWatchFragment.newInstance(subtitleKey, list)))
+        } else {
+            toast("Subtitles not found")
+        }
+    }
+
     private fun restartPlayer() {
         if (exoPlayer != null) {
-            if (subtitleData.isNotEmpty()) {
-                //setupMovieSubtitles()
-            }
             pausePlayer()
             exoPlayer!!.stop()
             exoPlayer!!.seekTo(0)
@@ -279,6 +288,12 @@ class TvPlaybackFragment : Fragment() {
     @Subscribe
     fun listenQualityChange(event: WatchQualityChangeEvent) {
         qualityKey = event.quality
+        restartPlayer()
+    }
+
+    @Subscribe
+    fun listenSubtitleChange(event: WatchSubtitleChangeEvent) {
+        subtitleKey = event.subtitle
         restartPlayer()
     }
 
