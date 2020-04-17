@@ -5,18 +5,16 @@ import androidx.leanback.app.GuidedStepSupportFragment
 import androidx.leanback.widget.GuidanceStylist
 import androidx.leanback.widget.GuidedAction
 import hexlay.movyeah.R
-import hexlay.movyeah.helpers.translateLanguage
-import movyeahtv.models.events.LanguageChangeEvent
+import movyeahtv.models.events.filter.LanguageChangeEvent
 import org.greenrobot.eventbus.EventBus
 
 
 class LanguagePreferenceFragment : GuidedStepSupportFragment() {
 
-    private var title: String? = null
     private var language = "ALL"
 
     override fun onCreateGuidance(savedInstanceState: Bundle?): GuidanceStylist.Guidance {
-        return GuidanceStylist.Guidance(title, language.translateLanguage(requireContext()), "", null)
+        return GuidanceStylist.Guidance(getString(R.string.filter_change_lang), "", "", null)
     }
 
     override fun onCreateActions(actions: MutableList<GuidedAction>, savedInstanceState: Bundle?) {
@@ -55,14 +53,6 @@ class LanguagePreferenceFragment : GuidedStepSupportFragment() {
         }
         EventBus.getDefault().post(LanguageChangeEvent(language))
         parentFragmentManager.popBackStack()
-    }
-
-    companion object {
-        fun newInstance(title: String): LanguagePreferenceFragment {
-            val fragment = LanguagePreferenceFragment()
-            fragment.title = title
-            return fragment
-        }
     }
 
 }

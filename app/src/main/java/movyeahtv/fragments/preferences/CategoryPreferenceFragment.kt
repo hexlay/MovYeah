@@ -6,17 +6,16 @@ import androidx.leanback.widget.GuidanceStylist
 import androidx.leanback.widget.GuidedAction
 import hexlay.movyeah.R
 import hexlay.movyeah.models.movie.attributes.Category
-import movyeahtv.models.events.CategoryChangeEvent
+import movyeahtv.models.events.filter.CategoryChangeEvent
 import org.greenrobot.eventbus.EventBus
 
 class CategoryPreferenceFragment : GuidedStepSupportFragment() {
 
-    private var title: String? = null
     private var categoriesList = ArrayList<Category>()
     private var categories = ArrayList<String>()
 
     override fun onCreateGuidance(savedInstanceState: Bundle?): GuidanceStylist.Guidance {
-        return GuidanceStylist.Guidance(title, "", "", null)
+        return GuidanceStylist.Guidance(getString(R.string.filter_change_category), "", "", null)
     }
 
     override fun onCreateActions(actions: MutableList<GuidedAction>, savedInstanceState: Bundle?) {
@@ -54,9 +53,8 @@ class CategoryPreferenceFragment : GuidedStepSupportFragment() {
     }
 
     companion object {
-        fun newInstance(title: String, currentCats: ArrayList<String>, allCats: ArrayList<Category>): CategoryPreferenceFragment {
+        fun newInstance(currentCats: ArrayList<String>, allCats: ArrayList<Category>): CategoryPreferenceFragment {
             val fragment = CategoryPreferenceFragment()
-            fragment.title = title
             fragment.categories.addAll(currentCats)
             fragment.categoriesList.addAll(allCats)
             return fragment

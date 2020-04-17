@@ -6,19 +6,18 @@ import androidx.leanback.widget.GuidanceStylist
 import androidx.leanback.widget.GuidedAction
 import hexlay.movyeah.R
 import hexlay.movyeah.helpers.Constants
-import movyeahtv.models.events.YearChangeEvent
+import movyeahtv.models.events.filter.YearChangeEvent
 import org.greenrobot.eventbus.EventBus
 
 
 class YearPreferenceFragment : GuidedStepSupportFragment() {
 
-    private var title: String? = null
     private var yearMode = 0
     private var startYear = 0
     private var endYear = 0
 
     override fun onCreateGuidance(savedInstanceState: Bundle?): GuidanceStylist.Guidance {
-        return GuidanceStylist.Guidance(title, "", "", null)
+        return GuidanceStylist.Guidance(getString(R.string.filter_change_year), "", "", null)
     }
 
     override fun onCreateActions(actions: MutableList<GuidedAction>, savedInstanceState: Bundle?) {
@@ -73,9 +72,8 @@ class YearPreferenceFragment : GuidedStepSupportFragment() {
     }
 
     companion object {
-        fun newInstance(title: String, startYear: Int, endYear: Int): YearPreferenceFragment {
+        fun newInstance(startYear: Int, endYear: Int): YearPreferenceFragment {
             val fragment = YearPreferenceFragment()
-            fragment.title = title
             fragment.startYear = startYear
             fragment.endYear = endYear
             return fragment

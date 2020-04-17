@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.leanback.widget.Presenter
 import movyeahtv.models.PreferenceModel
-import movyeahtv.models.events.StartPreferenceEvent
+import movyeahtv.models.events.StartFragmentEvent
 import org.greenrobot.eventbus.EventBus
 
 
@@ -21,23 +21,24 @@ class PreferencePresenter(private val context: Context) : Presenter() {
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val view = TextView(context)
         view.layoutParams = ViewGroup.LayoutParams(315, 175)
         view.isFocusable = true
         view.isFocusableInTouchMode = true
+        view.setPadding(5, 5, 5, 5)
         view.setBackgroundColor(ContextCompat.getColor(context, hexlay.movyeah.R.color.default_background))
         view.setTextColor(Color.WHITE)
         view.gravity = Gravity.CENTER
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(viewHolder: Presenter.ViewHolder, item: Any?) {
+    override fun onBindViewHolder(viewHolder: Presenter.ViewHolder, item: Any) {
         val holder = viewHolder as ViewHolder
         val preference = item as PreferenceModel
         holder.preference.text = preference.title
         holder.preference.setOnClickListener {
-            EventBus.getDefault().post(StartPreferenceEvent(preference.key, preference.fragment))
+            EventBus.getDefault().post(StartFragmentEvent(preference.key, preference.fragment))
         }
     }
 

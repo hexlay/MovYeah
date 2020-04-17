@@ -8,6 +8,7 @@ import android.app.DownloadManager
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.graphics.drawable.Drawable
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Environment
@@ -82,6 +83,8 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observ
 }
 
 fun String.translateLanguage(context: Context): String {
+    if (this == "NONE")
+        return ""
     val name = "full_${this.toLowerCase(Locale.ENGLISH)}"
     val identifier = context.resources.getIdentifier(name, "string", context.packageName)
     return context.getString(identifier)
@@ -90,7 +93,8 @@ fun String.translateLanguage(context: Context): String {
 fun String.translateQuality(context: Context): String {
     return when (this) {
         "HIGH" -> context.getString(R.string.full_qual_hd)
-        else -> context.getString(R.string.full_qual_low)
+        "MEDIUM" -> context.getString(R.string.full_qual_low)
+        else -> ""
     }
 }
 
@@ -282,4 +286,6 @@ fun Fragment.getWindow(): Window = requireActivity().window
 
 fun Fragment.getDecorView(): View = getWindow().decorView
 
-fun Fragment.onBackPressed(): Unit = requireActivity().onBackPressed()
+fun Fragment.onBackPressed() = requireActivity().onBackPressed()
+
+fun Fragment.getDrawable(resId: Int): Drawable? = ContextCompat.getDrawable(requireContext(), resId)

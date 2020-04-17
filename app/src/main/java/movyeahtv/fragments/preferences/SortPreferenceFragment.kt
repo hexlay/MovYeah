@@ -4,17 +4,17 @@ import android.os.Bundle
 import androidx.leanback.app.GuidedStepSupportFragment
 import androidx.leanback.widget.GuidanceStylist
 import androidx.leanback.widget.GuidedAction
-import movyeahtv.models.events.SortChangeEvent
+import hexlay.movyeah.R
+import movyeahtv.models.events.filter.SortChangeEvent
 import org.greenrobot.eventbus.EventBus
 
 
 class SortPreferenceFragment : GuidedStepSupportFragment() {
 
-    private var title: String? = null
     private var sort = "-upload_date"
 
     override fun onCreateGuidance(savedInstanceState: Bundle?): GuidanceStylist.Guidance {
-        return GuidanceStylist.Guidance(title, "", "", null)
+        return GuidanceStylist.Guidance(getString(R.string.filter_change_sort), "", "", null)
     }
 
     override fun onCreateActions(actions: MutableList<GuidedAction>, savedInstanceState: Bundle?) {
@@ -46,14 +46,6 @@ class SortPreferenceFragment : GuidedStepSupportFragment() {
         }
         EventBus.getDefault().post(SortChangeEvent(sort))
         parentFragmentManager.popBackStack()
-    }
-
-    companion object {
-        fun newInstance(title: String): SortPreferenceFragment {
-            val fragment = SortPreferenceFragment()
-            fragment.title = title
-            return fragment
-        }
     }
 
 }

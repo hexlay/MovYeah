@@ -18,7 +18,6 @@ import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.util.isNotEmpty
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -123,7 +122,6 @@ class WatchFragment : Fragment() {
     private var isPreparing = true
     private var isSeeking = false
     private var isPlaying = false
-    private var isCritical = false
     private var onPause = false
     private var seekSaved: Long = 0
     private var seekSecForward: Long = 0
@@ -145,7 +143,6 @@ class WatchFragment : Fragment() {
             movie = savedInstanceState.getParcelable("movie")!!
         }
         isNetworkAvailable = isNetworkAvailable()
-        safeCheckMovie()
         initLayout()
         initFavorite()
         initPlayer()
@@ -160,7 +157,7 @@ class WatchFragment : Fragment() {
                 override fun onAnimationRepeat(animation: Animation?) {}
 
                 override fun onAnimationEnd(animation: Animation?) {
-                    loadData(movie.id)
+                    loadData()
                 }
 
                 override fun onAnimationStart(animation: Animation?) {}
@@ -226,8 +223,7 @@ class WatchFragment : Fragment() {
                     if (isInPIP)
                         setPipActions(Constants.CONTROL_TYPE_PAUSE)
                     isPlaying = true
-                    if (!playerInitialLaunch)
-                        playerInitialLaunch = true
+                    playerInitialLaunch = true
                     exoPlayer!!.playWhenReady = true
                     //requestAudioFocus()
                     if (isSeeking) {
@@ -250,7 +246,6 @@ class WatchFragment : Fragment() {
             override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {}
 
             override fun onPlayerError(error: ExoPlaybackException) {
-                isCritical = true
                 action_error.isVisible = true
                 action_holder.isVisible = false
                 exo_loading.isVisible = false
@@ -322,7 +317,7 @@ class WatchFragment : Fragment() {
         })
     }
 
-    private fun loadData(id: Int) {
+    private fun loadData() {
         loadIndependentData()
         if (!isNetworkAvailable) {
             button_lang.isVisible = false
@@ -351,7 +346,7 @@ class WatchFragment : Fragment() {
                 })
             } else {
                 navigation.menu.removeItem(R.id.episodes)
-                watchViewModel.fetchMovieFileData(id)
+                watchViewModel.fetchMovieFileData(movie.id)
                 watchViewModel.movieData.observeOnce(viewLifecycleOwner, Observer { episode ->
                     if (episode != null) {
                         fileData = episode.files.map { it.lang!! to it.files }.toMap()
@@ -388,10 +383,10 @@ class WatchFragment : Fragment() {
         setupMovieInformation()
     }
 
-    private fun setupMovie() {
+    private fun setupLanguageAndQuality() {
         languageKey = when {
-            fileData.containsKey(preferenceHelper.lang) -> {
-                preferenceHelper.lang
+            fileData.containsKey("GEO") -> {
+                "GEO"
             }
             fileData.containsKey("ENG") -> {
                 "ENG"
@@ -400,11 +395,15 @@ class WatchFragment : Fragment() {
                 fileData.keys.first()
             }
         }
-        qualityKey = if (fileData[languageKey]?.map { it.quality }?.contains(preferenceHelper.quality)!!) {
-            preferenceHelper.quality
+        qualityKey = if (fileData[languageKey]?.map { it.quality }?.contains("HIGH")!!) {
+            "HIGH"
         } else {
-            fileData[languageKey]?.get(0)?.quality!!
+            fileData[languageKey]?.first()?.quality!!
         }
+    }
+
+    private fun setupMovie() {
+        setupLanguageAndQuality()
         button_lang.text = languageKey.translateLanguage(requireContext())
         button_quality.text = qualityKey.translateQuality(requireContext())
         if (isNetworkAvailable) {
@@ -413,7 +412,7 @@ class WatchFragment : Fragment() {
         if (isInLandscape())
             modeLandscape()
         setupMovieSubtitles()
-        setupSource()
+        decideSubtitles()
     }
 
     private fun setupTvShow() {
@@ -436,26 +435,11 @@ class WatchFragment : Fragment() {
         dbEpisodes.insertEpisode(EpisodeCache(movie.id, episode, currentSeason))
         fileData = tvShowSeasons[currentSeason][episode].files.map { it.lang!! to it.files }.toMap()
         subtitleData = tvShowSeasons[currentSeason][episode].files.map { it.lang!! to it.subtitles }.toMap()
-        languageKey = when {
-            fileData.containsKey(preferenceHelper.lang) -> {
-                preferenceHelper.lang
-            }
-            fileData.containsKey("ENG") -> {
-                "ENG"
-            }
-            else -> {
-                fileData.keys.first()
-            }
-        }
-        qualityKey = if (fileData[languageKey]?.map { it.quality }?.contains(preferenceHelper.quality)!!) {
-            preferenceHelper.quality
-        } else {
-            fileData[languageKey]?.get(0)?.quality!!
-        }
+        setupLanguageAndQuality()
         button_lang.text = languageKey.translateLanguage(requireContext())
         button_quality.text = qualityKey.translateQuality(requireContext())
         setupMovieSubtitles()
-        setupSource()
+        decideSubtitles()
     }
 
     private fun setupTvShowSeasons() {
@@ -559,12 +543,12 @@ class WatchFragment : Fragment() {
     private fun initFavorite() {
         dbMovie.getMovie(movie.id)?.observe(viewLifecycleOwner, Observer {
             if (it == null) {
-                button_favorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_empty))
+                button_favorite.setImageDrawable(getDrawable(R.drawable.ic_favorite_empty))
                 button_favorite.setOnClickListener {
                     dbMovie.insertMovie(movie)
                 }
             } else {
-                button_favorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite))
+                button_favorite.setImageDrawable(getDrawable(R.drawable.ic_favorite))
                 button_favorite.setOnClickListener {
                     dbMovie.deleteMovie(movie)
                 }
@@ -709,7 +693,7 @@ class WatchFragment : Fragment() {
     }
 
     private fun setFullscreenDrawable(drawableId: Int) {
-        exo_fullscreen.setImageDrawable(ContextCompat.getDrawable(requireContext(), drawableId))
+        exo_fullscreen.setImageDrawable(getDrawable(drawableId))
     }
 
     private fun modeLandscape() {
@@ -759,7 +743,7 @@ class WatchFragment : Fragment() {
             val dataSourceFactory = DefaultDataSourceFactory(context, null, httpDataSourceFactory)
             val mediaSource = ExtractorMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(Uri.parse(generatePlayerUrl()))
-            exoPlayer?.prepare(mediaSource)
+            exoPlayer!!.prepare(mediaSource)
         }
     }
 
@@ -775,7 +759,7 @@ class WatchFragment : Fragment() {
             val textFormat = Format.createTextSampleFormat(null, MimeTypes.TEXT_VTT, null, Format.NO_VALUE, C.SELECTION_FLAG_DEFAULT, null, null, 0)
             val subtitleSource = SingleSampleMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(generateSubtitleUrl()), textFormat, C.TIME_UNSET)
             val mediaSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(generatePlayerUrl()))
-            exoPlayer?.prepare(MergingMediaSource(mediaSource, subtitleSource))
+            exoPlayer!!.prepare(MergingMediaSource(mediaSource, subtitleSource))
         }
     }
 
@@ -785,17 +769,13 @@ class WatchFragment : Fragment() {
     }
 
     private fun pausePlayer() {
-        if (exoPlayer != null) {
-            exoPlayer!!.playWhenReady = false
-            exoPlayer!!.playbackState
-        }
+        exoPlayer?.playWhenReady = false
+        exoPlayer?.playbackState
     }
 
     private fun startPlayer() {
-        if (exoPlayer != null) {
-            exoPlayer!!.playWhenReady = true
-            exoPlayer!!.playbackState
-        }
+        exoPlayer?.playWhenReady = true
+        exoPlayer?.playbackState
     }
 
     private fun restartPlayer() {
@@ -895,13 +875,7 @@ class WatchFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        safeCheckMovie()
         outState.putParcelable("movie", movie)
-    }
-
-    private fun safeCheckMovie() {
-        if (!::movie.isInitialized)
-            onDetach()
     }
 
     fun pipStartPlayer() {

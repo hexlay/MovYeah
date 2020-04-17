@@ -107,6 +107,9 @@
         <activity
             android:name="movyeahtv.activities.TvWatchActivity"
             android:theme="@style/Theme.Leanback" />
+        <activity
+            android:name="movyeahtv.activities.TvPlaybackActivity"
+            android:theme="@style/Theme.Leanback" />
     </application>
 
 </manifest>

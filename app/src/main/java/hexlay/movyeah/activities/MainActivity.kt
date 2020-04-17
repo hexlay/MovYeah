@@ -11,7 +11,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentTransaction
@@ -139,7 +138,7 @@ class MainActivity : AbsWatchModeActivity() {
             button_search.setOnClickListener {
                 stopSearchMode()
             }
-            button_search.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_arrow_back_w))
+            button_search.setImageDrawable(getDrawable(R.drawable.ic_arrow_back_w))
             toolbar_search.requestFocus()
             toolbar_search.showKeyboard()
         }
@@ -166,7 +165,7 @@ class MainActivity : AbsWatchModeActivity() {
             button_search.setOnClickListener {
                 startSearchMode()
             }
-            button_search.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_search))
+            button_search.setImageDrawable(getDrawable(R.drawable.ic_search))
             toolbar_search.hideKeyboard()
         }
 

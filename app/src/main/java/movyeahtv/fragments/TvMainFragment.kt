@@ -10,11 +10,15 @@ import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.Observer
+import com.afollestad.inlineactivityresult.startActivityForResult
 import hexlay.movyeah.R
 import hexlay.movyeah.api.view_models.MovieListViewModel
 import hexlay.movyeah.database.view_models.DbCategoryViewModel
 import hexlay.movyeah.database.view_models.DbMovieViewModel
-import hexlay.movyeah.helpers.*
+import hexlay.movyeah.helpers.Constants
+import hexlay.movyeah.helpers.differsFrom
+import hexlay.movyeah.helpers.getWindow
+import hexlay.movyeah.helpers.observeOnce
 import hexlay.movyeah.models.movie.Movie
 import hexlay.movyeah.models.movie.attributes.Category
 import movyeahtv.activities.TvSearchActivity
@@ -22,16 +26,16 @@ import movyeahtv.fragments.preferences.CategoryPreferenceFragment
 import movyeahtv.fragments.preferences.LanguagePreferenceFragment
 import movyeahtv.fragments.preferences.SortPreferenceFragment
 import movyeahtv.fragments.preferences.YearPreferenceFragment
+import movyeahtv.helpers.setDrawableFromUrl
 import movyeahtv.models.PreferenceModel
-import movyeahtv.models.events.CategoryChangeEvent
-import movyeahtv.models.events.LanguageChangeEvent
-import movyeahtv.models.events.SortChangeEvent
-import movyeahtv.models.events.YearChangeEvent
+import movyeahtv.models.events.filter.CategoryChangeEvent
+import movyeahtv.models.events.filter.LanguageChangeEvent
+import movyeahtv.models.events.filter.SortChangeEvent
+import movyeahtv.models.events.filter.YearChangeEvent
 import movyeahtv.presenters.MoviePresenter
 import movyeahtv.presenters.PreferencePresenter
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import org.jetbrains.anko.support.v4.startActivity
 
 
 class TvMainFragment : BrowseSupportFragment() {
@@ -39,8 +43,6 @@ class TvMainFragment : BrowseSupportFragment() {
     private val movieListViewModel by viewModels<MovieListViewModel>()
     private val dbMovieViewModel by viewModels<DbMovieViewModel>()
     private val dbCategories by viewModels<DbCategoryViewModel>()
-    private var mainPosition = 0
-    private var mainRow = 0L
     private var backgroundManager: BackgroundManager? = null
 
     private var mainAdapter: ArrayObjectAdapter? = null
@@ -51,6 +53,7 @@ class TvMainFragment : BrowseSupportFragment() {
     private val perPage = 20
     private var moviesPage = 1
     private var tvsPage = 1
+    private var savedCover: String? = null
 
     // Filter attributes
     private var sortingMethod = "-upload_date"
@@ -63,9 +66,7 @@ class TvMainFragment : BrowseSupportFragment() {
         super.onCreate(savedInstanceState)
         startYear = Constants.START_YEAR
         endYear = Constants.END_YEAR
-        backgroundManager = BackgroundManager.getInstance(requireActivity())
-        if (!backgroundManager!!.isAttached)
-            backgroundManager!!.attach(getWindow())
+        initBackgroundManager()
         EventBus.getDefault().register(this)
     }
 
@@ -77,6 +78,12 @@ class TvMainFragment : BrowseSupportFragment() {
         initData()
     }
 
+    private fun initBackgroundManager() {
+        backgroundManager = BackgroundManager.getInstance(requireActivity())
+        if (!backgroundManager!!.isAttached)
+            backgroundManager!!.attach(getWindow())
+    }
+
     private fun initUi() {
         title = getString(R.string.app_name)
         headersState = HEADERS_ENABLED
@@ -84,7 +91,9 @@ class TvMainFragment : BrowseSupportFragment() {
         brandColor = ContextCompat.getColor(requireContext(), R.color.fastlane_background)
         searchAffordanceColor = Color.DKGRAY
         setOnSearchClickedListener {
-            startActivity<TvSearchActivity>()
+            startActivityForResult<TvSearchActivity> { _, _ ->
+                savedCover?.let { backgroundManager?.setDrawableFromUrl(requireContext(), it) }
+            }
         }
     }
 
@@ -125,15 +134,13 @@ class TvMainFragment : BrowseSupportFragment() {
         fetchMovies()
         fetchSeries()
         onItemViewSelectedListener = OnItemViewSelectedListener { _, item, _, row ->
-            mainRow = row.id
-            when (mainRow) {
+            when (row.id) {
                 0L -> {
                     val position = movieAdapter?.indexOf(item)!!
                     val page = ((position + 1) / perPage) + 1
                     if (position > 0 && page == moviesPage) {
                         fetchMovies()
                     }
-                    mainPosition = position
                 }
                 1L -> {
                     val position = seriesAdapter?.indexOf(item)!!
@@ -141,11 +148,11 @@ class TvMainFragment : BrowseSupportFragment() {
                     if (position > 0 && page == tvsPage) {
                         fetchSeries()
                     }
-                    mainPosition = position
                 }
             }
             if (item is Movie) {
-                item.getCover()?.let { backgroundManager?.setDrawableFromUrl(requireContext(), it) }
+                savedCover = item.getCover()
+                savedCover?.let { backgroundManager?.setDrawableFromUrl(requireContext(), it) }
             } else {
                 backgroundManager?.color = ContextCompat.getColor(requireContext(), R.color.default_background2)
             }
@@ -181,7 +188,7 @@ class TvMainFragment : BrowseSupportFragment() {
                 PreferenceModel(
                         getString(R.string.filter_change_lang),
                         "preference_language",
-                        LanguagePreferenceFragment.newInstance(getString(R.string.filter_change_lang))
+                        LanguagePreferenceFragment()
                 ),
                 PreferenceModel(
                         getString(R.string.filter_change_category),
@@ -191,12 +198,12 @@ class TvMainFragment : BrowseSupportFragment() {
                 PreferenceModel(
                         getString(R.string.filter_change_year),
                         "preference_year",
-                        YearPreferenceFragment.newInstance(getString(R.string.filter_change_year), startYear, endYear)
+                        YearPreferenceFragment.newInstance(startYear, endYear)
                 ),
                 PreferenceModel(
                         getString(R.string.filter_change_sort),
                         "preference_sort",
-                        SortPreferenceFragment.newInstance(getString(R.string.filter_change_sort))
+                        SortPreferenceFragment()
                 ),
                 PreferenceModel(
                         getString(R.string.settings_about),
@@ -211,7 +218,7 @@ class TvMainFragment : BrowseSupportFragment() {
                 dbCategories.getCategories()?.observeOnce(viewLifecycleOwner, Observer { dbCats ->
                     val list = ArrayList<Category>()
                     list.addAll(dbCats)
-                    it.fragment = CategoryPreferenceFragment.newInstance(getString(R.string.filter_change_category), categories, list)
+                    it.fragment = CategoryPreferenceFragment.newInstance(categories, list)
                 })
             }
             preferenceAdapter.add(it)

@@ -7,12 +7,14 @@ import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.Observer
+import com.afollestad.assent.Permission
+import com.afollestad.assent.runWithPermissions
 import hexlay.movyeah.R
 import hexlay.movyeah.api.view_models.MovieListViewModel
 import hexlay.movyeah.helpers.getWindow
 import hexlay.movyeah.helpers.observeOnce
-import hexlay.movyeah.helpers.setDrawableFromUrl
 import hexlay.movyeah.models.movie.Movie
+import movyeahtv.helpers.setDrawableFromUrl
 import movyeahtv.presenters.MoviePresenter
 
 
@@ -33,7 +35,18 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
         initBackgroundManager()
         initAdapters()
         initRows()
+        initVoiceSearch()
+        initItemListener()
         backgroundManager?.color = ContextCompat.getColor(requireContext(), R.color.default_background)
+    }
+
+    private fun initVoiceSearch() {
+        runWithPermissions(Permission.RECORD_AUDIO) {
+
+        }
+    }
+
+    private fun initItemListener() {
         setOnItemViewSelectedListener { _, item, _, _ ->
             val position = searchAdapter?.indexOf(item)!!
             val page = ((position + 1) / perPage) + 1

@@ -127,6 +127,7 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.2.0'
     implementation 'com.afollestad.material-dialogs:core:3.1.1'
     implementation 'com.afollestad.assent:core:3.0.0-RC4'
+    implementation 'com.afollestad.inline-activity-result:core:0.2.0'
     implementation 'com.github.zerobranch:android-remote-debugger:1.0.0'
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 }
