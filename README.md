@@ -18,4 +18,4 @@
 - ორჯერ სწაფი დაჭერით გადახვევა
 - ფილტრი
 - Offline რეჟიმი
-- Android TV suppoert !
+- Android TV support !
