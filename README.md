@@ -1,4 +1,4 @@
-# MovYeah [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e460846ef1bd4c9cbbc2b81d09d76c95)](https://www.codacy.com/manual/hexlay/MovYeah?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hexlay/MovYeah&amp;utm_campaign=Badge_Grade)
+# MovYeah [![Codacy Badge](https://api.codacy.com/project/badge/Grade/14e19da33b4b43489732f1775a49e085)](https://www.codacy.com/manual/hexlay/MovYeah?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hexlay/MovYeah&amp;utm_campaign=Badge_Grade)
 <a href="https://play.google.com/store/apps/details?id=hexlay.movyeah" target="_blank">
   <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="200" height="80">
 </a>
