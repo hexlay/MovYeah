@@ -23,14 +23,19 @@ import hexlay.movyeah.models.movie.attributes.show.Episode
 import hexlay.movyeah.models.movie.attributes.show.EpisodeCache
 import hexlay.movyeah.models.movie.attributes.show.EpisodeFileData
 import movyeahtv.activities.TvPlaybackActivity
+import movyeahtv.fragments.watch.EpisodeWatchFragment
 import movyeahtv.helpers.getWhiteDrawable
+import movyeahtv.helpers.makeParcelableExtra
 import movyeahtv.helpers.setDrawableFromUrl
 import movyeahtv.models.PlaybackModel
+import movyeahtv.models.events.StartFragmentEvent
 import movyeahtv.models.events.watch.MovieErrorEvent
+import movyeahtv.models.events.watch.WatchEpisodeChangeEvent
 import movyeahtv.presenters.CastPresenter
 import movyeahtv.presenters.DetailsDescriptionPresenter
 import movyeahtv.presenters.WatchPresenter
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -48,6 +53,7 @@ class TvWatchFragment : DetailsSupportFragment() {
     private var languageKey = "NONE"
     private var subtitleKey = "NONE"
     private var currentSeason = 1
+    private var currentEpisode = 1
     private var genres = ""
 
     private var fileData: Map<String, List<EpisodeFileData>> = HashMap()
@@ -90,12 +96,31 @@ class TvWatchFragment : DetailsSupportFragment() {
         watchPresenter?.setOnActionClickedListener {
             when (it.id) {
                 0L -> {
-                    val playback = PlaybackModel(movie, fileData, subtitleData, tvShowSeasons, qualityKey, languageKey, subtitleKey, currentSeason)
-                    val extras = Bundle()
-                    extras.putParcelable("playback", playback)
-                    startActivityForResult<TvPlaybackActivity>(extras = extras) { _, _ ->
+                    val playback = PlaybackModel(movie, fileData, subtitleData, tvShowSeasons, qualityKey, languageKey, subtitleKey, currentSeason, currentEpisode)
+                    startActivityForResult<TvPlaybackActivity>(extras = makeParcelableExtra("playback", playback)) { _, _ ->
                         movie.getCover()?.let { image -> backgroundManager?.setDrawableFromUrl(requireContext(), image) }
                     }
+                }
+                1L -> {
+                    val fragment = EpisodeWatchFragment.newInstance(currentSeason, currentEpisode, tvShowSeasons)
+                    EventBus.getDefault().post(StartFragmentEvent("choose_episode", fragment))
+                }
+                3L -> {
+                    dbMovie.getMovie(movie.id)?.observeOnce(viewLifecycleOwner, Observer { fav ->
+                        val size = actionAdapter!!.size() - 1
+                        val action = actionAdapter?.get(size) as Action
+                        if (fav == null) {
+                            dbMovie.insertMovie(movie)
+                            action.icon = getWhiteDrawable(R.drawable.ic_favorite)
+                            action.label1 = "ფავორიტებიდან წაშლა"
+                        } else {
+                            dbMovie.deleteMovie(movie)
+                            action.icon = getWhiteDrawable(R.drawable.ic_favorite_empty)
+                            action.label1 = "ფავორიტებში დამატება"
+                        }
+                        actionAdapter?.clear(size)
+                        actionAdapter?.set(size, action)
+                    })
                 }
             }
         }
@@ -152,10 +177,11 @@ class TvWatchFragment : DetailsSupportFragment() {
         setupWatchKeys()
         val actions = mutableListOf(
                 Action(0, getString(R.string.watch), "", getWhiteDrawable(R.drawable.action_play)),
-                Action(1, "s${currentSeason}e${episode + 1}", "", getWhiteDrawable(R.drawable.ic_list))
+                Action(1, "S${currentSeason}E${episode + 1}", "", getWhiteDrawable(R.drawable.ic_list))
         )
+        initFavorites()
         actions.forEach {
-            actionAdapter!![it.id.toInt()] = it
+            actionAdapter?.set(it.id.toInt(), it)
         }
     }
 
@@ -164,9 +190,21 @@ class TvWatchFragment : DetailsSupportFragment() {
         val actions = mutableListOf(
                 Action(0, getString(R.string.watch), "", getWhiteDrawable(R.drawable.action_play))
         )
+        initFavorites()
         actions.forEach {
-            actionAdapter!![it.id.toInt()] = it
+            actionAdapter?.set(it.id.toInt(), it)
         }
+    }
+
+    private fun initFavorites() {
+        dbMovie.getMovie(movie.id)?.observeOnce(viewLifecycleOwner, Observer {
+            val action = if (it == null) {
+                Action(3, "ფავორიტებში დამატება", "", getWhiteDrawable(R.drawable.ic_favorite_empty))
+            } else {
+                Action(3, "ფავორიტებიდან წაშლა", "", getWhiteDrawable(R.drawable.ic_favorite))
+            }
+            actionAdapter?.set(actionAdapter!!.size(), action)
+        })
     }
 
     private fun setupWatchKeys() {
@@ -206,6 +244,12 @@ class TvWatchFragment : DetailsSupportFragment() {
                 superAdapter!!.add(1, ListRow(headerItem, actorAdapter))
             }
         })
+    }
+
+    @Subscribe
+    fun listenEpisodeChange(event: WatchEpisodeChangeEvent) {
+        currentSeason = event.season
+        currentEpisode = event.episode
     }
 
     companion object {

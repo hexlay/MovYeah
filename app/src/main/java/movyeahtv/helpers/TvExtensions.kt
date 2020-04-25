@@ -6,6 +6,8 @@ import android.graphics.Color
 import android.graphics.LightingColorFilter
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Bundle
+import android.os.Parcelable
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.leanback.app.BackgroundManager
@@ -66,4 +68,10 @@ fun PlaybackControlsRow.setDrawableFromUrl(context: Context, url: String) {
 
                 override fun onLoadCleared(placeholder: Drawable?) {}
             })
+}
+
+fun Fragment.makeParcelableExtra(key: String, value: Parcelable): Bundle {
+    val extras = Bundle()
+    extras.putParcelable(key, value)
+    return extras
 }

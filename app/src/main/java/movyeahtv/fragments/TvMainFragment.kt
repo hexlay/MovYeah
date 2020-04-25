@@ -20,14 +20,15 @@ import hexlay.movyeah.helpers.differsFrom
 import hexlay.movyeah.helpers.getWindow
 import hexlay.movyeah.helpers.observeOnce
 import hexlay.movyeah.models.movie.Movie
-import hexlay.movyeah.models.movie.attributes.Category
 import movyeahtv.activities.TvSearchActivity
+import movyeahtv.activities.TvWatchActivity
 import movyeahtv.fragments.preferences.CategoryPreferenceFragment
 import movyeahtv.fragments.preferences.LanguagePreferenceFragment
 import movyeahtv.fragments.preferences.SortPreferenceFragment
 import movyeahtv.fragments.preferences.YearPreferenceFragment
 import movyeahtv.helpers.setDrawableFromUrl
 import movyeahtv.models.PreferenceModel
+import movyeahtv.models.events.StartActivityEvent
 import movyeahtv.models.events.filter.CategoryChangeEvent
 import movyeahtv.models.events.filter.LanguageChangeEvent
 import movyeahtv.models.events.filter.SortChangeEvent
@@ -165,6 +166,7 @@ class TvMainFragment : BrowseSupportFragment() {
         val preferenceHeader = HeaderItem(2, getString(R.string.settings_title))
         val favoriteHeader = HeaderItem(3, getString(R.string.menu_favorites))
         dbMovieViewModel.getMovies()?.observe(viewLifecycleOwner, Observer {
+            favoriteAdapter?.clear()
             for (favorite in it) {
                 favoriteAdapter?.add(favorite)
             }
@@ -216,9 +218,7 @@ class TvMainFragment : BrowseSupportFragment() {
             // Very bad approach. IDK any other way for GuidedFragment actions :(
             if (it.key == "preference_category") {
                 dbCategories.getCategories()?.observeOnce(viewLifecycleOwner, Observer { dbCats ->
-                    val list = ArrayList<Category>()
-                    list.addAll(dbCats)
-                    it.fragment = CategoryPreferenceFragment.newInstance(categories, list)
+                    it.fragment = CategoryPreferenceFragment.newInstance(categories, dbCats)
                 })
             }
             preferenceAdapter.add(it)
@@ -262,9 +262,21 @@ class TvMainFragment : BrowseSupportFragment() {
     @Subscribe
     fun listenCategoryChange(event: CategoryChangeEvent) {
         val pCategories = categories
-        categories = event.categories
+        categories.clear()
+        categories.addAll(event.categories)
         if (pCategories.differsFrom(categories)) {
             resetList()
+        }
+    }
+
+    @Subscribe
+    fun listenActivityStart(event: StartActivityEvent) {
+        when (event.key) {
+            "TvWatchActivity" -> {
+                startActivityForResult<TvWatchActivity>(event.params) { _, _ ->
+                    savedCover?.let { backgroundManager?.setDrawableFromUrl(requireContext(), it) }
+                }
+            }
         }
     }
 

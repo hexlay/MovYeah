@@ -17,5 +17,6 @@ data class PlaybackModel(
         var qualityKey: String,
         var languageKey: String,
         var subtitleKey: String,
-        var currentSeason: Int
+        var currentSeason: Int,
+        var currentEpisode: Int
 ) : Parcelable

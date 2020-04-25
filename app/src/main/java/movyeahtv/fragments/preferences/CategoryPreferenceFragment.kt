@@ -53,7 +53,7 @@ class CategoryPreferenceFragment : GuidedStepSupportFragment() {
     }
 
     companion object {
-        fun newInstance(currentCats: ArrayList<String>, allCats: ArrayList<Category>): CategoryPreferenceFragment {
+        fun newInstance(currentCats: ArrayList<String>, allCats: List<Category>): CategoryPreferenceFragment {
             val fragment = CategoryPreferenceFragment()
             fragment.categories.addAll(currentCats)
             fragment.categoriesList.addAll(allCats)

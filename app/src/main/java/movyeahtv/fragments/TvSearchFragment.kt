@@ -1,6 +1,7 @@
 package movyeahtv.fragments
 
 import android.os.Bundle
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.BackgroundManager
@@ -9,13 +10,18 @@ import androidx.leanback.widget.*
 import androidx.lifecycle.Observer
 import com.afollestad.assent.Permission
 import com.afollestad.assent.runWithPermissions
+import com.afollestad.inlineactivityresult.startActivityForResult
 import hexlay.movyeah.R
 import hexlay.movyeah.api.view_models.MovieListViewModel
 import hexlay.movyeah.helpers.getWindow
 import hexlay.movyeah.helpers.observeOnce
 import hexlay.movyeah.models.movie.Movie
+import movyeahtv.activities.TvWatchActivity
 import movyeahtv.helpers.setDrawableFromUrl
+import movyeahtv.models.events.StartActivityEvent
 import movyeahtv.presenters.MoviePresenter
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 
 class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchResultProvider {
@@ -28,21 +34,37 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
     private var superAdapter: ArrayObjectAdapter? = null
     private var searchAdapter: ArrayObjectAdapter? = null
     private val perPage = 20
+    private var savedCover: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSearchResultProvider(this)
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initBackgroundManager()
         initAdapters()
         initRows()
         initVoiceSearch()
         initItemListener()
-        backgroundManager?.color = ContextCompat.getColor(requireContext(), R.color.default_background)
     }
 
     private fun initVoiceSearch() {
         runWithPermissions(Permission.RECORD_AUDIO) {
+            // TODO: Still idk DD
+        }
+    }
 
+    @Subscribe
+    fun listenActivityStart(event: StartActivityEvent) {
+        when (event.key) {
+            "TvWatchActivity" -> {
+                startActivityForResult<TvWatchActivity>(event.params, requestCode = 73) { _, _ ->
+                    savedCover?.let { backgroundManager?.setDrawableFromUrl(requireContext(), it) }
+                }
+            }
         }
     }
 
@@ -54,7 +76,8 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
                 fetchSearch()
             }
             if (item is Movie) {
-                item.getCover()?.let { backgroundManager?.setDrawableFromUrl(requireContext(), it) }
+                savedCover = item.getCover()
+                savedCover?.let { backgroundManager?.setDrawableFromUrl(requireContext(), it) }
             } else {
                 backgroundManager?.color = ContextCompat.getColor(requireContext(), R.color.default_background)
             }
@@ -78,6 +101,7 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
         backgroundManager = BackgroundManager.getInstance(requireActivity())
         if (!backgroundManager!!.isAttached)
             backgroundManager!!.attach(getWindow())
+        backgroundManager?.color = ContextCompat.getColor(requireContext(), R.color.default_background)
     }
 
     override fun onQueryTextSubmit(query: String): Boolean {
@@ -107,6 +131,11 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
             searchAdapter?.addAll(searchAdapter!!.size(), dataList)
             page++
         }
+    }
+
+    override fun onDestroyView() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroyView()
     }
 
 }

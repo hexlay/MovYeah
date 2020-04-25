@@ -55,16 +55,17 @@ class TvPlaybackFragment : Fragment() {
     private var languageKey = "NONE"
     private var subtitleKey = "NONE"
     private var currentSeason = 1
+    private var currentEpisode = 1
 
     private var playerInitialLaunch = false
     private var stillInApp = false
     private var superExit = false
 
+    var isPlaying = false
     private var canResume = false
     private var exoPlayer: ExoPlayer? = null
     private var isPreparing = true
     private var isSeeking = false
-    var isPlaying = false
     private var onPause = false
     private var seekSaved: Long = 0
     private var seekSecForward: Long = 0
@@ -314,6 +315,7 @@ class TvPlaybackFragment : Fragment() {
             fragment.languageKey = playback.languageKey
             fragment.subtitleKey = playback.subtitleKey
             fragment.currentSeason = playback.currentSeason
+            fragment.currentEpisode = playback.currentEpisode
             fragment.playbackControlFragment = PlaybackControlFragment.newInstance(fragment, playback)
             return fragment
         }

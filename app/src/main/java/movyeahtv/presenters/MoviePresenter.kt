@@ -1,6 +1,7 @@
 package movyeahtv.presenters
 
 import android.content.Context
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -10,7 +11,8 @@ import hexlay.movyeah.R
 import hexlay.movyeah.helpers.setUrl
 import hexlay.movyeah.models.movie.Movie
 import movyeahtv.activities.TvWatchActivity
-import org.jetbrains.anko.startActivity
+import movyeahtv.models.events.StartActivityEvent
+import org.greenrobot.eventbus.EventBus
 
 
 class MoviePresenter(private val context: Context) : Presenter() {
@@ -33,11 +35,14 @@ class MoviePresenter(private val context: Context) : Presenter() {
     override fun onBindViewHolder(viewHolder: Presenter.ViewHolder, item: Any) {
         val movie = item as Movie
         val holder = viewHolder as ViewHolder
+        val score = movie.getRating("imdb").score
         holder.imageCardView.titleText = movie.getTitle()
-        holder.imageCardView.contentText = "IMDB: ${movie.getRating("imdb").score}, წელი: ${movie.year}"
+        holder.imageCardView.contentText = "IMDB: ${score}, წელი: ${movie.year}"
         movie.getTruePoster()?.let { holder.imageCardView.mainImageView.setUrl(it) }
         holder.imageCardView.setOnClickListener {
-            context.startActivity<TvWatchActivity>("movie" to movie)
+            val bundle = Bundle()
+            bundle.putParcelable("movie", movie)
+            EventBus.getDefault().post(StartActivityEvent(TvWatchActivity::class.simpleName!!, bundle))
         }
     }
 

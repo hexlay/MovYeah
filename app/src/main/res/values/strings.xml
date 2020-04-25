@@ -59,6 +59,7 @@
     <string name="filter_change_year">აირჩიეთ წელი</string>
     <string name="filter_change_category">აირჩიეთ კატეგორია</string>
     <string name="filter_change_lang">აირჩიეთ ენა</string>
+    <string name="filter_change_episode">აირჩიეთ ეპიზოდი</string>
     <string name="filter_change_sort">სორტირება</string>
 
     <!-- Fragment: Main -->

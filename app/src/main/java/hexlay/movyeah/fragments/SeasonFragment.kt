@@ -68,9 +68,6 @@ class SeasonFragment : Fragment() {
                             }
                         }
                     })
-                    itemView.setOnClickListener {
-                        EventBus.getDefault().post(ChooseEpisodeEvent(index))
-                    }
                     download.setOnClickListener {
                         val langs = item.files.map { it.lang!! to it.files }.toMap()
                         val dialogItems = ArrayList<String>()
