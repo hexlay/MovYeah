@@ -16,7 +16,6 @@ import hexlay.movyeah.database.view_models.DbEpisodeViewModel
 import hexlay.movyeah.database.view_models.DbMovieViewModel
 import hexlay.movyeah.helpers.getWindow
 import hexlay.movyeah.helpers.observeOnce
-import hexlay.movyeah.helpers.toCommaList
 import hexlay.movyeah.models.movie.Movie
 import hexlay.movyeah.models.movie.attributes.Subtitle
 import hexlay.movyeah.models.movie.attributes.show.Episode
@@ -81,7 +80,7 @@ class TvWatchFragment : DetailsSupportFragment() {
     }
 
     private fun initData() {
-        genres = movie.genres?.data?.map { it.primaryName }?.toCommaList().toString()
+        genres = movie.getGenresString()
         watchPresenter = WatchPresenter(requireContext(), DetailsDescriptionPresenter(genres))
         mainRows = DetailsOverviewRow(movie)
         actionAdapter = SparseArrayObjectAdapter()

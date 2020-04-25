@@ -31,14 +31,19 @@ class MovieViewHolder(itemView: View) : ViewHolder(itemView) {
         title.isSelected = true
         title.text = movie.getTitle()
         year.text = movie.year.toString()
-        imdb.text = movie.getRating("imdb").score.toString()
+        imdb.text = movie.getRating("imdb").toString()
         movie.getTruePoster()?.let { image.setUrl(it) }
         itemView.setOnClickListener {
             EventBus.getDefault().post(StartWatchingEvent(movie))
+            if (activity is DetailActivity) {
+                activity.finish()
+            }
         }
-        itemView.setOnLongClickListener {
-            activity.startActivity(activity.intentFor<DetailActivity>("movie" to movie))
-            return@setOnLongClickListener false
+        if (activity !is DetailActivity) {
+            itemView.setOnLongClickListener {
+                activity.startActivity(activity.intentFor<DetailActivity>("movie" to movie))
+                return@setOnLongClickListener false
+            }
         }
     }
 

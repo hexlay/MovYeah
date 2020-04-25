@@ -9,7 +9,7 @@ class DetailsDescriptionPresenter(private val genres: String) : AbstractDetailsD
 
     override fun onBindDescription(viewHolder: ViewHolder, item: Any) {
         val movie = item as Movie
-        val imdbScore = movie.getRating("imdb").score
+        val imdbScore = movie.getRating("imdb")
         viewHolder.title.text = movie.getTitle()
         val subtitle = "IMDB: ${imdbScore}, წელი: ${movie.year}, ხანგრძლივობა: ${movie.duration.toHumanDuration()}"
         viewHolder.subtitle.text = subtitle.toHtml()

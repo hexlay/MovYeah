@@ -379,7 +379,7 @@ class WatchFragment : Fragment() {
                 navigation.menu.removeItem(R.id.cast)
             }
         })
-        genres = movie.genres?.data?.map { it.primaryName }?.toCommaList().toString()
+        genres = movie.getGenresString()
         setupMovieInformation()
     }
 
@@ -514,12 +514,12 @@ class WatchFragment : Fragment() {
     private fun setupMovieInformation() {
         title_text.text = movie.getTitle()
         description_date.text = getString(R.string.news_year).format(movie.year)
-        description_imdb.text = getString(R.string.news_imdb).format(movie.getRating("imdb").score)
+        description_imdb.text = getString(R.string.news_imdb).format(movie.getRating("imdb"))
         description_duration.text = getString(R.string.news_duration).format(movie.duration.toHumanDuration())
         description_imdb.setOnClickListener {
             movie.imdbUrl?.let { it1 -> browse(it1, true) }
         }
-        watch_text.text = getString(R.string.news_watch).format(movie.watchCount)
+        watch_text.text = getString(R.string.news_watch).format(movie.getWatchString())
         category_text.text = if (genres.isEmpty())
             getString(R.string.full_cats_not_found)
         else

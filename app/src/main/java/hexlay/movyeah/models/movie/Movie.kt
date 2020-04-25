@@ -5,6 +5,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import hexlay.movyeah.helpers.toCommaList
 import hexlay.movyeah.models.movie.attributes.Rating
 import hexlay.movyeah.models.movie.generics.GenericMap
 import hexlay.movyeah.models.movie.helpers.CategoryHelper
@@ -12,6 +13,8 @@ import hexlay.movyeah.models.movie.helpers.LanguageHelper
 import hexlay.movyeah.models.movie.helpers.PlotHelper
 import hexlay.movyeah.models.movie.helpers.SeasonHelper
 import kotlinx.android.parcel.Parcelize
+import kotlin.math.ln
+import kotlin.math.pow
 
 @Parcelize
 @Entity
@@ -55,9 +58,21 @@ data class Movie(
 
     fun getDescription(): String = plots?.data?.firstOrNull { it.description?.isNotEmpty()!! }?.description ?: "აღწერა ვერ მოიძებნა"
 
-    fun getRating(type: String): Rating = rating?.get(type) ?: Rating(0.0, 0)
+    fun getRating(type: String): Double = rating?.get(type)?.score ?: Rating(0.0, 0).score
 
     fun getCover(): String? = covers?.data?.asSequence()?.firstOrNull { it.value.isNotEmpty() }?.value
+
+    fun getGenresString(): String {
+        val genres = genres?.data?.map { it.primaryName }?.toCommaList()
+        return genres ?: "კატეგორიები ვერ მოიძებნა"
+    }
+
+    fun getWatchString(): String {
+        if (watchCount < 1000)
+            return watchCount.toString()
+        val exp = (ln(watchCount.toDouble()) / ln(1000.0)).toInt()
+        return String.format("%.1f %c", watchCount / 1000.0.pow(exp.toDouble()), "KMGTPE"[exp - 1])
+    }
 
     override fun equals(other: Any?): Boolean {
         if (other is Movie) {

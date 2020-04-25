@@ -16,6 +16,10 @@
     <string name="download_start">გადმოწერა დაწყებულია</string>
     <string name="watch">ყურება</string>
 
+    <!-- Related -->
+    <string name="related_movies">მსგავსი ფილმები</string>
+
+    <!-- Offline mode -->
     <string name="offline_remove">წაშლა</string>
     <string name="offline_remove_confirm">ნამდვილად გსურთ წაშლა?</string>
     <string name="offline_download">გადმოწერა</string>

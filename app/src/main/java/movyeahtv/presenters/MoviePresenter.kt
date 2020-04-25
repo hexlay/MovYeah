@@ -35,7 +35,7 @@ class MoviePresenter(private val context: Context) : Presenter() {
     override fun onBindViewHolder(viewHolder: Presenter.ViewHolder, item: Any) {
         val movie = item as Movie
         val holder = viewHolder as ViewHolder
-        val score = movie.getRating("imdb").score
+        val score = movie.getRating("imdb")
         holder.imageCardView.titleText = movie.getTitle()
         holder.imageCardView.contentText = "IMDB: ${score}, წელი: ${movie.year}"
         movie.getTruePoster()?.let { holder.imageCardView.mainImageView.setUrl(it) }

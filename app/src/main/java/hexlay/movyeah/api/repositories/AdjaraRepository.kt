@@ -104,6 +104,14 @@ class AdjaraRepository(private val api: AdjaraAPI) : AbsAdjaraRepository() {
         return response?.data
     }
 
+    suspend fun getRelated(id: Int): List<Movie>? {
+        val response = safeApiCall(
+                call = { api.getRelatedMoviesAsync(id) },
+                errorMessage = "Error fetching movies"
+        )
+        return response?.data
+    }
+
     suspend fun getMovie(id: Int): Movie? {
         val response = safeApiCall(
                 call = { api.getMovieInfoAsync(id) },

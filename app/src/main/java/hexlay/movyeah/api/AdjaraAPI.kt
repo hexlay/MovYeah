@@ -47,6 +47,16 @@ interface AdjaraAPI {
             @Query("source") source: String = "adjaranet"
     ): Response<GenericList<Movie>>
 
+    @GET("movies/{id}/related")
+    suspend fun getRelatedMoviesAsync(
+            @Path("id") id: Int,
+            @Query("filters[with_actors]") filtersActors: Int = 3,
+            @Query("filters[with_directors]") filtersDirectors: Int = 1,
+            @Query("page") page: Int = 1,
+            @Query("per_page") perPage: Int = 20,
+            @Query("source") source: String = "adjaranet"
+    ): Response<GenericList<Movie>>
+
     @GET("movies/premiere-day?page=1&per_page=20&filters=&source=adjaranet")
     suspend fun getPremieresAsync(): Response<GenericList<Movie>>
 

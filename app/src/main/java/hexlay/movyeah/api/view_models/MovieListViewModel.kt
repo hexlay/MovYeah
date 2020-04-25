@@ -38,4 +38,14 @@ class MovieListViewModel(application: Application) : AbsAdjaraViewModel(applicat
         return movies
     }
 
+    fun fetchRelated(id: Int): MutableLiveData<List<Movie>> {
+        val movies = MutableLiveData<List<Movie>>()
+        scope.launch {
+            try {
+                movies.postValue(repository.getRelated(id))
+            } catch (t: Throwable) {}
+        }
+        return movies
+    }
+
 }
