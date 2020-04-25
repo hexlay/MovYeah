@@ -92,7 +92,7 @@ class TvMainFragment : BrowseSupportFragment() {
         brandColor = ContextCompat.getColor(requireContext(), R.color.fastlane_background)
         searchAffordanceColor = Color.DKGRAY
         setOnSearchClickedListener {
-            startActivityForResult<TvSearchActivity> { _, _ ->
+            startActivityForResult<TvSearchActivity>(requestCode = 1) { _, _ ->
                 savedCover?.let { backgroundManager?.setDrawableFromUrl(requireContext(), it) }
             }
         }
@@ -273,7 +273,7 @@ class TvMainFragment : BrowseSupportFragment() {
     fun listenActivityStart(event: StartActivityEvent) {
         when (event.key) {
             "TvWatchActivity" -> {
-                startActivityForResult<TvWatchActivity>(event.params) { _, _ ->
+                startActivityForResult<TvWatchActivity>(event.params, requestCode = 2) { _, _ ->
                     savedCover?.let { backgroundManager?.setDrawableFromUrl(requireContext(), it) }
                 }
             }

@@ -61,7 +61,7 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
     fun listenActivityStart(event: StartActivityEvent) {
         when (event.key) {
             "TvWatchActivity" -> {
-                startActivityForResult<TvWatchActivity>(event.params, requestCode = 73) { _, _ ->
+                startActivityForResult<TvWatchActivity>(event.params, requestCode = 3) { _, _ ->
                     savedCover?.let { backgroundManager?.setDrawableFromUrl(requireContext(), it) }
                 }
             }

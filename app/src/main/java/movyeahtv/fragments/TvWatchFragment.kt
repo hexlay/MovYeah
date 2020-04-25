@@ -67,6 +67,7 @@ class TvWatchFragment : DetailsSupportFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        EventBus.getDefault().register(this)
         initBackgroundManager()
         initData()
         loadData()
@@ -97,7 +98,8 @@ class TvWatchFragment : DetailsSupportFragment() {
             when (it.id) {
                 0L -> {
                     val playback = PlaybackModel(movie, fileData, subtitleData, tvShowSeasons, qualityKey, languageKey, subtitleKey, currentSeason, currentEpisode)
-                    startActivityForResult<TvPlaybackActivity>(extras = makeParcelableExtra("playback", playback)) { _, _ ->
+                    val extras = makeParcelableExtra("playback", playback)
+                    startActivityForResult<TvPlaybackActivity>(extras = extras, requestCode = 4) { _, _ ->
                         movie.getCover()?.let { image -> backgroundManager?.setDrawableFromUrl(requireContext(), image) }
                     }
                 }
@@ -171,6 +173,7 @@ class TvWatchFragment : DetailsSupportFragment() {
     }
 
     private fun setupTvShowEpisode(episode: Int) {
+        currentEpisode = episode
         dbEpisodes.insertEpisode(EpisodeCache(movie.id, episode, currentSeason))
         fileData = tvShowSeasons[currentSeason][episode].files.map { it.lang!! to it.files }.toMap()
         subtitleData = tvShowSeasons[currentSeason][episode].files.map { it.lang!! to it.subtitles }.toMap()
@@ -249,7 +252,13 @@ class TvWatchFragment : DetailsSupportFragment() {
     @Subscribe
     fun listenEpisodeChange(event: WatchEpisodeChangeEvent) {
         currentSeason = event.season
-        currentEpisode = event.episode
+        actionAdapter?.clear()
+        setupTvShowEpisode(event.episode)
+    }
+
+    override fun onDestroyView() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroyView()
     }
 
     companion object {

@@ -3,6 +3,7 @@ package movyeahtv.fragments.playback
 import android.os.Bundle
 import android.os.Handler
 import android.util.SparseArray
+import androidx.core.util.putAll
 import androidx.leanback.app.PlaybackSupportFragment
 import androidx.leanback.widget.*
 import androidx.leanback.widget.PlaybackControlsRow.*
@@ -16,6 +17,7 @@ import movyeahtv.helpers.getWhiteDrawable
 import movyeahtv.helpers.setDrawableFromUrl
 import movyeahtv.models.PlaybackModel
 import movyeahtv.presenters.DetailsPlaybackPresenter
+import movyeahtv.presenters.EpisodePresenter
 import java.lang.ref.WeakReference
 
 
@@ -50,8 +52,8 @@ class PlaybackControlFragment : PlaybackSupportFragment() {
         classPresenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
         superAdapter = ArrayObjectAdapter(classPresenterSelector)
         addPlaybackControlsRow()
-        /* if (tvShowSeasons[currentSeason].isNotEmpty())
-             addEpisodes()*/
+        if (tvShowSeasons[currentSeason] != null && tvShowSeasons[currentSeason].isNotEmpty())
+            addEpisodes()
         playbackControlsRowPresenter.onActionClickedListener = OnActionClickedListener { action ->
             when (action.id) {
                 playPauseAction!!.id -> {
@@ -146,16 +148,18 @@ class PlaybackControlFragment : PlaybackSupportFragment() {
     }
 
     private fun addEpisodes() {
-        //val episodeRow = ArrayObjectAdapter(EpisodePresenter(requireContext()))
-        //episodeRow.add(tvShowSeasons[currentSeason])
-        //superAdapter?.add(ListRow(HeaderItem(0, "სხვა სერიები სეზონში"), episodeRow))
+        val episodeRow = ArrayObjectAdapter(EpisodePresenter(requireContext()))
+        tvShowSeasons[currentSeason].forEach {
+            episodeRow.add(it)
+        }
+        superAdapter?.add(ListRow(HeaderItem(0, "სხვა სერიები სეზონში"), episodeRow))
     }
 
     companion object {
         fun newInstance(parent: TvPlaybackFragment, playback: PlaybackModel): PlaybackControlFragment {
             val fragment = PlaybackControlFragment()
             fragment.movie = playback.movie
-            fragment.tvShowSeasons = playback.tvShowSeasons
+            fragment.tvShowSeasons.putAll(playback.tvShowSeasons)
             fragment.currentSeason = playback.currentSeason
             fragment.reference = WeakReference(parent)
             return fragment

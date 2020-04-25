@@ -6,9 +6,11 @@ import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.util.putAll
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.fragment.app.viewModels
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MergingMediaSource
@@ -22,10 +24,12 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.MimeTypes
 import com.google.android.exoplayer2.util.Util
 import hexlay.movyeah.R
+import hexlay.movyeah.database.view_models.DbEpisodeViewModel
 import hexlay.movyeah.helpers.Constants
 import hexlay.movyeah.models.movie.Movie
 import hexlay.movyeah.models.movie.attributes.Subtitle
 import hexlay.movyeah.models.movie.attributes.show.Episode
+import hexlay.movyeah.models.movie.attributes.show.EpisodeCache
 import hexlay.movyeah.models.movie.attributes.show.EpisodeFileData
 import kotlinx.android.synthetic.main.tv_fragment_playback.*
 import movyeahtv.fragments.playback.PlaybackControlFragment
@@ -34,6 +38,7 @@ import movyeahtv.fragments.watch.QualityWatchFragment
 import movyeahtv.fragments.watch.SubtitleWatchFragment
 import movyeahtv.models.PlaybackModel
 import movyeahtv.models.events.StartFragmentEvent
+import movyeahtv.models.events.watch.WatchEpisodeChangeEvent
 import movyeahtv.models.events.watch.WatchLanguageChangeEvent
 import movyeahtv.models.events.watch.WatchQualityChangeEvent
 import movyeahtv.models.events.watch.WatchSubtitleChangeEvent
@@ -43,6 +48,8 @@ import org.jetbrains.anko.support.v4.toast
 import java.util.*
 
 class TvPlaybackFragment : Fragment() {
+
+    private val dbEpisodes by viewModels<DbEpisodeViewModel>()
 
     private var playbackControlFragment: PlaybackControlFragment? = null
 
@@ -298,6 +305,16 @@ class TvPlaybackFragment : Fragment() {
         restartPlayer()
     }
 
+    @Subscribe
+    fun listenEpisodeChange(event: WatchEpisodeChangeEvent) {
+        currentSeason = event.season
+        currentEpisode = event.episode
+        dbEpisodes.insertEpisode(EpisodeCache(movie.id, currentEpisode, currentSeason))
+        fileData = tvShowSeasons[currentSeason][currentEpisode].files.map { it.lang!! to it.files }.toMap()
+        subtitleData = tvShowSeasons[currentSeason][currentEpisode].files.map { it.lang!! to it.subtitles }.toMap()
+        decideSubtitles()
+    }
+
     override fun onDestroyView() {
         releaseVideo()
         EventBus.getDefault().unregister(this)
@@ -310,7 +327,7 @@ class TvPlaybackFragment : Fragment() {
             fragment.movie = playback.movie
             fragment.fileData = playback.fileData
             fragment.subtitleData = playback.subtitleData
-            fragment.tvShowSeasons = playback.tvShowSeasons
+            fragment.tvShowSeasons.putAll(playback.tvShowSeasons)
             fragment.qualityKey = playback.qualityKey
             fragment.languageKey = playback.languageKey
             fragment.subtitleKey = playback.subtitleKey
