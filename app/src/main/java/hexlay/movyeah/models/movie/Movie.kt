@@ -39,6 +39,10 @@ data class Movie(
         @Embedded(prefix = "seasons_") @SerializedName("seasons") var seasons: SeasonHelper?
 ) : Parcelable {
 
+    fun getRealId(): Int {
+        return if (isTvShow) adjaraId else id
+    }
+
     fun getTitle(): String {
         return when {
             primaryName?.isNotEmpty()!! -> {

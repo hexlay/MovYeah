@@ -18,6 +18,7 @@
 
     <!-- Related -->
     <string name="related_movies">მსგავსი ფილმები</string>
+    <string name="related_series">მსგავსი სერიალები</string>
 
     <!-- Offline mode -->
     <string name="offline_remove">წაშლა</string>

@@ -66,7 +66,12 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun initRelated() {
-        movieListViewModel.fetchRelated(movie!!.id).observeOnce(this, Observer {
+        related_movies_title.text = if (movie!!.isTvShow) {
+            getString(R.string.related_series)
+        } else {
+            getString(R.string.related_movies)
+        }
+        movieListViewModel.fetchRelated(movie!!.getRealId()).observeOnce(this, Observer {
             loading_movies.isGone = true
             if (it != null) {
                 handleRelated(it)

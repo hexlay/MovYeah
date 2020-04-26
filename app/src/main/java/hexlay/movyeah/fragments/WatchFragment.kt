@@ -574,8 +574,7 @@ class WatchFragment : Fragment() {
             onBackPressed()
         }
         button_share.setOnClickListener {
-            val id = if (movie.isTvShow) movie.adjaraId else movie.id
-            share("https://www.adjaranet.com/movies/${id}")
+            share("https://www.adjaranet.com/movies/${movie.getRealId()}")
             stillInApp = true
         }
         button_download.setOnClickListener {
