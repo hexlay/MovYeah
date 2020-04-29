@@ -63,7 +63,7 @@ class NotificationService : LifecycleService() {
                             val mockId = last.getMockEpisodeId(size)
                             if (mockId != preferenceHelper!!.lastNotificationId) {
                                 createNotificationChannel("Favorites", "Favorite tv shows")
-                                showNotification(it, "${last.episode}. ${last.getEpisodeTitle()}", size + last.episode)
+                                showNotification(it, "S${size}E${last.episode} - ${last.getEpisodeTitle()}", size + last.episode)
                             }
                             preferenceHelper!!.lastNotificationId = mockId
                         }
