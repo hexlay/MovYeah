@@ -63,7 +63,7 @@ class NotificationService : LifecycleService() {
                             val mockId = last.getMockEpisodeId(size)
                             if (mockId != preferenceHelper!!.lastNotificationId) {
                                 createNotificationChannel("Favorites", "Favorite tv shows")
-                                showNotification(it, size + last.episode)
+                                showNotification(it, "${last.episode}. ${last.getEpisodeTitle()}", size + last.episode)
                             }
                             preferenceHelper!!.lastNotificationId = mockId
                         }
@@ -84,11 +84,11 @@ class NotificationService : LifecycleService() {
         }
     }
 
-    private fun showNotification(movie: Movie, notificationId: Int) {
+    private fun showNotification(movie: Movie, desc: String, notificationId: Int) {
         val intent = intentFor<MainActivity>("movie" to movie)
         val pendingIntent = PendingIntent.getActivity(this, notificationId, intent, 0)
         val notificationBuilder = NotificationCompat.Builder(this, "Movyeah")
-                .setContentTitle("სიახლე !")
+                .setContentTitle("${movie.getTitle()} - ახალი ეპიზოდი !")
                 .setContentText(movie.getTitle())
                 .setSmallIcon(R.drawable.ic_noti)
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
