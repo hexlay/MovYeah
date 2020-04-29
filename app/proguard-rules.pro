@@ -46,3 +46,14 @@
 }
 -keep class com.zerobranch.androidremotedebugger.source.models.** { *; }
 -keep class com.zerobranch.androidremotedebugger.source.local.LogLevel
+
+################ rxjava2 ###########
+-dontwarn java.util.concurrent.Flow*
+##### END ##############
+
+##ReactNetwork####
+-dontwarn com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
+-dontwarn io.reactivex.functions.Function
+-dontwarn rx.internal.util.**
+-dontwarn sun.misc.Unsafe
+##END#####

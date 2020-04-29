@@ -14,7 +14,15 @@ data class Episode(
     fun getEpisodeTitle(): String {
         return (if (title?.isNotEmpty()!!)
             title
-        else "სათაური ვერ მოიძებნა") ?: "სათაური ვერ მოიძებნა"
+        else
+            "სათაური ვერ მოიძებნა") ?: "სათაური ვერ მოიძებნა"
+    }
+
+    fun getMockEpisodeId(season: Int): String {
+        return if (title?.isNotEmpty()!!)
+            "${season}_${episode}_${title}"
+        else
+            "${season}_${episode}_null"
     }
 
 }

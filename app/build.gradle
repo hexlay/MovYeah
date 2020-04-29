@@ -130,5 +130,6 @@ dependencies {
     implementation 'com.afollestad.assent:core:3.0.0-RC4'
     implementation 'com.afollestad.inline-activity-result:core:0.2.0'
     implementation 'com.github.zerobranch:android-remote-debugger:1.0.0'
+    implementation 'com.rezwan.knetworklib:knetworklib:1.0.3'
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 }

@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="movies">
-        <item name="0">@string/menu_movies</item>
-        <item name="1">@string/menu_series</item>
-    </string-array>
-
-    <string-array name="movies_value">
-        <item name="0">0</item>
-        <item name="1">1</item>
-    </string-array>
-
     <string-array name="quality">
         <item name="MEDIUM">@string/full_qual_low</item>
         <item name="HIGH">@string/full_qual_hd</item>

@@ -69,6 +69,14 @@ fun String.toHtml(): Spanned {
     }
 }
 
+fun Menu.hideItem(id: Int) {
+    findItem(id).isVisible = false
+}
+
+fun Menu.showItem(id: Int) {
+    findItem(id).isVisible = true
+}
+
 fun <T> List<T>.toCommaList(): String = joinToString(separator = ", ")
 
 fun <T> ArrayList<T>.differsFrom(other: ArrayList<T>): Boolean = size != other.size || !CollectionUtils.subtract(this, other).isEmpty()
@@ -87,6 +95,9 @@ fun String.translateLanguage(context: Context): String {
         return ""
     val name = "full_${this.toLowerCase(Locale.ENGLISH)}"
     val identifier = context.resources.getIdentifier(name, "string", context.packageName)
+    if (identifier == 0) {
+        return this
+    }
     return context.getString(identifier)
 }
 

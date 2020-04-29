@@ -1,6 +1,5 @@
 package hexlay.movyeah.activities
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.view.isGone
@@ -20,7 +19,6 @@ import hexlay.movyeah.models.movie.Movie
 import hexlay.movyeah.models.movie.attributes.Actor
 import kotlinx.android.synthetic.main.activity_actor_movie.*
 
-@SuppressLint("CheckResult")
 class ActorActivity : AbsWatchModeActivity() {
 
     private val actorMoviesViewModel by viewModels<ActorMoviesViewModel>()
@@ -29,6 +27,8 @@ class ActorActivity : AbsWatchModeActivity() {
     private var page = 1
     private var loading = true
     private val source = emptyDataSource()
+
+    override var networkView: Int = android.R.id.content
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

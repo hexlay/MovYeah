@@ -79,19 +79,11 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:enabled="false"
             android:disableDependentsState="false"
             android:icon="@drawable/ic_pref_notification"
             android:key="notifications"
-            android:title="@string/settings_notification" />
-
-        <ListPreference
-            android:defaultValue="0"
-            android:dependency="notifications"
-            android:entries="@array/movies"
-            android:entryValues="@array/movies_value"
-            android:key="service_value"
-            android:title="@string/settings_notification_value" />
+            android:title="@string/settings_notification"
+            android:summary="@string/settings_notification_sum"/>
 
     </PreferenceCategory>
 

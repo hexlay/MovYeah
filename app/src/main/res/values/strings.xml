@@ -105,7 +105,7 @@
     <string name="settings_main_autostart_title">ავტომატური გაშვება</string>
     <string name="settings_main_autostart_sum">ფილმის/სერიალის ავტომატური გაშვება არჩევისთანავე</string>
     <string name="settings_notification">შეტყობინებები</string>
-    <string name="settings_notification_value">შეტყობინების ტიპი</string>
+    <string name="settings_notification_sum">შეტყობინებებს მიიღებთ ფავორიტებში დამატებული სერიალების მიხედვით</string>
     <string name="settings_main_language">აპლიკაციის ენა</string>
     <string name="settings_main_subtitles_title">სუბტიტრები</string>
     <string name="settings_main_subtitles_sum">სუბტიტრების ჩვენება არჩეულ ენაზე როცა შესაძლებელია</string>

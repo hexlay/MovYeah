@@ -23,24 +23,36 @@ import hexlay.movyeah.adapters.MainPageAdapter
 import hexlay.movyeah.database.view_models.DbCategoryViewModel
 import hexlay.movyeah.fragments.*
 import hexlay.movyeah.helpers.*
+import hexlay.movyeah.models.events.NetworkChangeEvent
 import hexlay.movyeah.models.movie.Movie
 import hexlay.movyeah.models.movie.attributes.Category
-import hexlay.movyeah.services.NotificationService
+import hexlay.movyeah.services.NotificationServiceJob
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.navigation
 import kotlinx.android.synthetic.main.fragment_watch.*
+import org.greenrobot.eventbus.Subscribe
 
 class MainActivity : AbsWatchModeActivity() {
 
     private var searchFragment: SearchFragment? = null
     private var searchMode = false
     private var searchAdapter: ArrayAdapter<String>? = null
+    private var isNetworkAvailable = true
+
+    private lateinit var mainFragment: MainFragment
+    private lateinit var moviesFragment: MoviesFragment
+    private lateinit var tvShowFragment: TvShowFragment
+    private lateinit var favoriteFragment: FavoriteFragment
+    private lateinit var downloadFragment: DownloadFragment
+
+    override var networkView: Int = R.id.navigation
 
     private val dbCategories by viewModels<DbCategoryViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        isNetworkAvailable = isNetworkAvailable()
         initActivity()
     }
 
@@ -48,12 +60,21 @@ class MainActivity : AbsWatchModeActivity() {
         super.initActivity()
         initCategories()
         makeFullscreen()
+        initFragments()
         initToolbar()
         initNavigationView()
         initSync()
         initDarkMode()
         initStarterData()
         initHistory()
+    }
+
+    private fun initFragments() {
+        mainFragment = MainFragment()
+        moviesFragment = MoviesFragment()
+        tvShowFragment = TvShowFragment()
+        favoriteFragment = FavoriteFragment()
+        downloadFragment = DownloadFragment()
     }
 
     private fun initCategories() {
@@ -105,7 +126,7 @@ class MainActivity : AbsWatchModeActivity() {
     }
 
     private fun startSearchMode() {
-        if (!searchMode && isNetworkAvailable()) {
+        if (!searchMode && isNetworkAvailable) {
             searchMode = true
             searchFragment = SearchFragment()
             supportFragmentManager.commit {
@@ -197,7 +218,7 @@ class MainActivity : AbsWatchModeActivity() {
     fun initSync() {
         if (preferenceHelper?.getNotifications!!) {
             if (!isSyncing()) {
-                val jobService = ComponentName(this, NotificationService::class.java)
+                val jobService = ComponentName(this, NotificationServiceJob::class.java)
                 val syncInfo = JobInfo.Builder(0x1, jobService)
                         .setPeriodic(3600000) //1h; 4h - 14400000
                         .setPersisted(true)
@@ -229,22 +250,26 @@ class MainActivity : AbsWatchModeActivity() {
         }
     }
 
-    private fun setupViewPager() {
+    private fun setupViewPagerAdapter() {
         val adapter = MainPageAdapter(supportFragmentManager)
-        if (isNetworkAvailable()) {
-            adapter.addFragment(MainFragment())
-            adapter.addFragment(MoviesFragment())
-            adapter.addFragment(TvShowFragment())
-            adapter.addFragment(FavoriteFragment())
+        if (isNetworkAvailable) {
+            adapter.addFragment(mainFragment)
+            adapter.addFragment(moviesFragment)
+            adapter.addFragment(tvShowFragment)
+            adapter.addFragment(favoriteFragment)
         } else {
-            navigation.menu.removeItem(R.id.nav_main)
-            navigation.menu.removeItem(R.id.nav_movies)
-            navigation.menu.removeItem(R.id.nav_series)
-            navigation.menu.removeItem(R.id.nav_favorites)
+            navigation.menu.hideItem(R.id.nav_main)
+            navigation.menu.hideItem(R.id.nav_movies)
+            navigation.menu.hideItem(R.id.nav_series)
+            navigation.menu.hideItem(R.id.nav_favorites)
         }
-        adapter.addFragment(DownloadFragment())
+        adapter.addFragment(downloadFragment)
         fragment_pager.adapter = adapter
         fragment_pager.offscreenPageLimit = adapter.count
+    }
+
+    private fun setupViewPager() {
+        setupViewPagerAdapter()
         fragment_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
@@ -297,6 +322,19 @@ class MainActivity : AbsWatchModeActivity() {
                 add(android.R.id.content, SettingsFragment(), "settings")
                 addToBackStack("")
             }
+        }
+    }
+
+    @Subscribe
+    fun listenNetworkChange(event: NetworkChangeEvent) {
+        if (event.isConnected && !isNetworkAvailable) {
+            isNetworkAvailable = true
+            fragment_pager.adapter = null
+            setupViewPagerAdapter()
+            navigation.menu.showItem(R.id.nav_main)
+            navigation.menu.showItem(R.id.nav_movies)
+            navigation.menu.showItem(R.id.nav_series)
+            navigation.menu.showItem(R.id.nav_favorites)
         }
     }
 

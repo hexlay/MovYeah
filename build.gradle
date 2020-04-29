@@ -24,6 +24,9 @@ allprojects {
         maven {
             url 'https://jitpack.io'
         }
+        maven {
+            url 'https://dl.bintray.com/rrsaikat/RNetwork'
+        }
         google()
     }
 }

@@ -22,7 +22,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private lateinit var notifications: SwitchPreference
     private lateinit var downloadNotification: SwitchPreference
     private lateinit var pipMode: SwitchPreference
-    private lateinit var serviceCategory: ListPreference
     private lateinit var seek: ListPreference
     private lateinit var lang: ListPreference
     private lateinit var quality: ListPreference
@@ -65,7 +64,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         notifications = preferenceManager.findPreference("notifications")!!
         downloadNotification = preferenceManager.findPreference("download_notification")!!
         autoPlay = preferenceManager.findPreference("autostart")!!
-        serviceCategory = preferenceManager.findPreference("service_value")!!
         seek = preferenceManager.findPreference("seek_value")!!
         lang = preferenceManager.findPreference("lang_value")!!
         quality = preferenceManager.findPreference("qual_value")!!
@@ -74,7 +72,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         if (Constants.isAndroidO)
             pipMode.isEnabled = true
 
-        serviceCategory.summary = getString(if (preferenceHelper.notificationType == 0) R.string.menu_movies else R.string.menu_series)
         seek.summary = getString(R.string.settings_main_seek_seconds).format((preferenceHelper.seek / 1000))
         lang.summary = preferenceHelper.lang.translateLanguage(requireContext())
         quality.summary = preferenceHelper.quality.translateQuality(requireContext())
@@ -82,13 +79,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         about.setOnPreferenceClickListener {
             startActivity<AboutActivity>()
             false
-        }
-
-        serviceCategory.setOnPreferenceChangeListener { _, newValue ->
-            val newNotificationType = newValue.toString().toInt()
-            preferenceHelper.notificationType = newNotificationType
-            serviceCategory.summary = getString(if (newNotificationType == 0) R.string.menu_movies else R.string.menu_series)
-            true
         }
 
         lang.setOnPreferenceChangeListener { _, newValue ->

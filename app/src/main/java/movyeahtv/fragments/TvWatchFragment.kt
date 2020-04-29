@@ -130,11 +130,10 @@ class TvWatchFragment : DetailsSupportFragment() {
 
     private fun loadData() {
         if (movie.isTvShow) {
-            watchViewModel.fetchMovie(movie.adjaraId)
-            watchViewModel.movie.observeOnce(viewLifecycleOwner, Observer { movieExtend ->
+            watchViewModel.fetchMovie(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { movieExtend ->
                 if (movieExtend?.seasons != null) {
                     watchViewModel.fetchTvShowEpisodes(movie.id, movieExtend.seasons!!.data.size)
-                    watchViewModel.tvShowEpisodes.observeOnce(viewLifecycleOwner, Observer { seasons ->
+                            .observeOnce(viewLifecycleOwner, Observer { seasons ->
                         if (seasons != null && seasons.isNotEmpty()) {
                             tvShowSeasons = seasons
                             setupTvShow()
@@ -147,8 +146,7 @@ class TvWatchFragment : DetailsSupportFragment() {
                 }
             })
         } else {
-            watchViewModel.fetchMovieFileData(movie.id)
-            watchViewModel.movieData.observeOnce(viewLifecycleOwner, Observer { episode ->
+            watchViewModel.fetchMovieFileData(movie.id).observeOnce(viewLifecycleOwner, Observer { episode ->
                 if (episode != null) {
                     fileData = episode.files.map { it.lang!! to it.files }.toMap()
                     subtitleData = episode.files.map { it.lang!! to it.subtitles }.toMap()
@@ -237,8 +235,7 @@ class TvWatchFragment : DetailsSupportFragment() {
     }
 
     private fun initCast() {
-        watchViewModel.fetchActors(movie.adjaraId)
-        watchViewModel.actorList.observeOnce(viewLifecycleOwner, Observer { cast ->
+        watchViewModel.fetchActors(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { cast ->
             if (cast != null) {
                 val actorAdapter = ArrayObjectAdapter(CastPresenter(requireContext()))
                 actorAdapter.addAll(0, cast)

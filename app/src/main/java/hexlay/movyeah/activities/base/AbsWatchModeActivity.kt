@@ -8,10 +8,12 @@ import android.content.res.Configuration
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
+import com.rezwan.knetworklib.KNetwork
 import hexlay.movyeah.R
 import hexlay.movyeah.fragments.WatchFragment
 import hexlay.movyeah.helpers.Constants
 import hexlay.movyeah.helpers.PreferenceHelper
+import hexlay.movyeah.models.events.NetworkChangeEvent
 import hexlay.movyeah.models.events.StartWatchingEvent
 import hexlay.movyeah.models.movie.Movie
 import kotlinx.android.synthetic.main.fragment_watch.*
@@ -24,16 +26,25 @@ abstract class AbsWatchModeActivity : AppCompatActivity() {
     protected var preferenceHelper: PreferenceHelper? = null
 
     protected var watchMode = false
-    protected var registered = false
     protected var watchFragment: WatchFragment? = null
+
+    protected abstract var networkView: Int
 
     protected open fun initActivity() {
         preferenceHelper = PreferenceHelper(this)
-    }
+        KNetwork.bind(this, lifecycle)
+                .setInAnimation(R.anim.top_in)
+                .setOutAnimation(R.anim.top_out)
+                .setViewGroupResId(networkView)
+                .setConnectivityListener(object : KNetwork.OnNetWorkConnectivityListener {
+            override fun onNetConnected() {
+                EventBus.getDefault().post(NetworkChangeEvent(true))
+            }
 
-    @Subscribe
-    fun listenWatch(event: StartWatchingEvent) {
-        startWatchMode(event.item, event.identifier)
+            override fun onNetDisConnected() {
+                EventBus.getDefault().post(NetworkChangeEvent(false))
+            }
+        })
     }
 
     protected open fun startWatchMode(movie: Movie, identifier: String = "") {
@@ -99,6 +110,11 @@ abstract class AbsWatchModeActivity : AppCompatActivity() {
     public override fun onStop() {
         EventBus.getDefault().unregister(this)
         super.onStop()
+    }
+
+    @Subscribe
+    fun listenWatch(event: StartWatchingEvent) {
+        startWatchMode(event.item, event.identifier)
     }
 
 }

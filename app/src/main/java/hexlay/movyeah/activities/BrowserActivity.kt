@@ -18,6 +18,8 @@ class BrowserActivity : AbsWatchModeActivity() {
     private var movieId = 0
     private val watchViewModel by viewModels<WatchViewModel>()
 
+    override var networkView: Int = android.R.id.content
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initData()
@@ -37,8 +39,7 @@ class BrowserActivity : AbsWatchModeActivity() {
     }
 
     private fun initMovieData() {
-        watchViewModel.fetchMovie(movieId)
-        watchViewModel.movie.observeOnce(this, Observer {
+        watchViewModel.fetchMovie(movieId).observeOnce(this, Observer {
             startWatchMode(it)
         })
     }
