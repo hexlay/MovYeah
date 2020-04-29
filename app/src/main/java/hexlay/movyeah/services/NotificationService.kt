@@ -94,7 +94,7 @@ class NotificationService : LifecycleService() {
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                 .setLights(Color.BLUE, 400, 300)
                 .setAutoCancel(true)
-                .setStyle(NotificationCompat.BigTextStyle().bigText(movie.getDescription()))
+                .setStyle(NotificationCompat.BigTextStyle().bigText(desc))
                 .setContentIntent(pendingIntent)
         Glide.with(applicationContext)
                 .asBitmap()
