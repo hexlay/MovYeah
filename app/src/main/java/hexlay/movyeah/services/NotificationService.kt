@@ -55,7 +55,7 @@ class NotificationService : LifecycleService() {
     private fun handleData(data: List<Movie>) {
         if (data.isNotEmpty()) {
             data.forEach {
-                if (it.isTvShow) {
+                if (it.isTvShow && it.seasons != null) {
                     watchViewModel?.fetchTvShowEpisodes(it.id, it.seasons!!.data.size)?.observeOnce(this, Observer { seasons ->
                         if (seasons != null && seasons.isNotEmpty()) {
                             val size = seasons.size()
