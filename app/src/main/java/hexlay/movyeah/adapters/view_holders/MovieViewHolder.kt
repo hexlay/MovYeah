@@ -7,18 +7,18 @@ import android.widget.TextView
 import com.afollestad.recyclical.ViewHolder
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.DetailActivity
+import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.helpers.setUrl
 import hexlay.movyeah.models.events.StartWatchingEvent
-import hexlay.movyeah.models.movie.Movie
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.intentFor
 
 class MovieViewHolder(itemView: View) : ViewHolder(itemView) {
 
     var title: TextView = itemView.findViewById(R.id.title)
-    var year: TextView = itemView.findViewById(R.id.year)
-    var imdb: TextView = itemView.findViewById(R.id.imdb)
-    var image: ImageView = itemView.findViewById(R.id.image)
+    private var year: TextView = itemView.findViewById(R.id.year)
+    private var imdb: TextView = itemView.findViewById(R.id.imdb)
+    private var image: ImageView = itemView.findViewById(R.id.image)
 
     init {
         title.isSelected = true

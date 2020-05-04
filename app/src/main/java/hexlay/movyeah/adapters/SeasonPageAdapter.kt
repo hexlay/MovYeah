@@ -4,9 +4,9 @@ import android.util.SparseArray
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import hexlay.movyeah.api.models.Movie
+import hexlay.movyeah.api.models.attributes.show.Episode
 import hexlay.movyeah.fragments.SeasonFragment
-import hexlay.movyeah.models.movie.Movie
-import hexlay.movyeah.models.movie.attributes.show.Episode
 
 class SeasonPageAdapter(
         fragmentManager: FragmentManager,

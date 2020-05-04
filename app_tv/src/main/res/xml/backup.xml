@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <include
+        domain="database"
+        path="db_links" />
+    <include
+        domain="sharedpref"
+        path="userPreferences.xml" />
+</full-backup-content>

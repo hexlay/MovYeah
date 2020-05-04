@@ -257,16 +257,6 @@ fun Fragment.downloadExists(id: String): Boolean {
     return getOfflineMovie(id).exists()
 }
 
-fun Activity.isNetworkAvailable(): Boolean {
-    val network = connectivityManager.activeNetwork
-    val capabilities = connectivityManager.getNetworkCapabilities(network)
-    return capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR))
-}
-
-fun Fragment.isNetworkAvailable(): Boolean {
-    return requireActivity().isNetworkAvailable()
-}
-
 fun Fragment.getStatusBarHeight(): Int = requireActivity().getStatusBarHeight()
 
 fun Fragment.getActionBarSize(): Int = requireActivity().getActionBarSize()

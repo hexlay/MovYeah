@@ -15,11 +15,11 @@ import com.afollestad.recyclical.setup
 import com.afollestad.recyclical.withItem
 import hexlay.movyeah.R
 import hexlay.movyeah.adapters.view_holders.MovieViewHolder
-import hexlay.movyeah.api.view_models.MainViewModel
+import hexlay.movyeah.api.models.Movie
+import hexlay.movyeah.api.network.view_models.MainViewModel
 import hexlay.movyeah.helpers.getActionBarSize
 import hexlay.movyeah.helpers.getStatusBarHeight
 import hexlay.movyeah.helpers.observeOnce
-import hexlay.movyeah.models.movie.Movie
 import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : Fragment() {

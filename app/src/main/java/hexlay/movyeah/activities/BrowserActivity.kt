@@ -7,11 +7,11 @@ import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.base.AbsWatchModeActivity
-import hexlay.movyeah.api.view_models.WatchViewModel
+import hexlay.movyeah.api.models.Movie
+import hexlay.movyeah.api.network.view_models.WatchViewModel
 import hexlay.movyeah.fragments.WatchFragment
 import hexlay.movyeah.helpers.makeFullscreen
 import hexlay.movyeah.helpers.observeOnce
-import hexlay.movyeah.models.movie.Movie
 
 class BrowserActivity : AbsWatchModeActivity() {
 

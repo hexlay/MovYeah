@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="hexlay.movyeah.app_tv">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="true" />
+
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/backup"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Leanback"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".activities.TvMainActivity"
+            android:banner="@drawable/tv_banner"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:logo="@drawable/tv_banner">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activities.TvSearchActivity" />
+        <activity android:name=".activities.TvWatchActivity" />
+        <activity android:name=".activities.TvPlaybackActivity" />
+    </application>
+
+</manifest>

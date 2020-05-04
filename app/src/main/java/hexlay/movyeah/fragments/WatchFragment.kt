@@ -52,19 +52,20 @@ import hexlay.movyeah.activities.ActorActivity
 import hexlay.movyeah.activities.base.AbsWatchModeActivity
 import hexlay.movyeah.adapters.SeasonPageAdapter
 import hexlay.movyeah.adapters.view_holders.CastViewHolder
-import hexlay.movyeah.api.view_models.WatchViewModel
-import hexlay.movyeah.database.view_models.DbDownloadMovieViewModel
-import hexlay.movyeah.database.view_models.DbEpisodeViewModel
-import hexlay.movyeah.database.view_models.DbMovieViewModel
+import hexlay.movyeah.api.database.view_models.DbDownloadMovieViewModel
+import hexlay.movyeah.api.database.view_models.DbEpisodeViewModel
+import hexlay.movyeah.api.database.view_models.DbMovieViewModel
+import hexlay.movyeah.api.helpers.isNetworkAvailable
+import hexlay.movyeah.api.models.DownloadMovie
+import hexlay.movyeah.api.models.Movie
+import hexlay.movyeah.api.models.attributes.Actor
+import hexlay.movyeah.api.models.attributes.Subtitle
+import hexlay.movyeah.api.models.attributes.show.Episode
+import hexlay.movyeah.api.models.attributes.show.EpisodeCache
+import hexlay.movyeah.api.models.attributes.show.EpisodeFileData
+import hexlay.movyeah.api.network.view_models.WatchViewModel
 import hexlay.movyeah.helpers.*
 import hexlay.movyeah.models.events.ChooseEpisodeEvent
-import hexlay.movyeah.models.movie.DownloadMovie
-import hexlay.movyeah.models.movie.Movie
-import hexlay.movyeah.models.movie.attributes.Actor
-import hexlay.movyeah.models.movie.attributes.Subtitle
-import hexlay.movyeah.models.movie.attributes.show.Episode
-import hexlay.movyeah.models.movie.attributes.show.EpisodeCache
-import hexlay.movyeah.models.movie.attributes.show.EpisodeFileData
 import kotlinx.android.synthetic.main.exo_playback_control_view.*
 import kotlinx.android.synthetic.main.fragment_watch.*
 import kotlinx.android.synthetic.main.piece_cast.*
@@ -707,7 +708,7 @@ class WatchFragment : Fragment() {
     private fun modePortrait() {
         isFullscreen = false
         navigation.isVisible = true
-        val params = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+        val params = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, dpOf(230))
         player_holder.layoutParams = params
         layoutStable()
         toolbar.setNavigationIcon(R.drawable.ic_down)

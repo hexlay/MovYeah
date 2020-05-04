@@ -15,10 +15,10 @@ import com.afollestad.recyclical.setup
 import com.afollestad.recyclical.withItem
 import hexlay.movyeah.R
 import hexlay.movyeah.adapters.view_holders.MovieViewHolder
-import hexlay.movyeah.api.view_models.MovieListViewModel
+import hexlay.movyeah.api.models.Movie
+import hexlay.movyeah.api.network.view_models.MovieListViewModel
 import hexlay.movyeah.fragments.FilterFragment
 import hexlay.movyeah.helpers.*
-import hexlay.movyeah.models.movie.Movie
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.piece_scroll_up.*
 

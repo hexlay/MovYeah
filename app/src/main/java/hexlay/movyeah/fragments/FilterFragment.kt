@@ -15,11 +15,11 @@ import com.afollestad.recyclical.withItem
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import hexlay.movyeah.R
 import hexlay.movyeah.adapters.view_holders.CategoryViewHolder
-import hexlay.movyeah.database.view_models.DbCategoryViewModel
+import hexlay.movyeah.api.database.view_models.DbCategoryViewModel
 import hexlay.movyeah.fragments.base.AbsMoviesFragment
 import hexlay.movyeah.helpers.Constants
 import hexlay.movyeah.helpers.observeOnce
-import hexlay.movyeah.models.movie.attributes.Category
+import hexlay.movyeah.api.models.attributes.Category
 import kotlinx.android.synthetic.main.fragment_filter.*
 
 class FilterFragment : BottomSheetDialogFragment() {

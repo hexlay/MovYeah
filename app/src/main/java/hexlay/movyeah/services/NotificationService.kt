@@ -19,11 +19,11 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.MainActivity
-import hexlay.movyeah.api.view_models.WatchViewModel
-import hexlay.movyeah.database.view_models.DbMovieViewModel
+import hexlay.movyeah.api.database.view_models.DbMovieViewModel
+import hexlay.movyeah.api.models.Movie
+import hexlay.movyeah.api.network.view_models.WatchViewModel
 import hexlay.movyeah.helpers.PreferenceHelper
 import hexlay.movyeah.helpers.observeOnce
-import hexlay.movyeah.models.movie.Movie
 import org.jetbrains.anko.intentFor
 
 class NotificationService : LifecycleService() {

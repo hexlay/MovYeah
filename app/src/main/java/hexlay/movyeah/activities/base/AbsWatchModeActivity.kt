@@ -10,12 +10,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.rezwan.knetworklib.KNetwork
 import hexlay.movyeah.R
+import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.fragments.WatchFragment
 import hexlay.movyeah.helpers.Constants
 import hexlay.movyeah.helpers.PreferenceHelper
 import hexlay.movyeah.models.events.NetworkChangeEvent
 import hexlay.movyeah.models.events.StartWatchingEvent
-import hexlay.movyeah.models.movie.Movie
 import kotlinx.android.synthetic.main.fragment_watch.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

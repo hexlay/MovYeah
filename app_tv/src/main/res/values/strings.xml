@@ -1,0 +1,75 @@
+<resources>
+
+    <string name="app_name">MovYeah</string>
+    <string name="back">უკან</string>
+    <string name="done">დასრულება</string>
+    <string name="watch">ყურება</string>
+
+    <!-- About -->
+    <string name="about_developer">Hexlay</string>
+    <string name="about_resources_tv">Made possible with →</string>
+
+    <!-- Fragment: Watch -->
+    <string name="full_chquality">ხარისხის შეცვლა</string>
+    <string name="full_cast">მონაწილე მსახიობები</string>
+    <string name="full_qual_low">დაბალი</string>
+    <string name="full_qual_hd">მაღალი</string>
+    <string name="full_error_movie">ფილმის ჩვენება შეუძლებელია</string>
+    <string name="full_error_show">სერიალის ჩვენება შეუძლებელია</string>
+
+    <!-- Languages -->
+    <string name="full_geo">ქართული</string>
+    <string name="full_eng">ინგლისური</string>
+    <string name="full_rus">რუსული</string>
+    <string name="full_jpn">იაპონური</string>
+    <string name="full_ger">გერმანული</string>
+    <string name="full_tur">თურქული</string>
+    <string name="full_spa">ესპანური</string>
+    <string name="full_ara">არაბული</string>
+
+    <!-- Filter -->
+    <string name="filter_change_year">აირჩიეთ წელი</string>
+    <string name="filter_change_category">აირჩიეთ კატეგორია</string>
+    <string name="filter_change_lang">აირჩიეთ ენა</string>
+    <string name="filter_change_episode">აირჩიეთ ეპიზოდი</string>
+    <string name="filter_change_sort">სორტირება</string>
+
+    <!-- Menus -->
+    <string name="menu_series">სერიალები</string>
+    <string name="menu_movies">ფილმები</string>
+    <string name="menu_favorites">ფავორიტები</string>
+
+    <!-- Settings -->
+    <string name="settings_title">პარამეტრები</string>
+    <string name="settings_about">აპლიკაციის შესახებ</string>
+
+    <!-- Categories -->
+    <string name="cat_265">ანიმაციური</string>
+    <string name="cat_253">ბიოგრაფიული</string>
+    <string name="cat_259">დეტექტივი</string>
+    <string name="cat_252">დოკუმენტური</string>
+    <string name="cat_249">დრამა</string>
+    <string name="cat_269">ეროტიკული</string>
+    <string name="cat_267">ვესტერნი</string>
+    <string name="cat_264">ისტორიული</string>
+    <string name="cat_258">კომედია</string>
+    <string name="cat_260">მელოდრამა</string>
+    <string name="cat_268">მიუზიკლი</string>
+    <string name="cat_256">მისტიკა</string>
+    <string name="cat_273">მოკლემეტრაჟიანი</string>
+    <string name="cat_262">მუსიკალური</string>
+    <string name="cat_248">მძაფრ-სიუჟეტიანი</string>
+    <string name="cat_266">სათავგადასავლო</string>
+    <string name="cat_257">ფანტასტიკა</string>
+    <string name="cat_251">საომარი</string>
+    <string name="cat_263">საოჯახო</string>
+    <string name="cat_255">საშინელებათა ფილმი</string>
+    <string name="cat_254">სერიალი</string>
+    <string name="cat_275">სპორტული</string>
+    <string name="cat_250">თრილერი</string>
+    <string name="cat_261">ზღაპრული (ფენტეზი)</string>
+    <string name="cat_316">კონცერტი</string>
+    <string name="cat_312">Stand Up</string>
+    <string name="cat_317">ავტო</string>
+
+</resources>

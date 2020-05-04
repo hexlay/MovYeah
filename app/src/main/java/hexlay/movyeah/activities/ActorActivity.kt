@@ -13,10 +13,10 @@ import com.afollestad.recyclical.withItem
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.base.AbsWatchModeActivity
 import hexlay.movyeah.adapters.view_holders.MovieViewHolder
-import hexlay.movyeah.api.view_models.ActorMoviesViewModel
+import hexlay.movyeah.api.models.Movie
+import hexlay.movyeah.api.models.attributes.Actor
+import hexlay.movyeah.api.network.view_models.ActorMoviesViewModel
 import hexlay.movyeah.helpers.*
-import hexlay.movyeah.models.movie.Movie
-import hexlay.movyeah.models.movie.attributes.Actor
 import kotlinx.android.synthetic.main.activity_actor_movie.*
 
 class ActorActivity : AbsWatchModeActivity() {

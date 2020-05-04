@@ -84,5 +84,8 @@ lint/outputs/
 lint/tmp/
 lint/reports/
 /app/schemas/
+/app_tv/schemas/
+/api/schemas/
 
 /app/version.properties
+/app_tv/version.properties

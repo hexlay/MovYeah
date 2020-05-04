@@ -20,12 +20,13 @@ import androidx.viewpager.widget.ViewPager
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.base.AbsWatchModeActivity
 import hexlay.movyeah.adapters.MainPageAdapter
-import hexlay.movyeah.database.view_models.DbCategoryViewModel
+import hexlay.movyeah.api.database.view_models.DbCategoryViewModel
+import hexlay.movyeah.api.helpers.isNetworkAvailable
+import hexlay.movyeah.api.models.Movie
+import hexlay.movyeah.api.models.attributes.Category
 import hexlay.movyeah.fragments.*
 import hexlay.movyeah.helpers.*
 import hexlay.movyeah.models.events.NetworkChangeEvent
-import hexlay.movyeah.models.movie.Movie
-import hexlay.movyeah.models.movie.attributes.Category
 import hexlay.movyeah.services.NotificationServiceJob
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.navigation
@@ -266,6 +267,7 @@ class MainActivity : AbsWatchModeActivity() {
         adapter.addFragment(downloadFragment)
         fragment_pager.adapter = adapter
         fragment_pager.offscreenPageLimit = adapter.count
+        fragment_pager.currentItem = 0
     }
 
     private fun setupViewPager() {

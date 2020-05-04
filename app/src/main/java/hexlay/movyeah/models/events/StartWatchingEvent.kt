@@ -1,5 +1,5 @@
 package hexlay.movyeah.models.events
 
-import hexlay.movyeah.models.movie.Movie
+import hexlay.movyeah.api.models.Movie
 
 class StartWatchingEvent(val item: Movie, var identifier: String = "")

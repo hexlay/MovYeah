@@ -20,10 +20,10 @@ import com.afollestad.recyclical.withItem
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.DetailActivity
 import hexlay.movyeah.adapters.view_holders.DownloadMovieViewHolder
-import hexlay.movyeah.database.view_models.DbDownloadMovieViewModel
+import hexlay.movyeah.api.database.view_models.DbDownloadMovieViewModel
+import hexlay.movyeah.api.models.DownloadMovie
 import hexlay.movyeah.helpers.*
 import hexlay.movyeah.models.events.StartWatchingEvent
-import hexlay.movyeah.models.movie.DownloadMovie
 import kotlinx.android.synthetic.main.fragment_movies.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.support.v4.intentFor

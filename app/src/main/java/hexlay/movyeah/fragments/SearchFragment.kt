@@ -4,11 +4,11 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import hexlay.movyeah.R
+import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.fragments.base.AbsMoviesFragment
 import hexlay.movyeah.helpers.dpOf
 import hexlay.movyeah.helpers.observeOnce
 import hexlay.movyeah.helpers.setMargins
-import hexlay.movyeah.models.movie.Movie
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.piece_scroll_up.*
 

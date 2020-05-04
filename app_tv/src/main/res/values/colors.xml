@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Background colors -->
+
+    <!-- Transparents -->
+
+    <!-- More... -->
+
+    <!-- Android TV -->
+    <color name="fastlane_background">#B31976D2</color>
+    <color name="default_background">#3d3d3d</color>
+    <color name="default_background2">#9E9E9E</color>
+</resources>
