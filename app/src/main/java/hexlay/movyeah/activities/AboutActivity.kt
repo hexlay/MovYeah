@@ -76,6 +76,9 @@ class AboutActivity : AppCompatActivity() {
                 Library("Leak Canary",
                         "Square",
                         "https://github.com/square/leakcanary"),
+                Library("Expandable Layout",
+                        "Daniel Cachapa",
+                        "https://github.com/cachapa/ExpandableLayout"),
                 Library("EventBus",
                         "Markus Junginger",
                         "https://github.com/greenrobot/EventBus")
