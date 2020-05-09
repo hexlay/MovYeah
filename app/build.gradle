@@ -108,4 +108,5 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:3.1.1'
     implementation 'com.afollestad.assent:core:3.0.0-RC4'
     implementation 'com.rezwan.knetworklib:knetworklib:1.0.3'
+    implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
 }

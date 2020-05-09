@@ -5,10 +5,6 @@ import androidx.fragment.app.Fragment
 
 fun <T> List<T>.toCommaList(): String = joinToString(separator = ", ")
 
-fun Activity.isNetworkAvailable(): Boolean {
-    return NetworkHelper.isNetworkAvailable(baseContext)
-}
+fun Activity.isNetworkAvailable(): Boolean = NetworkHelper.isNetworkAvailable(baseContext)
 
-fun Fragment.isNetworkAvailable(): Boolean {
-    return requireActivity().isNetworkAvailable()
-}
+fun Fragment.isNetworkAvailable(): Boolean = requireActivity().isNetworkAvailable()

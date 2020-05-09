@@ -15,13 +15,13 @@ class NotificationServiceJob : JobService() {
     }
 
     override fun onStartJob(jobParameters: JobParameters): Boolean {
-        startService(service)
-        return true
+        //startService(service)
+        return false
     }
 
     override fun onStopJob(jobParameters: JobParameters): Boolean {
-        stopService(service)
-        return true
+        //stopService(service)
+        return false
     }
 
 

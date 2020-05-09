@@ -13,12 +13,15 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.recyclical.datasource.dataSourceOf
 import com.afollestad.recyclical.datasource.emptyDataSource
 import com.afollestad.recyclical.setup
 import com.afollestad.recyclical.withItem
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.DetailActivity
+import hexlay.movyeah.adapters.view_holders.DownloadGroupViewHolder
 import hexlay.movyeah.adapters.view_holders.DownloadMovieViewHolder
 import hexlay.movyeah.api.database.view_models.DbDownloadMovieViewModel
 import hexlay.movyeah.api.models.DownloadMovie
@@ -68,7 +71,9 @@ class DownloadFragment : Fragment() {
             loading_movies.isGone = true
             source.clear()
             if (it.isNotEmpty()) {
-                source.addAll(it)
+                it.groupBy { g -> g.movie!!.id }.forEach { (_, value) ->
+                    source.add(value)
+                }
                 warning_holder.isVisible = false
             } else {
                 warning_holder.text = getString(R.string.loading_dows_fail)
@@ -77,19 +82,52 @@ class DownloadFragment : Fragment() {
         })
         movies_holder.setup {
             withDataSource(source)
+            withItem<ArrayList<DownloadMovie>, DownloadGroupViewHolder>(R.layout.list_items_download_group) {
+                onBind(::DownloadGroupViewHolder) { _, groupedItems ->
+                    val firstMovie = groupedItems.first().movie
+                    groupTitle.text = firstMovie?.getTitle()
+                    firstMovie?.getTruePoster()?.let { groupImage.setUrl(it) }
+                    setupChildRecyclerView(childrenHolder, groupedItems)
+                    var title = ""
+                    groupedItems.forEach {
+                        val movie = it.movie
+                        if (movie != null) {
+                            val translatedLanguage = it.language?.translateLanguage(requireContext())
+                            val translatedQuality = it.quality?.translateQuality(requireContext())
+                            title += if (movie.isTvShow) {
+                                "S${it.currentSeason}E${it.currentEpisode + 1} (${translatedLanguage}, ${translatedQuality})"
+                            } else {
+                                "${translatedLanguage}, $translatedQuality"
+                            }
+                            title += "<br>"
+                        }
+                    }
+                    groupContent.text = title.toHtml()
+                    itemView.setOnClickListener {
+                        children.toggle()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupChildRecyclerView(view: RecyclerView, groupedItems: ArrayList<DownloadMovie>) {
+        view.setup {
+            withDataSource(dataSourceOf(groupedItems))
             withItem<DownloadMovie, DownloadMovieViewHolder>(R.layout.list_items_download) {
                 onBind(::DownloadMovieViewHolder) { _, item ->
                     val movie = item.movie
                     val downloadProgress = DownloadProgress(item.downloadId, progress)
                     if (movie != null) {
                         title.isSelected = true
+                        val translatedLanguage = item.language?.translateLanguage(requireContext())
+                        val translatedQuality = item.quality?.translateQuality(requireContext())
                         val titleTrue = if (movie.isTvShow) {
-                            "${movie.getTitle()} s${item.currentSeason}e${item.currentEpisode + 1} (${item.language}, ${item.quality})"
+                            "S${item.currentSeason}E${item.currentEpisode + 1} (${translatedLanguage}, ${translatedQuality})"
                         } else {
-                            "${movie.getTitle()} (${item.language}, ${item.quality})"
+                            "${translatedLanguage}, $translatedQuality"
                         }
                         title.text = titleTrue
-                        movie.getTruePoster()?.let { image.setUrl(it) }
                         Handler().postDelayed({
                             if (downloadExists(item.identifier)) {
                                 download.isVisible = false
@@ -123,14 +161,14 @@ class DownloadFragment : Fragment() {
                             downloadProgress.start()
                             download.isVisible = false
                         }
+                        itemView.setOnClickListener {
+                            item.movie?.let { movie -> EventBus.getDefault().post(StartWatchingEvent(movie, item.identifier)) }
+                        }
+                        itemView.setOnLongClickListener {
+                            startActivity(intentFor<DetailActivity>("movie" to item.movie))
+                            true
+                        }
                     }
-                }
-                onClick {
-                    item.movie?.let { movie -> EventBus.getDefault().post(StartWatchingEvent(movie, item.identifier)) }
-
-                }
-                onLongClick {
-                    startActivity(intentFor<DetailActivity>("movie" to item.movie))
                 }
             }
         }
@@ -142,7 +180,7 @@ class DownloadFragment : Fragment() {
         private val query = DownloadManager.Query()
 
         init {
-            query.setFilterById(downloadId)
+            setDownloadId(downloadId)
         }
 
         fun setDownloadId(downloadId: Long) {

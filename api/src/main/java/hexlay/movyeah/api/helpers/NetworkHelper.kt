@@ -23,7 +23,7 @@ object NetworkHelper {
         return capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR))
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    @Suppress("DEPRECATION")
     private fun isNetworkAvailableL(context: Context): Boolean {
         val network = context.connectivityManager.activeNetworkInfo
         return network != null && network.isConnected
