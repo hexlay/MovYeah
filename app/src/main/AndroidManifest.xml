@@ -59,7 +59,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.DetailActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppThemeTranslucent" />
         <activity
             android:name=".activities.ActorActivity"
