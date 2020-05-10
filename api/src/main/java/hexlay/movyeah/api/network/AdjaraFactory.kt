@@ -11,7 +11,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 object AdjaraFactory {
 
     private fun buildRetrofit(context: Context): Retrofit {
-        val cache = Cache(context.cacheDir, 5242880) // 5 * 1024 * 1024
+        val cache = Cache(context.cacheDir, 5 * 1024 * 1024)
         val client = OkHttpClient.Builder()
                 .addInterceptor(ConnectionInterceptor(context))
                 .cache(cache)
@@ -24,8 +24,8 @@ object AdjaraFactory {
                 .build()
     }
 
-    fun createService(context: Context): hexlay.movyeah.api.network.AdjaraAPI {
-        return buildRetrofit(context).create(hexlay.movyeah.api.network.AdjaraAPI::class.java)
+    fun createService(context: Context): AdjaraAPI {
+        return buildRetrofit(context).create(AdjaraAPI::class.java)
     }
 
 }
