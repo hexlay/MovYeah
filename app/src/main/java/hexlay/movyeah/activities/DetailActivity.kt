@@ -71,7 +71,7 @@ class DetailActivity : AppCompatActivity() {
         } else {
             getString(R.string.related_movies)
         }
-        movieListViewModel.fetchRelated(movie!!.getRealId()).observeOnce(this, Observer {
+        movieListViewModel.fetchRelated(movie!!.getRealId()).observeOnce(Observer {
             loading_movies.isGone = true
             if (it != null) {
                 handleRelated(it)

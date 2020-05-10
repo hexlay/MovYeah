@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
@@ -16,10 +17,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import hexlay.movyeah.R
 import hexlay.movyeah.adapters.view_holders.CategoryViewHolder
 import hexlay.movyeah.api.database.view_models.DbCategoryViewModel
+import hexlay.movyeah.api.models.attributes.Category
 import hexlay.movyeah.fragments.base.AbsMoviesFragment
 import hexlay.movyeah.helpers.Constants
 import hexlay.movyeah.helpers.observeOnce
-import hexlay.movyeah.api.models.attributes.Category
 import kotlinx.android.synthetic.main.fragment_filter.*
 
 class FilterFragment : BottomSheetDialogFragment() {
@@ -122,7 +123,7 @@ class FilterFragment : BottomSheetDialogFragment() {
 
     private fun setupCategories() {
         val source = emptyDataSource()
-        dbCategories.getCategories()?.observeOnce(viewLifecycleOwner, androidx.lifecycle.Observer {
+        dbCategories.getCategories()?.observeOnce(Observer {
             source.addAll(it)
         })
         cat_holder.setup {

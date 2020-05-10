@@ -80,7 +80,7 @@ class MainActivity : AbsWatchModeActivity() {
 
     private fun initCategories() {
         val categoryIds = listOf(265, 253, 259, 252, 249, 269, 267, 264, 258, 260, 268, 256, 273, 262, 248, 266, 257, 251, 263, 255, 254, 275, 250, 317, 316, 312, 261)
-        dbCategories.getCategories()?.observeOnce(this, Observer {
+        dbCategories.getCategories()?.observeOnce(Observer {
             if (it.size != categoryIds.size) {
                 dbCategories.clearCategories()
                 for (categoryId in categoryIds) {
@@ -221,7 +221,7 @@ class MainActivity : AbsWatchModeActivity() {
             if (!isSyncing()) {
                 val jobService = ComponentName(this, NotificationServiceJob::class.java)
                 val syncInfo = JobInfo.Builder(0x1, jobService)
-                        .setPeriodic(3600000) //1h; 4h - 14400000
+                        .setPeriodic(1) //1h; 4h - 14400000
                         .setPersisted(true)
                         .build()
                 val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler

@@ -3,6 +3,7 @@ package hexlay.movyeah.services
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Intent
+import hexlay.movyeah.helpers.startBackgroundService
 import org.jetbrains.anko.intentFor
 
 class NotificationServiceJob : JobService() {
@@ -15,13 +16,13 @@ class NotificationServiceJob : JobService() {
     }
 
     override fun onStartJob(jobParameters: JobParameters): Boolean {
-        //startService(service)
-        return false
+        startBackgroundService(service)
+        return true
     }
 
     override fun onStopJob(jobParameters: JobParameters): Boolean {
-        //stopService(service)
-        return false
+        stopService(service)
+        return true
     }
 
 

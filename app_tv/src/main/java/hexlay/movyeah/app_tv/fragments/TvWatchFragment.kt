@@ -103,7 +103,7 @@ class TvWatchFragment : DetailsSupportFragment() {
                     EventBus.getDefault().post(StartFragmentEvent("choose_episode", fragment))
                 }
                 3L -> {
-                    dbMovie.getMovie(movie.id)?.observeOnce(viewLifecycleOwner, Observer { fav ->
+                    dbMovie.getMovie(movie.id)?.observeOnce(Observer { fav ->
                         val size = actionAdapter!!.size() - 1
                         val action = actionAdapter?.get(size) as Action
                         if (fav == null) {
@@ -126,10 +126,10 @@ class TvWatchFragment : DetailsSupportFragment() {
 
     private fun loadData() {
         if (movie.isTvShow) {
-            watchViewModel.fetchMovie(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { movieExtend ->
+            watchViewModel.fetchMovie(movie.adjaraId).observeOnce(Observer { movieExtend ->
                 if (movieExtend?.seasons != null) {
                     watchViewModel.fetchTvShowEpisodes(movie.id, movieExtend.seasons!!.data.size)
-                            .observeOnce(viewLifecycleOwner, Observer { seasons ->
+                            .observeOnce(Observer { seasons ->
                         if (seasons != null && seasons.isNotEmpty()) {
                             tvShowSeasons = seasons
                             setupTvShow()
@@ -142,7 +142,7 @@ class TvWatchFragment : DetailsSupportFragment() {
                 }
             })
         } else {
-            watchViewModel.fetchMovieFileData(movie.id).observeOnce(viewLifecycleOwner, Observer { episode ->
+            watchViewModel.fetchMovieFileData(movie.id).observeOnce(Observer { episode ->
                 if (episode != null) {
                     fileData = episode.files.map { it.lang!! to it.files }.toMap()
                     subtitleData = episode.files.map { it.lang!! to it.subtitles }.toMap()
@@ -155,7 +155,7 @@ class TvWatchFragment : DetailsSupportFragment() {
     }
 
     private fun setupTvShow() {
-        dbEpisodes.getEpisode(movie.id)?.observeOnce(viewLifecycleOwner, Observer {
+        dbEpisodes.getEpisode(movie.id)?.observeOnce(Observer {
             if (it != null) {
                 currentSeason = it.season
                 setupTvShowEpisode(it.episode)
@@ -193,7 +193,7 @@ class TvWatchFragment : DetailsSupportFragment() {
     }
 
     private fun initFavorites() {
-        dbMovie.getMovie(movie.id)?.observeOnce(viewLifecycleOwner, Observer {
+        dbMovie.getMovie(movie.id)?.observeOnce(Observer {
             val action = if (it == null) {
                 Action(3, "ფავორიტებში დამატება", "", getWhiteDrawable(R.drawable.ic_favorite_empty))
             } else {
@@ -231,7 +231,7 @@ class TvWatchFragment : DetailsSupportFragment() {
     }
 
     private fun initCast() {
-        watchViewModel.fetchActors(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { cast ->
+        watchViewModel.fetchActors(movie.adjaraId).observeOnce(Observer { cast ->
             if (cast != null) {
                 val actorAdapter = ArrayObjectAdapter(CastPresenter(requireContext()))
                 actorAdapter.addAll(0, cast)

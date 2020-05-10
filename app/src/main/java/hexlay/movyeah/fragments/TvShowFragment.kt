@@ -19,7 +19,7 @@ class TvShowFragment : AbsMoviesFragment() {
                 },
                 filtersSort = sortingMethod,
                 filtersYears = "${startYear},${endYear}"
-        ).observeOnce(viewLifecycleOwner, Observer {
+        ).observeOnce(Observer {
             handleMovies(it)
         })
     }

@@ -44,7 +44,7 @@ class SeasonFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dbEpisodes.getEpisode(movie!!.id)?.observeOnce(viewLifecycleOwner, Observer {
+        dbEpisodes.getEpisode(movie!!.id)?.observeOnce(Observer {
             if (it != null) {
                 episode_holder.scrollToPosition(it.episode)
             } else {

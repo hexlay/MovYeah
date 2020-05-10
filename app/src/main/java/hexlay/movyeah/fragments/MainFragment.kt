@@ -44,23 +44,23 @@ class MainFragment : Fragment() {
     private fun init() {
         setupLayout()
         mainViewModel.fetchMovies()
-        mainViewModel.geoMovies.observeOnce(viewLifecycleOwner, Observer {
+        mainViewModel.geoMovies.observeOnce(Observer {
             setupView(geo_movies_holder, it)
             loading_geo_movies.isGone = true
         })
-        mainViewModel.topMovies.observeOnce(viewLifecycleOwner, Observer {
+        mainViewModel.topMovies.observeOnce(Observer {
             setupView(top_movies_holder, it)
             loading_top_movies.isGone = true
         })
-        mainViewModel.topTvShows.observeOnce(viewLifecycleOwner, Observer {
+        mainViewModel.topTvShows.observeOnce(Observer {
             setupView(top_series_holder, it)
             loading_top_series.isGone = true
         })
-        mainViewModel.geoTvShows.observeOnce(viewLifecycleOwner, Observer {
+        mainViewModel.geoTvShows.observeOnce(Observer {
             setupView(geo_series_holder, it)
             loading_geo_series.isGone = true
         })
-        mainViewModel.premieres.observeOnce(viewLifecycleOwner, Observer {
+        mainViewModel.premieres.observeOnce(Observer {
             setupView(premiere_movies_holder, it)
             loading_premiere_movies.isGone = true
         })

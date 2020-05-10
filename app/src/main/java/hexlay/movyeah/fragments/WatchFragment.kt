@@ -329,11 +329,11 @@ class WatchFragment : Fragment() {
             setupSource()
         } else {
             if (movie.isTvShow) {
-                watchViewModel.fetchMovie(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { movieExtend ->
+                watchViewModel.fetchMovie(movie.adjaraId).observeOnce(Observer { movieExtend ->
                     if (movieExtend?.seasons != null) {
                         movie.seasons = movieExtend.seasons
                         watchViewModel.fetchTvShowEpisodes(movie.id, movieExtend.seasons!!.data.size)
-                                .observeOnce(viewLifecycleOwner, Observer { seasons ->
+                                .observeOnce(Observer { seasons ->
                             if (seasons != null && seasons.isNotEmpty()) {
                                 tvShowSeasons = seasons
                                 setupTvShow()
@@ -347,7 +347,7 @@ class WatchFragment : Fragment() {
                 })
             } else {
                 navigation.menu.removeItem(R.id.episodes)
-                watchViewModel.fetchMovieFileData(movie.id).observeOnce(viewLifecycleOwner, Observer { episode ->
+                watchViewModel.fetchMovieFileData(movie.id).observeOnce(Observer { episode ->
                     if (episode != null) {
                         fileData = episode.files.map { it.lang!! to it.files }.toMap()
                         subtitleData = episode.files.map { it.lang!! to it.subtitles }.toMap()
@@ -371,7 +371,7 @@ class WatchFragment : Fragment() {
     }
 
     private fun loadIndependentData() {
-        watchViewModel.fetchActors(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { cast ->
+        watchViewModel.fetchActors(movie.adjaraId).observeOnce(Observer { cast ->
             if (cast != null) {
                 setupCast(cast)
             } else {
@@ -415,9 +415,7 @@ class WatchFragment : Fragment() {
     }
 
     private fun setupTvShow() {
-        if (isInLandscape())
-            modeLandscape()
-        dbEpisodes.getEpisode(movie.id)?.observeOnce(viewLifecycleOwner, Observer {
+        dbEpisodes.getEpisode(movie.id)?.observeOnce(Observer {
             if (it != null) {
                 currentSeason = it.season
                 setupTvShowEpisode(it.episode)
@@ -426,6 +424,8 @@ class WatchFragment : Fragment() {
                 setupTvShowEpisode(0)
             }
         })
+        if (isInLandscape())
+            modeLandscape()
         setupTvShowSeasons()
     }
 
