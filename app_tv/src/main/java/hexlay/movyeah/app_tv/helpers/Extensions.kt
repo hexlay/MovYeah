@@ -6,11 +6,8 @@ import android.graphics.Color
 import android.graphics.LightingColorFilter
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.os.Bundle
-import android.os.Parcelable
 import android.text.Html
 import android.text.Spanned
-import android.view.View
 import android.view.Window
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
@@ -49,8 +46,6 @@ fun String.toHtml(): Spanned {
         Html.fromHtml(this)
     }
 }
-
-fun <T> List<T>.toCommaList(): String = joinToString(separator = ", ")
 
 fun <T> ArrayList<T>.differsFrom(other: ArrayList<T>): Boolean = size != other.size || !CollectionUtils.subtract(this, other).isEmpty()
 
@@ -143,12 +138,4 @@ fun PlaybackControlsRow.setDrawableFromUrl(context: Context, url: String) {
             })
 }
 
-fun Fragment.makeParcelableExtra(key: String, value: Parcelable): Bundle {
-    val extras = Bundle()
-    extras.putParcelable(key, value)
-    return extras
-}
-
 fun Fragment.getWindow(): Window = requireActivity().window
-
-fun Fragment.getDecorView(): View = getWindow().decorView

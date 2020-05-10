@@ -40,14 +40,14 @@ class SearchFragment : AbsMoviesFragment() {
     }
 
     override fun loadMovies() {
-        if (searchText.isNotEmpty()) {
-            movieListViewModel.fetchSearchMovie(page, searchText).observeOnce(viewLifecycleOwner, Observer {
-                handleMovies(it)
-            })
-        }
+        movieListViewModel.fetchSearchMovie(page, searchText).observeOnce(viewLifecycleOwner, Observer {
+            handleMovies(it)
+        })
     }
 
     fun search(text: String) {
+        if (text.isEmpty())
+            return
         searchText = text
         zeroLoadMovies()
     }

@@ -9,7 +9,6 @@ import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.drawable.Drawable
-import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Environment
 import android.os.Handler
@@ -27,7 +26,6 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import hexlay.movyeah.R
 import org.apache.commons.collections4.CollectionUtils
-import org.jetbrains.anko.connectivityManager
 import java.io.File
 import java.util.*
 
@@ -91,8 +89,6 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observ
 }
 
 fun String.translateLanguage(context: Context): String {
-    if (this == "NONE")
-        return ""
     val name = "full_${this.toLowerCase(Locale.ENGLISH)}"
     val identifier = context.resources.getIdentifier(name, "string", context.packageName)
     if (identifier == 0) {
@@ -172,12 +168,7 @@ fun Activity.removeLightStatusBar() {
 }
 
 fun Activity.isInNightMode(): Boolean {
-    return when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-        Configuration.UI_MODE_NIGHT_YES -> true
-        Configuration.UI_MODE_NIGHT_NO -> false
-        Configuration.UI_MODE_NIGHT_UNDEFINED -> false
-        else -> false
-    }
+    return (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 }
 
 fun Activity.dpOf(value: Int): Int {
