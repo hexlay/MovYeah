@@ -39,7 +39,7 @@ class BrowserActivity : AbsWatchModeActivity() {
     }
 
     private fun initMovieData() {
-        watchViewModel.fetchMovie(movieId).observeOnce(Observer {
+        watchViewModel.fetchMovie(movieId).observeOnce(this, Observer {
             startWatchMode(it)
         })
     }

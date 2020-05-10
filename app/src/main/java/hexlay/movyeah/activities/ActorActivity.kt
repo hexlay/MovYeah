@@ -68,7 +68,7 @@ class ActorActivity : AbsWatchModeActivity() {
 
     private fun loadMovies() {
         actor?.id?.let { id ->
-            actorMoviesViewModel.fetchMovies(id, page).observeOnce(Observer {
+            actorMoviesViewModel.fetchMovies(id, page).observeOnce(this, Observer {
                 handleMovies(it)
             })
         }

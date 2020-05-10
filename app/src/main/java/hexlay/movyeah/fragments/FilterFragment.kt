@@ -123,7 +123,7 @@ class FilterFragment : BottomSheetDialogFragment() {
 
     private fun setupCategories() {
         val source = emptyDataSource()
-        dbCategories.getCategories()?.observeOnce(Observer {
+        dbCategories.getCategories()?.observeOnce(viewLifecycleOwner, Observer {
             source.addAll(it)
         })
         cat_holder.setup {

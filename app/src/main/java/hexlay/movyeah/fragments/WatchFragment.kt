@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.util.Rational
 import android.util.SparseArray
 import android.view.*
@@ -329,11 +330,11 @@ class WatchFragment : Fragment() {
             setupSource()
         } else {
             if (movie.isTvShow) {
-                watchViewModel.fetchMovie(movie.adjaraId).observeOnce(Observer { movieExtend ->
+                watchViewModel.fetchMovie(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { movieExtend ->
                     if (movieExtend?.seasons != null) {
                         movie.seasons = movieExtend.seasons
                         watchViewModel.fetchTvShowEpisodes(movie.id, movieExtend.seasons!!.data.size)
-                                .observeOnce(Observer { seasons ->
+                                .observeOnce(viewLifecycleOwner, Observer { seasons ->
                             if (seasons != null && seasons.isNotEmpty()) {
                                 tvShowSeasons = seasons
                                 setupTvShow()
@@ -347,7 +348,7 @@ class WatchFragment : Fragment() {
                 })
             } else {
                 navigation.menu.removeItem(R.id.episodes)
-                watchViewModel.fetchMovieFileData(movie.id).observeOnce(Observer { episode ->
+                watchViewModel.fetchMovieFileData(movie.id).observeOnce(viewLifecycleOwner, Observer { episode ->
                     if (episode != null) {
                         fileData = episode.files.map { it.lang!! to it.files }.toMap()
                         subtitleData = episode.files.map { it.lang!! to it.subtitles }.toMap()
@@ -371,7 +372,7 @@ class WatchFragment : Fragment() {
     }
 
     private fun loadIndependentData() {
-        watchViewModel.fetchActors(movie.adjaraId).observeOnce(Observer { cast ->
+        watchViewModel.fetchActors(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { cast ->
             if (cast != null) {
                 setupCast(cast)
             } else {
@@ -402,6 +403,7 @@ class WatchFragment : Fragment() {
     }
 
     private fun setupMovie() {
+        Log.e("setupMovie", "exec")
         setupLanguageAndQuality()
         button_lang.text = languageKey.translateLanguage(requireContext())
         button_quality.text = qualityKey.translateQuality(requireContext())
@@ -415,7 +417,7 @@ class WatchFragment : Fragment() {
     }
 
     private fun setupTvShow() {
-        dbEpisodes.getEpisode(movie.id)?.observeOnce(Observer {
+        dbEpisodes.getEpisode(movie.id)?.observeOnce(viewLifecycleOwner, Observer {
             if (it != null) {
                 currentSeason = it.season
                 setupTvShowEpisode(it.episode)

@@ -47,7 +47,7 @@ class NotificationService : LifecycleService() {
     }
 
     private fun sync() {
-        dbMovies?.getMovies()?.observeOnce(Observer {
+        dbMovies?.getMovies()?.observeOnce(this, Observer {
             handleData(it)
         })
     }
@@ -56,7 +56,7 @@ class NotificationService : LifecycleService() {
         if (data.isNotEmpty()) {
             data.forEach {
                 if (it.isTvShow && it.seasons != null) {
-                    watchViewModel?.fetchTvShowEpisodes(it.id, it.seasons!!.data.size)?.observeOnce(Observer { seasons ->
+                    watchViewModel?.fetchTvShowEpisodes(it.id, it.seasons!!.data.size)?.observeOnce(this, Observer { seasons ->
                         if (seasons != null && seasons.isNotEmpty()) {
                             val size = seasons.size()
                             val last = seasons[size].last()

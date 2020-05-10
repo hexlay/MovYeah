@@ -40,7 +40,7 @@ class SearchFragment : AbsMoviesFragment() {
     }
 
     override fun loadMovies() {
-        movieListViewModel.fetchSearchMovie(page, searchText).observeOnce(Observer {
+        movieListViewModel.fetchSearchMovie(page, searchText).observeOnce(viewLifecycleOwner, Observer {
             handleMovies(it)
         })
     }

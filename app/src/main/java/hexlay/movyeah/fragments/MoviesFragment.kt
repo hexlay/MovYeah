@@ -18,7 +18,7 @@ class MoviesFragment : AbsMoviesFragment() {
                 },
                 filtersSort = sortingMethod,
                 filtersYears = "${startYear},${endYear}"
-        ).observeOnce(Observer {
+        ).observeOnce(viewLifecycleOwner, Observer {
             handleMovies(it)
         })
     }
