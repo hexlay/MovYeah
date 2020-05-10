@@ -6,7 +6,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.recyclical.ViewHolder
 import hexlay.movyeah.R
-import hexlay.movyeah.helpers.CustomExpandableLayout
+import hexlay.movyeah.layouts.CustomExpandableLayout
 
 class DownloadGroupViewHolder(itemView: View) : ViewHolder(itemView) {
 

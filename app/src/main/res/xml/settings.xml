@@ -24,7 +24,7 @@
             android:key="download_notification"
             android:title="@string/settings_main_downl_noti_title" />
 
-        <ListPreference
+        <hexlay.movyeah.layouts.CustomListPreferenceLayout
             android:defaultValue="1"
             android:entries="@array/darkmode"
             android:entryValues="@array/darkmode_value"
@@ -48,7 +48,7 @@
             android:summary="@string/settings_main_autostart_sum"
             android:title="@string/settings_main_autostart_title" />
 
-        <ListPreference
+        <hexlay.movyeah.layouts.CustomListPreferenceLayout
             android:defaultValue="5000"
             android:entries="@array/seek"
             android:entryValues="@array/seek_value"
@@ -56,7 +56,7 @@
             android:key="seek_value"
             android:title="@string/settings_main_seek_title" />
 
-        <ListPreference
+        <hexlay.movyeah.layouts.CustomListPreferenceLayout
             android:defaultValue="MEDIUM"
             android:entries="@array/quality"
             android:entryValues="@array/quality_value"
@@ -64,7 +64,7 @@
             android:key="qual_value"
             android:title="@string/settings_main_qual_title" />
 
-        <ListPreference
+        <hexlay.movyeah.layouts.CustomListPreferenceLayout
             android:defaultValue="GEO"
             android:entries="@array/language"
             android:entryValues="@array/language_value"

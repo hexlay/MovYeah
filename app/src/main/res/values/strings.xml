@@ -13,6 +13,7 @@
     <string name="search_text">შეიყვანეთ საძიებო სიტყვა</string>
     <string name="yes">კი</string>
     <string name="no">არა</string>
+    <string name="cancel">გაუქმება</string>
     <string name="download_start">გადმოწერა დაწყებულია</string>
     <string name="watch">ყურება</string>
 

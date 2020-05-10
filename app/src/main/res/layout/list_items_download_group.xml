@@ -59,7 +59,7 @@
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <hexlay.movyeah.helpers.CustomExpandableLayout
+    <hexlay.movyeah.layouts.CustomExpandableLayout
         android:id="@+id/expandable_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -75,6 +75,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-    </hexlay.movyeah.helpers.CustomExpandableLayout>
+    </hexlay.movyeah.layouts.CustomExpandableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

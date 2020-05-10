@@ -1,4 +1,4 @@
-package hexlay.movyeah.helpers
+package hexlay.movyeah.layouts
 
 import android.animation.Animator
 import android.animation.ValueAnimator

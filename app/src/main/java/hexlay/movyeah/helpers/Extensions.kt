@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Environment
 import android.os.Handler
-import android.provider.Settings
 import android.text.Html
 import android.text.Spanned
 import android.view.*
@@ -148,8 +147,7 @@ fun View.hideKeyboard() {
 fun Activity.makeFullscreen() {
     val decorView = window.decorView
     var flags = decorView.systemUiVisibility
-    flags = flags or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-    flags = flags or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+    flags = flags or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
     decorView.systemUiVisibility = flags
 }
 
@@ -205,9 +203,7 @@ fun Activity.requestPortraitForever() {
 }
 
 fun Activity.requestSensorForever() {
-    if (Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0) == 1) {
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-    }
+    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER
 }
 
 fun Activity.getStatusBarHeight(): Int {
