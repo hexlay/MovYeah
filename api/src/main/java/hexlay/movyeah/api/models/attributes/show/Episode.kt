@@ -19,10 +19,7 @@ data class Episode(
     }
 
     fun getMockEpisodeId(season: Int): String {
-        return if (title?.isNotEmpty()!!)
-            "${season}_${episode}_${title}"
-        else
-            "${season}_${episode}_null"
+        return "${season}_${episode}"
     }
 
 }

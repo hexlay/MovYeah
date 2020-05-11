@@ -88,11 +88,11 @@ class PreferenceHelper(private val context: Context) {
             }
         }
 
-    var lastNotificationId: String
-        get() = settings.getString("adj_last_id", "0")!!
+    var savedNotificationIds: MutableSet<String>
+        get() = settings.getStringSet("adj_notification_ids", mutableSetOf())!!
         set(value) {
             settings.edit {
-                putString("adj_last_id", value)
+                putStringSet("adj_notification_ids", value)
             }
         }
 
@@ -108,6 +108,12 @@ class PreferenceHelper(private val context: Context) {
         val current = searchHistory
         current.add(value)
         searchHistory = current
+    }
+
+    fun addNotificationHistory(value: String) {
+        val current = savedNotificationIds
+        current.add(value)
+        savedNotificationIds = current
     }
 
 }

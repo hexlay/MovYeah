@@ -60,12 +60,12 @@ class NotificationService : LifecycleService() {
                         if (seasons != null && seasons.isNotEmpty()) {
                             val size = seasons.size()
                             val last = seasons[size].last()
-                            val mockId = last.getMockEpisodeId(size)
-                            if (mockId != preferenceHelper!!.lastNotificationId) {
+                            val mockId = "${it.adjaraId}_${last.getMockEpisodeId(size)}"
+                            if (!preferenceHelper!!.savedNotificationIds.contains(mockId)) {
                                 createNotificationChannel("Favorites", "Favorite tv shows")
                                 showNotification(it, "S${size}E${last.episode} - ${last.getEpisodeTitle()}", size + last.episode)
                             }
-                            preferenceHelper!!.lastNotificationId = mockId
+                            preferenceHelper!!.addNotificationHistory(mockId)
                         }
                     })
                 }
