@@ -221,7 +221,7 @@ class MainActivity : AbsWatchModeActivity() {
             if (!isSyncing()) {
                 val jobService = ComponentName(this, NotificationServiceJob::class.java)
                 val syncInfo = JobInfo.Builder(0x1, jobService)
-                        .setPeriodic(1) //1h; 4h - 14400000
+                        .setPeriodic(3600000) //1h; 4h - 14400000
                         .setPersisted(true)
                         .build()
                 val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
