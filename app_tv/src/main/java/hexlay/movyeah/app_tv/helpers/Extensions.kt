@@ -6,6 +6,8 @@ import android.graphics.Color
 import android.graphics.LightingColorFilter
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Bundle
+import android.os.Parcelable
 import android.text.Html
 import android.text.Spanned
 import android.view.Window
@@ -121,6 +123,12 @@ fun DetailsOverviewRow.setDrawableFromUrl(context: Context, url: String) {
 
                 override fun onLoadCleared(placeholder: Drawable?) {}
             })
+}
+
+fun Fragment.makeParcelableExtra(key: String, value: Parcelable): Bundle {
+    val extras = Bundle()
+    extras.putParcelable(key, value)
+    return extras
 }
 
 fun PlaybackControlsRow.setDrawableFromUrl(context: Context, url: String) {

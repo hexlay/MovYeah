@@ -23,7 +23,7 @@ class TvMainActivity : TvBaseFragmentActivity() {
 
     private fun initCategories() {
         val categoryIds = listOf(265, 253, 259, 252, 249, 269, 267, 264, 258, 260, 268, 256, 273, 262, 248, 266, 257, 251, 263, 255, 254, 275, 250, 317, 316, 312, 261)
-        dbCategories.getCategories()?.observeOnce(Observer {
+        dbCategories.getCategories()?.observeOnce(this, Observer {
             if (it.size != categoryIds.size) {
                 dbCategories.clearCategories()
                 for (categoryId in categoryIds) {

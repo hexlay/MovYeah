@@ -121,7 +121,7 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
     }
 
     private fun fetchSearch() {
-        movieListViewModel.fetchSearchMovie(page, searchText).observeOnce(Observer {
+        movieListViewModel.fetchSearchMovie(page, searchText).observeOnce(viewLifecycleOwner, Observer {
             handleMovies(it)
         })
     }

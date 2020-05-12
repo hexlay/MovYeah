@@ -106,7 +106,7 @@ class TvMainFragment : BrowseSupportFragment() {
                 },
                 filtersSort = sortingMethod,
                 filtersYears = "${startYear},${endYear}"
-        ).observeOnce(Observer {
+        ).observeOnce(viewLifecycleOwner, Observer {
             handleMovies(it)
         })
     }
@@ -124,7 +124,7 @@ class TvMainFragment : BrowseSupportFragment() {
                 },
                 filtersSort = sortingMethod,
                 filtersYears = "${startYear},${endYear}"
-        ).observeOnce(Observer {
+        ).observeOnce(viewLifecycleOwner, Observer {
             Log.e("das", it.toString())
             handleTvs(it)
         })
@@ -216,7 +216,7 @@ class TvMainFragment : BrowseSupportFragment() {
         preferences.forEach {
             // Very bad approach. IDK any other way for GuidedFragment actions :(
             if (it.key == "preference_category") {
-                dbCategories.getCategories()?.observeOnce(Observer { dbCats ->
+                dbCategories.getCategories()?.observeOnce(viewLifecycleOwner, Observer { dbCats ->
                     it.fragment = CategoryPreferenceFragment.newInstance(categories, dbCats)
                 })
             }
