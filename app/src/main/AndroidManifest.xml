@@ -69,9 +69,6 @@
             tools:targetApi="o" />
 
         <service
-            android:name=".services.NotificationService" />
-
-        <service
             android:name=".services.NotificationServiceJob"
             android:enabled="true"
             android:exported="true"

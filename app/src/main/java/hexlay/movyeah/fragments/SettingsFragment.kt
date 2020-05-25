@@ -16,7 +16,6 @@ import java.lang.ref.WeakReference
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
-    private lateinit var preferenceHelper: PreferenceHelper
     private lateinit var brightness: SwitchPreference
     private lateinit var autoPlay: SwitchPreference
     private lateinit var notifications: SwitchPreference
@@ -32,7 +31,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         reference = WeakReference(activity as MainActivity)
-        preferenceHelper = PreferenceHelper(reference.get()!!)
         val height = getStatusBarHeight() + getActionBarSize()
         toolbar.setNavigationOnClickListener { reference.get()!!.supportFragmentManager.popBackStack() }
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0)
@@ -72,9 +70,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         if (Constants.isAndroidO)
             pipMode.isEnabled = true
 
-        seek.summary = getString(R.string.settings_main_seek_seconds).format((preferenceHelper.seek / 1000))
-        lang.summary = preferenceHelper.lang.translateLanguage(requireContext())
-        quality.summary = preferenceHelper.quality.translateQuality(requireContext())
+        seek.summary = getString(R.string.settings_main_seek_seconds).format((PreferenceHelper.seek / 1000))
+        lang.summary = PreferenceHelper.lang.translateLanguage(requireContext())
+        quality.summary = PreferenceHelper.quality.translateQuality(requireContext())
 
         about.setOnPreferenceClickListener {
             startActivity<AboutActivity>()
@@ -83,21 +81,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         lang.setOnPreferenceChangeListener { _, newValue ->
             val newLang = newValue.toString()
-            preferenceHelper.lang = newLang
+            PreferenceHelper.lang = newLang
             lang.summary = newLang.translateLanguage(requireContext())
             true
         }
 
         quality.setOnPreferenceChangeListener { _, newValue ->
             val newQuality = newValue.toString()
-            preferenceHelper.quality = newQuality
+            PreferenceHelper.quality = newQuality
             quality.summary = newQuality.translateQuality(requireContext())
             true
         }
 
         seek.setOnPreferenceChangeListener { _, newValue ->
             val newSeek = newValue.toString().toInt()
-            preferenceHelper.seek = newSeek
+            PreferenceHelper.seek = newSeek
             seek.summary = getString(R.string.settings_main_seek_seconds).format((newSeek / 1000).toString())
             true
         }
@@ -105,7 +103,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         notifications.setOnPreferenceChangeListener { _, newValue ->
             val currentCase = newValue.toString().toBoolean()
             notifications.isChecked = currentCase
-            preferenceHelper.getNotifications = currentCase
+            PreferenceHelper.getNotifications = currentCase
             if (currentCase) {
                 reference.get()!!.initSync()
             } else {
@@ -117,27 +115,27 @@ class SettingsFragment : PreferenceFragmentCompat() {
         downloadNotification.setOnPreferenceChangeListener { _, newValue ->
             val currentCase = newValue.toString().toBoolean()
             downloadNotification.isChecked = currentCase
-            preferenceHelper.downloadNotification = currentCase
+            PreferenceHelper.downloadNotification = currentCase
             currentCase
         }
 
         autoPlay.setOnPreferenceChangeListener { _, newValue ->
             val currentCase = newValue.toString().toBoolean()
             autoPlay.isChecked = currentCase
-            preferenceHelper.autoStart = currentCase
+            PreferenceHelper.autoStart = currentCase
             currentCase
         }
 
         brightness.setOnPreferenceChangeListener { _, newValue ->
             val currentCase = newValue.toString().toBoolean()
             brightness.isChecked = currentCase
-            preferenceHelper.maxBrightness = currentCase
+            PreferenceHelper.maxBrightness = currentCase
             currentCase
         }
 
         darkMode.setOnPreferenceChangeListener { _, newValue ->
             val newMode = newValue.toString().toInt()
-            preferenceHelper.darkMode = newMode
+            PreferenceHelper.darkMode = newMode
             reference.get()!!.initDarkMode()
             true
         }
@@ -145,7 +143,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         pipMode.setOnPreferenceChangeListener { _, newValue ->
             val currentCase = newValue.toString().toBoolean()
             pipMode.isChecked = currentCase
-            preferenceHelper.pictureInPicture = currentCase
+            PreferenceHelper.pictureInPicture = currentCase
             currentCase
         }
     }

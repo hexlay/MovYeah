@@ -52,8 +52,7 @@ class PlaybackControlFragment : PlaybackSupportFragment() {
         classPresenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
         superAdapter = ArrayObjectAdapter(classPresenterSelector)
         addPlaybackControlsRow()
-        if (tvShowSeasons[currentSeason] != null && tvShowSeasons[currentSeason].isNotEmpty())
-            addEpisodes()
+        addEpisodes()
         playbackControlsRowPresenter.onActionClickedListener = OnActionClickedListener { action ->
             when (action.id) {
                 playPauseAction!!.id -> {
@@ -96,18 +95,17 @@ class PlaybackControlFragment : PlaybackSupportFragment() {
 
     fun updateProgressBar(exoPlayer: ExoPlayer) {
         if (playbackControlsRow != null) {
-            val duration = exoPlayer.duration
             val position = exoPlayer.currentPosition
-            playbackControlsRow!!.duration = duration
+            playbackControlsRow!!.duration = exoPlayer.duration
             playbackControlsRow!!.currentPosition = position
-            val bufferedPosition = exoPlayer.bufferedPosition
-            playbackControlsRow!!.bufferedPosition = bufferedPosition
+            playbackControlsRow!!.bufferedPosition = exoPlayer.bufferedPosition
             val playbackState = exoPlayer.playbackState
             if (playbackState != Player.STATE_IDLE && playbackState != Player.STATE_ENDED) {
                 var delayMs = 1000L
                 if (exoPlayer.playWhenReady && playbackState == Player.STATE_READY) {
                     delayMs = 1000 - position % 1000
-                    if (delayMs < 200) delayMs += 1000
+                    if (delayMs < 200)
+                        delayMs += 1000
                 }
                 Handler().postDelayed({
                     updateProgressBar(exoPlayer)
@@ -148,11 +146,13 @@ class PlaybackControlFragment : PlaybackSupportFragment() {
     }
 
     private fun addEpisodes() {
-        val episodeRow = ArrayObjectAdapter(EpisodePresenter(requireContext()))
-        tvShowSeasons[currentSeason].forEach {
-            episodeRow.add(it)
+        if (tvShowSeasons[currentSeason] != null && tvShowSeasons[currentSeason].isNotEmpty()) {
+            val episodeRow = ArrayObjectAdapter(EpisodePresenter(requireContext()))
+            tvShowSeasons[currentSeason].forEach {
+                episodeRow.add(it)
+            }
+            superAdapter?.add(ListRow(HeaderItem(0, "სხვა სერიები სეზონში"), episodeRow))
         }
-        superAdapter?.add(ListRow(HeaderItem(0, "სხვა სერიები სეზონში"), episodeRow))
     }
 
     companion object {

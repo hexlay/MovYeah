@@ -86,7 +86,6 @@ import kotlin.collections.HashMap
 class WatchFragment : Fragment() {
 
     private lateinit var reference: WeakReference<AbsWatchModeActivity>
-    private lateinit var preferenceHelper: PreferenceHelper
 
     private val watchViewModel by viewModels<WatchViewModel>()
     private val dbMovie by viewModels<DbMovieViewModel>()
@@ -131,7 +130,6 @@ class WatchFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         reference = WeakReference(requireActivity() as AbsWatchModeActivity)
-        preferenceHelper = PreferenceHelper(requireActivity())
         EventBus.getDefault().register(this)
         return inflater.inflate(R.layout.fragment_watch, container, false)
     }
@@ -174,7 +172,7 @@ class WatchFragment : Fragment() {
         if (!isInNightMode())
             removeLightStatusBar()
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        if (preferenceHelper.maxBrightness) {
+        if (PreferenceHelper.maxBrightness) {
             val layoutParams = getWindow().attributes
             layoutParams?.screenBrightness = 100 / 100.0f
             getWindow().attributes = layoutParams
@@ -192,7 +190,7 @@ class WatchFragment : Fragment() {
             controlsShown = visibility == View.VISIBLE
             toolbar.fade(if (visibility == View.VISIBLE) 1 else 0, 150)
         }
-        exoPlayer!!.playWhenReady = preferenceHelper.autoStart
+        exoPlayer!!.playWhenReady = PreferenceHelper.autoStart
         exoPlayer!!.addListener(object : Player.EventListener {
 
             override fun onTimelineChanged(timeline: Timeline?, manifest: Any?, reason: Int) {}
@@ -284,16 +282,16 @@ class WatchFragment : Fragment() {
                 override fun onDoubleTap(motionEvent: MotionEvent): Boolean {
                     player_src.showController()
                     if (motionEvent.x > screenWidth * 0.5f) {
-                        seekSecForward += (preferenceHelper.seek / 1000).toLong()
+                        seekSecForward += (PreferenceHelper.seek / 1000).toLong()
                         view_forward.text = getString(R.string.settings_main_seek_seconds).format(seekSecForward.toString())
                         view_forward.fade(1, 150)
-                        exoPlayer!!.seekTo(exoPlayer!!.currentPosition + preferenceHelper.seek)
+                        exoPlayer!!.seekTo(exoPlayer!!.currentPosition + PreferenceHelper.seek)
                         Handler().postDelayed({ view_forward.fade(0, 150) }, 500)
                     } else {
-                        seekSecBackward += (preferenceHelper.seek / 1000).toLong()
+                        seekSecBackward += (PreferenceHelper.seek / 1000).toLong()
                         view_backward.text = getString(R.string.settings_main_seek_seconds).format(seekSecBackward.toString())
                         view_backward.fade(1, 150)
-                        exoPlayer!!.seekTo(exoPlayer!!.currentPosition - preferenceHelper.seek)
+                        exoPlayer!!.seekTo(exoPlayer!!.currentPosition - PreferenceHelper.seek)
                         Handler().postDelayed({ view_backward.fade(0, 150) }, 500)
                     }
                     return true
@@ -806,7 +804,7 @@ class WatchFragment : Fragment() {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         if (!isInNightMode())
             setLightStatusBar()
-        if (preferenceHelper.maxBrightness) {
+        if (PreferenceHelper.maxBrightness) {
             val layoutParams = getWindow().attributes
             layoutParams?.screenBrightness = -1f
             getWindow().attributes = layoutParams
@@ -837,7 +835,7 @@ class WatchFragment : Fragment() {
             canResume = true
             if (isPlaying && !Constants.isAndroidO) {
                 pausePlayer()
-            } else if (isPlaying && preferenceHelper.pictureInPicture && !stillInApp && !isFullscreen) {
+            } else if (isPlaying && PreferenceHelper.pictureInPicture && !stillInApp && !isFullscreen) {
                 enterPIP()
             } else if (isPlaying) {
                 pausePlayer()

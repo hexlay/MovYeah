@@ -92,7 +92,7 @@ class MainActivity : AbsWatchModeActivity() {
     }
 
     fun initDarkMode() {
-        when (preferenceHelper?.darkMode) {
+        when (PreferenceHelper.darkMode) {
             0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             2 -> if (Constants.isAndroidQ) {
@@ -105,7 +105,7 @@ class MainActivity : AbsWatchModeActivity() {
     }
 
     private fun initHistory() {
-        searchAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, preferenceHelper?.searchHistory!!.toTypedArray())
+        searchAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, PreferenceHelper.searchHistory!!.toTypedArray())
         toolbar_search.setAdapter(searchAdapter)
     }
 
@@ -149,7 +149,7 @@ class MainActivity : AbsWatchModeActivity() {
                     if (event == null || !event.isShiftPressed) {
                         val searchText = toolbar_search.text.toString()
                         searchFragment?.search(searchText)
-                        preferenceHelper?.addSearchHistory(searchText)
+                        PreferenceHelper.addSearchHistory(searchText)
                         searchAdapter?.add(searchText)
                         toolbar_search.hideKeyboard()
                         return@setOnEditorActionListener true
@@ -217,7 +217,7 @@ class MainActivity : AbsWatchModeActivity() {
     }
 
     fun initSync() {
-        if (preferenceHelper?.getNotifications!!) {
+        if (PreferenceHelper.getNotifications!!) {
             if (!isSyncing()) {
                 val jobService = ComponentName(this, NotificationServiceJob::class.java)
                 val syncInfo = JobInfo.Builder(0x1, jobService)

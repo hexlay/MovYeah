@@ -5,9 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DownloadManager
-import android.app.job.JobService
 import android.content.Context
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.drawable.Drawable
@@ -87,14 +85,6 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observ
             removeObserver(this)
         }
     })
-}
-
-fun JobService.startBackgroundService(intent: Intent?) {
-    if (Constants.isAndroidO) {
-        startForegroundService(intent)
-    } else {
-        startService(intent)
-    }
 }
 
 fun String.translateLanguage(context: Context): String {
@@ -229,7 +219,7 @@ fun Activity.getActionBarSize(): Int {
 }
 
 fun Fragment.downloadMovie(url: String, title: String): Long {
-    val visibleNotification = if (PreferenceHelper(requireContext()).downloadNotification) {
+    val visibleNotification = if (PreferenceHelper.downloadNotification) {
         DownloadManager.Request.VISIBILITY_VISIBLE
     } else {
         DownloadManager.Request.VISIBILITY_HIDDEN

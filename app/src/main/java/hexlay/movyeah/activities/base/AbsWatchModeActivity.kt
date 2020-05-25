@@ -13,7 +13,6 @@ import hexlay.movyeah.R
 import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.fragments.WatchFragment
 import hexlay.movyeah.helpers.Constants
-import hexlay.movyeah.helpers.PreferenceHelper
 import hexlay.movyeah.models.events.NetworkChangeEvent
 import hexlay.movyeah.models.events.StartWatchingEvent
 import kotlinx.android.synthetic.main.fragment_watch.*
@@ -23,7 +22,6 @@ import org.greenrobot.eventbus.Subscribe
 abstract class AbsWatchModeActivity : AppCompatActivity() {
 
     private var pipActions: BroadcastReceiver? = null
-    protected var preferenceHelper: PreferenceHelper? = null
 
     protected var watchMode = false
     protected var watchFragment: WatchFragment? = null
@@ -31,7 +29,6 @@ abstract class AbsWatchModeActivity : AppCompatActivity() {
     protected abstract var networkView: Int
 
     protected open fun initActivity() {
-        preferenceHelper = PreferenceHelper(this)
         KNetwork.bind(this, lifecycle)
                 .setInAnimation(R.anim.top_in)
                 .setOutAnimation(R.anim.top_out)
