@@ -3,6 +3,7 @@ package hexlay.movyeah.api.network.repositories
 import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.api.models.attributes.Actor
 import hexlay.movyeah.api.models.attributes.Category
+import hexlay.movyeah.api.models.attributes.Country
 import hexlay.movyeah.api.models.attributes.show.Episode
 import hexlay.movyeah.api.network.AdjaraAPI
 import hexlay.movyeah.api.network.repositories.base.AbsAdjaraRepository
@@ -11,6 +12,11 @@ class AdjaraRepository(private val api: AdjaraAPI) : AbsAdjaraRepository() {
 
     suspend fun getCategories(): List<Category>? {
         val response = safeApiCall { api.getCategoriesAsync() }
+        return response?.data
+    }
+
+    suspend fun getCountries(): List<Country>? {
+        val response = safeApiCall { api.getCountriesAsync() }
         return response?.data
     }
 
@@ -44,6 +50,7 @@ class AdjaraRepository(private val api: AdjaraAPI) : AbsAdjaraRepository() {
             filtersType: String = "movie",
             filtersLanguage: String? = null,
             filtersGenres: String? = null,
+            filtersCountries: String? = null,
             filtersYears: String,
             filtersSort: String = "-upload_date"
     ): List<Movie>? {
@@ -53,6 +60,7 @@ class AdjaraRepository(private val api: AdjaraAPI) : AbsAdjaraRepository() {
                     filtersType = filtersType,
                     filtersLanguage = filtersLanguage,
                     filtersGenres = filtersGenres,
+                    filtersCountry = filtersCountries,
                     filtersYears = filtersYears,
                     filtersSort = filtersSort
             )

@@ -3,6 +3,7 @@ package hexlay.movyeah.api.network
 import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.api.models.attributes.Actor
 import hexlay.movyeah.api.models.attributes.Category
+import hexlay.movyeah.api.models.attributes.Country
 import hexlay.movyeah.api.models.attributes.show.Episode
 import hexlay.movyeah.api.models.generics.GenericList
 import hexlay.movyeah.api.models.helpers.ExtendedMovieHelper
@@ -20,6 +21,9 @@ interface AdjaraAPI {
     @GET("genres?per_page=100&source=adjaranet")
     suspend fun getCategoriesAsync(): Response<GenericList<Category>>
 
+    @GET("countries?per_page=300&source=adjaranet")
+    suspend fun getCountriesAsync(): Response<GenericList<Country>>
+
     @GET("movies")
     suspend fun getMainMoviesAsync(
             @Query("page") page: Int = 1,
@@ -27,6 +31,8 @@ interface AdjaraAPI {
             @Query("filters[type]") filtersType: String = "movie",
             @Query("filters[language]") filtersLanguage: String? = null,
             @Query("filters[genre]") filtersGenres: String? = null,
+            @Query("filters[subtitles]") filtersSubtitles: String? = null,
+            @Query("filters[country]") filtersCountry: String? = null,
             @Query("filters[year_range]") filtersYears: String,
             @Query("filters[init]") filtersInit: String = "true",
             @Query("filters[sort]") filtersSort: String = "-upload_date",

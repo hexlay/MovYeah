@@ -14,12 +14,21 @@ class MovieListViewModel(application: Application) : AbsAdjaraViewModel(applicat
             filtersType: String = "movie",
             filtersLanguage: String? = null,
             filtersGenres: String? = null,
+            filtersCountries: String? = null,
             filtersYears: String
     ): MutableLiveData<List<Movie>> {
         val movies = MutableLiveData<List<Movie>>()
         scope.launch {
             try {
-                movies.postValue(repository.getMainMovies(page, filtersType, filtersLanguage, filtersGenres, filtersYears, filtersSort))
+                movies.postValue(repository.getMainMovies(
+                        page = page,
+                        filtersType = filtersType,
+                        filtersLanguage = filtersLanguage,
+                        filtersGenres = filtersGenres,
+                        filtersCountries = filtersCountries,
+                        filtersYears = filtersYears,
+                        filtersSort = filtersSort
+                ))
             } catch (t: Throwable) {}
         }
         return movies

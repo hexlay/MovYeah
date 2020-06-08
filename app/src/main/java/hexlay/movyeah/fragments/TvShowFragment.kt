@@ -17,6 +17,11 @@ class TvShowFragment : AbsMoviesFragment() {
                 } else {
                     null
                 },
+                filtersCountries =  if (countries.size > 0) {
+                    countries.joinToString { it }
+                } else {
+                    null
+                },
                 filtersSort = sortingMethod,
                 filtersYears = "${startYear},${endYear}"
         ).observeOnce(viewLifecycleOwner, Observer {

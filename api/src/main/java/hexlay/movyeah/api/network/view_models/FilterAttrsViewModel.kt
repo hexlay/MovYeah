@@ -3,10 +3,11 @@ package hexlay.movyeah.api.network.view_models
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import hexlay.movyeah.api.models.attributes.Category
+import hexlay.movyeah.api.models.attributes.Country
 import hexlay.movyeah.api.network.view_models.base.AbsAdjaraViewModel
 import kotlinx.coroutines.launch
 
-class CategoryViewModel(application: Application) : AbsAdjaraViewModel(application) {
+class FilterAttrsViewModel(application: Application) : AbsAdjaraViewModel(application) {
 
     fun fetchCategories(): MutableLiveData<List<Category>> {
         val categories = MutableLiveData<List<Category>>()
@@ -16,6 +17,16 @@ class CategoryViewModel(application: Application) : AbsAdjaraViewModel(applicati
             } catch (t: Throwable) {}
         }
         return categories
+    }
+
+    fun fetchCountries(): MutableLiveData<List<Country>> {
+        val countries = MutableLiveData<List<Country>>()
+        scope.launch {
+            try {
+                countries.postValue(repository.getCountries())
+            } catch (t: Throwable) {}
+        }
+        return countries
     }
 
 }

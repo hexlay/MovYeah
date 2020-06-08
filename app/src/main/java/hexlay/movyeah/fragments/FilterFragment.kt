@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
 import com.afollestad.recyclical.datasource.emptyDataSource
@@ -16,8 +18,11 @@ import com.afollestad.recyclical.withItem
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import hexlay.movyeah.R
 import hexlay.movyeah.adapters.view_holders.CategoryViewHolder
+import hexlay.movyeah.adapters.view_holders.CountryViewHolder
 import hexlay.movyeah.api.database.view_models.DbCategoryViewModel
+import hexlay.movyeah.api.database.view_models.DbCountryViewModel
 import hexlay.movyeah.api.models.attributes.Category
+import hexlay.movyeah.api.models.attributes.Country
 import hexlay.movyeah.fragments.base.AbsMoviesFragment
 import hexlay.movyeah.helpers.Constants
 import hexlay.movyeah.helpers.observeOnce
@@ -27,6 +32,7 @@ class FilterFragment : BottomSheetDialogFragment() {
 
     private var activeFragment: AbsMoviesFragment? = null
 
+    private val dbCountries by viewModels<DbCountryViewModel>()
     private val dbCategories by viewModels<DbCategoryViewModel>()
 
     // Filter attributes
@@ -34,6 +40,7 @@ class FilterFragment : BottomSheetDialogFragment() {
     private var startYear = 0
     private var endYear = 0
     private var categories = ArrayList<String>()
+    private var countries = ArrayList<String>()
     private var language: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -117,6 +124,7 @@ class FilterFragment : BottomSheetDialogFragment() {
     private fun setupFilterMethods() {
         setupYears()
         setupCategories()
+        setupCountries()
         setupSorter()
         setupLanguageChanger()
     }
@@ -126,7 +134,7 @@ class FilterFragment : BottomSheetDialogFragment() {
         dbCategories.getCategories()?.observeOnce(viewLifecycleOwner, Observer {
             source.addAll(it)
         })
-        cat_holder.setup {
+        category_holder.setup {
             withLayoutManager(GridLayoutManager(context, 2))
             withDataSource(source)
             withItem<Category, CategoryViewHolder>(R.layout.list_categories) {
@@ -142,6 +150,34 @@ class FilterFragment : BottomSheetDialogFragment() {
                             categories.add(categoryId)
                         } else {
                             categories.remove(categoryId)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupCountries() {
+        val source = emptyDataSource()
+        dbCountries.getCountries()?.observeOnce(viewLifecycleOwner, Observer {
+            source.addAll(it)
+        })
+        country_holder.setup {
+            withLayoutManager(LinearLayoutManager(context, RecyclerView.HORIZONTAL, false))
+            withDataSource(source)
+            withItem<Country, CountryViewHolder>(R.layout.list_countries) {
+                onBind(::CountryViewHolder) { _, item ->
+                    setIsRecyclable(false)
+                    val countryId = item.id.toString()
+                    toggleButton.text = item.primaryName
+                    toggleButton.textOff = item.primaryName
+                    toggleButton.textOn = item.primaryName
+                    toggleButton.isChecked = countries.contains(countryId)
+                    toggleButton.setOnCheckedChangeListener { _, isChecked ->
+                        if (isChecked) {
+                            countries.add(countryId)
+                        } else {
+                            countries.remove(countryId)
                         }
                     }
                 }
@@ -169,6 +205,8 @@ class FilterFragment : BottomSheetDialogFragment() {
         if (activeFragment != null) {
             categories.clear()
             categories.addAll(activeFragment!!.categories)
+            countries.clear()
+            countries.addAll(activeFragment!!.countries)
             language = activeFragment!!.language
             startYear = activeFragment!!.startYear
             endYear = activeFragment!!.endYear
@@ -179,9 +217,10 @@ class FilterFragment : BottomSheetDialogFragment() {
 
     private fun onFilterClose() {
         if (activeFragment != null) {
-            val filter = activeFragment!!.filter(sortingMethod, endYear, startYear, language, categories)
+            val filter = activeFragment!!.filter(sortingMethod, endYear, startYear, language, categories, countries)
             if (filter) {
                 categories.clear()
+                countries.clear()
                 activeFragment = null
             }
         }

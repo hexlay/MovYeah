@@ -21,9 +21,10 @@ import hexlay.movyeah.R
 import hexlay.movyeah.activities.base.AbsWatchModeActivity
 import hexlay.movyeah.adapters.MainPageAdapter
 import hexlay.movyeah.api.database.view_models.DbCategoryViewModel
+import hexlay.movyeah.api.database.view_models.DbCountryViewModel
 import hexlay.movyeah.api.helpers.isNetworkAvailable
 import hexlay.movyeah.api.models.Movie
-import hexlay.movyeah.api.network.view_models.CategoryViewModel
+import hexlay.movyeah.api.network.view_models.FilterAttrsViewModel
 import hexlay.movyeah.fragments.*
 import hexlay.movyeah.helpers.*
 import hexlay.movyeah.models.events.NetworkChangeEvent
@@ -48,8 +49,9 @@ class MainActivity : AbsWatchModeActivity() {
 
     override var networkView: Int = R.id.navigation
 
-    private val apiCategories by viewModels<CategoryViewModel>()
+    private val apiFilters by viewModels<FilterAttrsViewModel>()
     private val dbCategories by viewModels<DbCategoryViewModel>()
+    private val dbCountries by viewModels<DbCountryViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +62,7 @@ class MainActivity : AbsWatchModeActivity() {
 
     override fun initActivity() {
         super.initActivity()
-        initCategories()
+        initFiltersApi()
         makeFullscreen()
         initFragments()
         initToolbar()
@@ -79,10 +81,15 @@ class MainActivity : AbsWatchModeActivity() {
         downloadFragment = DownloadFragment()
     }
 
-    private fun initCategories() {
-        apiCategories.fetchCategories().observeOnce(this, Observer {
+    private fun initFiltersApi() {
+        apiFilters.fetchCategories().observeOnce(this, Observer {
             for (category in it) {
                 dbCategories.insertCategory(category)
+            }
+        })
+        apiFilters.fetchCountries().observeOnce(this, Observer {
+            for (country in it) {
+                dbCountries.insertCountry(country)
             }
         })
     }

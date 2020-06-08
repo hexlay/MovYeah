@@ -34,6 +34,7 @@ abstract class AbsMoviesFragment : Fragment() {
     var endYear = 0
     var startYear = 0
     var categories = ArrayList<String>()
+    var countries = ArrayList<String>()
     var language: String? = null
 
     private val source = emptyDataSourceTyped<Movie>()
@@ -76,12 +77,14 @@ abstract class AbsMoviesFragment : Fragment() {
             var totalItemCount = 0
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (gridLayoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
-                    scroll_up.hide()
-                    fab_filter.extend()
-                } else {
-                    scroll_up.show()
-                    fab_filter.shrink()
+                if (source.isNotEmpty()) {
+                    if (gridLayoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
+                        scroll_up.hide()
+                        fab_filter.extend()
+                    } else {
+                        scroll_up.show()
+                        fab_filter.shrink()
+                    }
                 }
                 if (dy > 0) {
                     visibleItemCount = gridLayoutManager.childCount
@@ -134,22 +137,29 @@ abstract class AbsMoviesFragment : Fragment() {
         loadMovies()
     }
 
-    fun filter(filterSort: String, filterEndYear: Int, filterStartYear: Int, filterLanguage: String?, filterCategories: ArrayList<String>): Boolean {
-        val filtered = isDifference(filterSort, filterEndYear, filterStartYear, filterLanguage, filterCategories)
+    fun filter(filterSort: String, filterEndYear: Int, filterStartYear: Int, filterLanguage: String?, filterCategories: ArrayList<String>, filterCountries: ArrayList<String>): Boolean {
+        val filtered = isDifference(filterSort, filterEndYear, filterStartYear, filterLanguage, filterCategories, filterCountries)
         if (filtered) {
             sortingMethod = filterSort
             endYear = filterEndYear
             startYear = filterStartYear
             categories.clear()
             categories.addAll(filterCategories)
+            countries.clear()
+            countries.addAll(filterCountries)
             language = filterLanguage
             zeroLoadMovies()
         }
         return filtered
     }
 
-    private fun isDifference(filterSort: String, filterEndYear: Int, filterStartYear: Int, filterLanguage: String?, filterCategories: ArrayList<String>): Boolean {
-        return filterSort != sortingMethod || filterEndYear != endYear || filterStartYear != startYear || filterLanguage != language || categories.differsFrom(filterCategories)
+    private fun isDifference(filterSort: String, filterEndYear: Int, filterStartYear: Int, filterLanguage: String?, filterCategories: ArrayList<String>, filterCountries: ArrayList<String>): Boolean {
+        return filterSort != sortingMethod
+                || filterEndYear != endYear
+                || filterStartYear != startYear
+                || filterLanguage != language
+                || categories.differsFrom(filterCategories)
+                || countries.differsFrom(filterCountries)
     }
 
     protected open fun handleMovies(dataList: List<Movie>) {
@@ -169,6 +179,9 @@ abstract class AbsMoviesFragment : Fragment() {
             if (page == 1) {
                 warning_holder.text = getString(R.string.loading_news_fail)
                 warning_holder.isVisible = true
+                loading_movies.isGone = true
+                source.clear()
+                fab_filter.show()
             }
         }
     }
