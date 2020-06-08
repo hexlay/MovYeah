@@ -43,33 +43,4 @@
     <string name="settings_title">პარამეტრები</string>
     <string name="settings_about">აპლიკაციის შესახებ</string>
 
-    <!-- Categories -->
-    <string name="cat_265">ანიმაციური</string>
-    <string name="cat_253">ბიოგრაფიული</string>
-    <string name="cat_259">დეტექტივი</string>
-    <string name="cat_252">დოკუმენტური</string>
-    <string name="cat_249">დრამა</string>
-    <string name="cat_269">ეროტიკული</string>
-    <string name="cat_267">ვესტერნი</string>
-    <string name="cat_264">ისტორიული</string>
-    <string name="cat_258">კომედია</string>
-    <string name="cat_260">მელოდრამა</string>
-    <string name="cat_268">მიუზიკლი</string>
-    <string name="cat_256">მისტიკა</string>
-    <string name="cat_273">მოკლემეტრაჟიანი</string>
-    <string name="cat_262">მუსიკალური</string>
-    <string name="cat_248">მძაფრ-სიუჟეტიანი</string>
-    <string name="cat_266">სათავგადასავლო</string>
-    <string name="cat_257">ფანტასტიკა</string>
-    <string name="cat_251">საომარი</string>
-    <string name="cat_263">საოჯახო</string>
-    <string name="cat_255">საშინელებათა ფილმი</string>
-    <string name="cat_254">სერიალი</string>
-    <string name="cat_275">სპორტული</string>
-    <string name="cat_250">თრილერი</string>
-    <string name="cat_261">ზღაპრული (ფენტეზი)</string>
-    <string name="cat_316">კონცერტი</string>
-    <string name="cat_312">Stand Up</string>
-    <string name="cat_317">ავტო</string>
-
 </resources>

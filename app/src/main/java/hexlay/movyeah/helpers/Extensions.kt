@@ -100,7 +100,7 @@ fun String.translateQuality(context: Context): String {
     return when (this) {
         "HIGH" -> context.getString(R.string.full_qual_hd)
         "MEDIUM" -> context.getString(R.string.full_qual_low)
-        else -> ""
+        else -> this
     }
 }
 

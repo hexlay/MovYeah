@@ -2,11 +2,17 @@ package hexlay.movyeah.api.network.repositories
 
 import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.api.models.attributes.Actor
+import hexlay.movyeah.api.models.attributes.Category
 import hexlay.movyeah.api.models.attributes.show.Episode
 import hexlay.movyeah.api.network.AdjaraAPI
 import hexlay.movyeah.api.network.repositories.base.AbsAdjaraRepository
 
 class AdjaraRepository(private val api: AdjaraAPI) : AbsAdjaraRepository() {
+
+    suspend fun getCategories(): List<Category>? {
+        val response = safeApiCall { api.getCategoriesAsync() }
+        return response?.data
+    }
 
     suspend fun getGeoMovies(): List<Movie>? {
         val response = safeApiCall { api.getGeoMoviesAsync() }

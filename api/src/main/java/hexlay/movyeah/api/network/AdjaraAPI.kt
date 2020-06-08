@@ -2,6 +2,7 @@ package hexlay.movyeah.api.network
 
 import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.api.models.attributes.Actor
+import hexlay.movyeah.api.models.attributes.Category
 import hexlay.movyeah.api.models.attributes.show.Episode
 import hexlay.movyeah.api.models.generics.GenericList
 import hexlay.movyeah.api.models.helpers.ExtendedMovieHelper
@@ -15,6 +16,9 @@ interface AdjaraAPI {
     companion object {
         const val BASE_URL = "https://api.adjaranet.com/api/v1/"
     }
+
+    @GET("genres?per_page=100&source=adjaranet")
+    suspend fun getCategoriesAsync(): Response<GenericList<Category>>
 
     @GET("movies")
     suspend fun getMainMoviesAsync(
