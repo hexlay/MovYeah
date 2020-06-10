@@ -1,35 +1,40 @@
 package hexlay.movyeah.fragments
 
 import hexlay.movyeah.fragments.base.AbsMoviesFragment
-import kotlinx.android.synthetic.main.fragment_movies.*
+import hexlay.movyeah.models.Filter
+import org.greenrobot.eventbus.Subscribe
 
 class TvShowFragment : AbsMoviesFragment() {
+
+    override var filter: Filter = Filter(this)
 
     override fun loadMovies() {
         movieListViewModel.fetchMainMovies(
                 page = page,
                 filtersType = "series",
-                filtersLanguage = language,
-                filtersGenres = if (categories.size > 0) {
-                    categories.joinToString { it }
+                filtersLanguage = filter.language,
+                filtersGenres = if (filter.categories.size > 0) {
+                    filter.categories.joinToString { it }
                 } else {
                     null
                 },
-                filtersCountries =  if (countries.size > 0) {
-                    countries.joinToString { it }
+                filtersCountries =  if (filter.countries.size > 0) {
+                    filter.countries.joinToString { it }
                 } else {
                     null
                 },
-                filtersSort = sortingMethod,
-                filtersYears = "${startYear},${endYear}"
+                filtersSort = filter.sortingMethod,
+                filtersYears = "${filter.startYear},${filter.endYear}"
         )
     }
 
-    override fun initFilter() {
-        super.initFilter()
-        fab_filter.setOnClickListener {
-            filter = FilterFragment.newInstance(this@TvShowFragment)
-            filter!!.show(childFragmentManager, filter!!.tag)
+    @Subscribe
+    fun listenFilterChange(filter: Filter) {
+        if (filter.activeFragment is TvShowFragment) {
+            if (this.filter != filter) {
+                this.filter = filter
+                zeroLoadMovies()
+            }
         }
     }
 

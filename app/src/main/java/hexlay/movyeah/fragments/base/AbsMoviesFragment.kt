@@ -19,26 +19,30 @@ import hexlay.movyeah.adapters.view_holders.MovieViewHolder
 import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.api.network.view_models.MovieListViewModel
 import hexlay.movyeah.fragments.FilterFragment
-import hexlay.movyeah.helpers.*
+import hexlay.movyeah.helpers.dpOf
+import hexlay.movyeah.helpers.getActionBarSize
+import hexlay.movyeah.helpers.getStatusBarHeight
+import hexlay.movyeah.helpers.setMargins
+import hexlay.movyeah.models.Filter
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.piece_scroll_up.*
+import org.greenrobot.eventbus.EventBus
 
 abstract class AbsMoviesFragment : Fragment() {
 
     protected val movieListViewModel by viewModels<MovieListViewModel>()
-    protected var filter: FilterFragment? = null
     protected var page = 1
     private var loading = true
+    private var filterFragment: FilterFragment? = null
 
-    // Filter attributes
-    var sortingMethod = "-upload_date"
-    var endYear = 0
-    var startYear = 0
-    var categories = ArrayList<String>()
-    var countries = ArrayList<String>()
-    var language: String? = null
+    protected abstract var filter: Filter
 
     private val source = emptyDataSourceTyped<Movie>()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        EventBus.getDefault().register(this)
+        return inflater.inflate(R.layout.fragment_movies, container, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,18 +58,12 @@ abstract class AbsMoviesFragment : Fragment() {
     }
 
     protected open fun initFragment() {
-        startYear = Constants.START_YEAR
-        endYear = Constants.END_YEAR
         initReloader()
         initRecyclerView()
         initFilter()
         initScrollUp()
         zeroLoadMovies()
         handleObserver()
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_movies, container, false)
     }
 
     protected fun initRecyclerView() {
@@ -114,6 +112,10 @@ abstract class AbsMoviesFragment : Fragment() {
 
     protected open fun initFilter() {
         fab_filter.setMargins(bottom = getActionBarSize() + dpOf(15))
+        fab_filter.setOnClickListener {
+            filterFragment = FilterFragment.newInstance(filter)
+            filterFragment!!.show(childFragmentManager, filterFragment!!.tag)
+        }
     }
 
     protected open fun initScrollUp() {
@@ -137,31 +139,6 @@ abstract class AbsMoviesFragment : Fragment() {
         loading_movies.isGone = false
         fab_filter.hide()
         loadMovies()
-    }
-
-    fun filter(filterSort: String, filterEndYear: Int, filterStartYear: Int, filterLanguage: String?, filterCategories: ArrayList<String>, filterCountries: ArrayList<String>): Boolean {
-        val filtered = isDifference(filterSort, filterEndYear, filterStartYear, filterLanguage, filterCategories, filterCountries)
-        if (filtered) {
-            sortingMethod = filterSort
-            endYear = filterEndYear
-            startYear = filterStartYear
-            categories.clear()
-            categories.addAll(filterCategories)
-            countries.clear()
-            countries.addAll(filterCountries)
-            language = filterLanguage
-            zeroLoadMovies()
-        }
-        return filtered
-    }
-
-    private fun isDifference(filterSort: String, filterEndYear: Int, filterStartYear: Int, filterLanguage: String?, filterCategories: ArrayList<String>, filterCountries: ArrayList<String>): Boolean {
-        return filterSort != sortingMethod
-                || filterEndYear != endYear
-                || filterStartYear != startYear
-                || filterLanguage != language
-                || categories.differsFrom(filterCategories)
-                || countries.differsFrom(filterCountries)
     }
 
     protected open fun handleObserver() {
@@ -190,6 +167,11 @@ abstract class AbsMoviesFragment : Fragment() {
                 }
             }
         })
+    }
+
+    override fun onDestroyView() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroyView()
     }
 
 }

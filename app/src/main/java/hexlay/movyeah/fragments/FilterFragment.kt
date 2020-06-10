@@ -23,55 +23,42 @@ import hexlay.movyeah.api.database.view_models.DbCategoryViewModel
 import hexlay.movyeah.api.database.view_models.DbCountryViewModel
 import hexlay.movyeah.api.models.attributes.Category
 import hexlay.movyeah.api.models.attributes.Country
-import hexlay.movyeah.fragments.base.AbsMoviesFragment
 import hexlay.movyeah.helpers.Constants
 import hexlay.movyeah.helpers.observeOnce
+import hexlay.movyeah.models.Filter
 import kotlinx.android.synthetic.main.fragment_filter.*
+import org.greenrobot.eventbus.EventBus
 
 class FilterFragment : BottomSheetDialogFragment() {
-
-    private var activeFragment: AbsMoviesFragment? = null
 
     private val dbCountries by viewModels<DbCountryViewModel>()
     private val dbCategories by viewModels<DbCategoryViewModel>()
 
-    // Filter attributes
-    private var sortingMethod = "-upload_date"
-    private var startYear = 0
-    private var endYear = 0
-    private var categories = ArrayList<String>()
-    private var countries = ArrayList<String>()
-    private var language: String? = null
+    private lateinit var filter: Filter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_filter, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setupFilterMethods()
         super.onViewCreated(view, savedInstanceState)
-        setupFilter()
-    }
-
-    private fun setupFilter() {
-        startYear = Constants.START_YEAR
-        endYear = Constants.END_YEAR
-        onFilterOpen()
     }
 
     override fun onDismiss(dialog: DialogInterface) {
-        onFilterClose()
+        EventBus.getDefault().post(filter)
         super.onDismiss(dialog)
     }
 
     private fun setupYears() {
         // Start year
         val yearList = listOf(Constants.START_YEAR..Constants.END_YEAR).flatten().map { it.toString() }
-        start_year.text = startYear.toString()
+        start_year.text = filter.startYear.toString()
         start_year.setOnClickListener {
             MaterialDialog(requireContext()).show {
                 title(R.string.filter_change_year)
                 listItems(items = yearList) { _, index, _ ->
-                    startYear = yearList[index].toInt()
+                    filter.startYear = yearList[index].toInt()
                     setStartYear(yearList[index])
                 }
             }
@@ -79,12 +66,12 @@ class FilterFragment : BottomSheetDialogFragment() {
 
         // End year
         val endYears = yearList.reversed()
-        end_year.text = endYear.toString()
+        end_year.text = filter.endYear.toString()
         end_year.setOnClickListener {
             MaterialDialog(requireContext()).show {
                 title(R.string.filter_change_year)
                 listItems(items = endYears) { _, index, _ ->
-                    endYear = endYears[index].toInt()
+                    filter.endYear = endYears[index].toInt()
                     setEndYear(endYears[index])
                 }
             }
@@ -94,12 +81,12 @@ class FilterFragment : BottomSheetDialogFragment() {
     private fun setupSorter() {
         val items = listOf("დამატების თარიღი", "IMDB რეიტინგი", "გამოშვების წელი")
         val itemValues = listOf("-upload_date", "-imdb_rating", "-year")
-        sort_changer.text = items[itemValues.indexOf(sortingMethod)]
+        sort_changer.text = items[itemValues.indexOf(filter.sortingMethod)]
         sort_changer.setOnClickListener {
             MaterialDialog(requireContext()).show {
                 title(R.string.filter_change_sort)
                 listItems(items = items) { _, index, _ ->
-                    sortingMethod = itemValues[index]
+                    filter.sortingMethod = itemValues[index]
                     setSorter(items[index])
                 }
             }
@@ -109,12 +96,12 @@ class FilterFragment : BottomSheetDialogFragment() {
     private fun setupLanguageChanger() {
         val items = listOf("ყველა", "ქართულად", "ინგლისურად", "რუსულად")
         val itemValues = listOf(null, "GEO", "ENG", "RUS")
-        language_changer.text = items[itemValues.indexOf(language)]
+        language_changer.text = items[itemValues.indexOf(filter.language)]
         language_changer.setOnClickListener {
             MaterialDialog(requireContext()).show {
                 title(R.string.filter_change_lang)
                 listItems(items = items) { _, index, _ ->
-                    language = itemValues[index]
+                    filter.language = itemValues[index]
                     setLanguage(items[index])
                 }
             }
@@ -144,12 +131,12 @@ class FilterFragment : BottomSheetDialogFragment() {
                     toggleButton.text = item.primaryName
                     toggleButton.textOff = item.primaryName
                     toggleButton.textOn = item.primaryName
-                    toggleButton.isChecked = categories.contains(categoryId)
+                    toggleButton.isChecked = filter.categories.contains(categoryId)
                     toggleButton.setOnCheckedChangeListener { _, isChecked ->
                         if (isChecked) {
-                            categories.add(categoryId)
+                            filter.categories.add(categoryId)
                         } else {
-                            categories.remove(categoryId)
+                            filter.categories.remove(categoryId)
                         }
                     }
                 }
@@ -172,12 +159,12 @@ class FilterFragment : BottomSheetDialogFragment() {
                     toggleButton.text = item.primaryName
                     toggleButton.textOff = item.primaryName
                     toggleButton.textOn = item.primaryName
-                    toggleButton.isChecked = countries.contains(countryId)
+                    toggleButton.isChecked = filter.countries.contains(countryId)
                     toggleButton.setOnCheckedChangeListener { _, isChecked ->
                         if (isChecked) {
-                            countries.add(countryId)
+                            filter.countries.add(countryId)
                         } else {
-                            countries.remove(countryId)
+                            filter.countries.remove(countryId)
                         }
                     }
                 }
@@ -201,36 +188,11 @@ class FilterFragment : BottomSheetDialogFragment() {
         start_year.text = value
     }
 
-    private fun onFilterOpen() {
-        if (activeFragment != null) {
-            categories.clear()
-            categories.addAll(activeFragment!!.categories)
-            countries.clear()
-            countries.addAll(activeFragment!!.countries)
-            language = activeFragment!!.language
-            startYear = activeFragment!!.startYear
-            endYear = activeFragment!!.endYear
-            sortingMethod = activeFragment!!.sortingMethod
-            setupFilterMethods()
-        }
-    }
-
-    private fun onFilterClose() {
-        if (activeFragment != null) {
-            val filter = activeFragment!!.filter(sortingMethod, endYear, startYear, language, categories, countries)
-            if (filter) {
-                categories.clear()
-                countries.clear()
-                activeFragment = null
-            }
-        }
-    }
-
     companion object {
 
-        fun newInstance(activeFragment: AbsMoviesFragment): FilterFragment {
+        fun newInstance(filter: Filter): FilterFragment {
             val filterFragment = FilterFragment()
-            filterFragment.activeFragment = activeFragment
+            filterFragment.filter = filter.copy()
             return filterFragment
         }
 
