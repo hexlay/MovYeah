@@ -12,11 +12,10 @@ import com.afollestad.assent.Permission
 import com.afollestad.assent.runWithPermissions
 import com.afollestad.inlineactivityresult.startActivityForResult
 import hexlay.movyeah.api.models.Movie
-import hexlay.movyeah.api.network.view_models.MovieListViewModel
+import hexlay.movyeah.api.network.view_models.MovieListViewModelTv
 import hexlay.movyeah.app_tv.R
 import hexlay.movyeah.app_tv.activities.TvWatchActivity
 import hexlay.movyeah.app_tv.helpers.getWindow
-import hexlay.movyeah.app_tv.helpers.observeOnce
 import hexlay.movyeah.app_tv.helpers.setDrawableFromUrl
 import hexlay.movyeah.app_tv.models.events.StartActivityEvent
 import hexlay.movyeah.app_tv.presenters.MoviePresenter
@@ -26,7 +25,7 @@ import org.greenrobot.eventbus.Subscribe
 
 class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchResultProvider {
 
-    private val movieListViewModel by viewModels<MovieListViewModel>()
+    private val movieListViewModel by viewModels<MovieListViewModelTv>()
     private var backgroundManager: BackgroundManager? = null
 
     private var searchText = ""
@@ -49,6 +48,7 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
         initRows()
         initVoiceSearch()
         initItemListener()
+        handleMovieObserver()
     }
 
     private fun initVoiceSearch() {
@@ -121,16 +121,16 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
     }
 
     private fun fetchSearch() {
-        movieListViewModel.fetchSearchMovie(page, searchText).observeOnce(viewLifecycleOwner, Observer {
-            handleMovies(it)
-        })
+        movieListViewModel.fetchSearchMovie(page, searchText)
     }
 
-    private fun handleMovies(dataList: List<Movie>) {
-        if (dataList.isNotEmpty()) {
-            searchAdapter?.addAll(searchAdapter!!.size(), dataList)
-            page++
-        }
+    private fun handleMovieObserver() {
+        movieListViewModel.movies.observe(viewLifecycleOwner, Observer { dataList ->
+            if (dataList.isNotEmpty()) {
+                searchAdapter?.addAll(searchAdapter!!.size(), dataList)
+                page++
+            }
+        })
     }
 
     override fun onDestroyView() {

@@ -1,6 +1,7 @@
 package hexlay.movyeah.api.network.view_models
 
 import android.app.Application
+import android.util.Log
 import android.util.SparseArray
 import androidx.core.util.set
 import androidx.lifecycle.MutableLiveData
@@ -17,27 +18,33 @@ class WatchViewModel(application: Application) : AbsAdjaraViewModel(application)
         scope.launch {
             try {
                 movieData.postValue(repository.getEpisodeList(id, 0)?.get(0))
-            } catch (t: Throwable) {}
+            } catch (t: Throwable) {
+                Log.e("fetchMovieFileData", t.message.toString())
+            }
         }
         return movieData
     }
 
-    fun fetchActors(id: Int): MutableLiveData<List<Actor>> {
+    fun fetchMovieActors(id: Int): MutableLiveData<List<Actor>> {
         val actorList = MutableLiveData<List<Actor>>()
         scope.launch {
             try {
                 actorList.postValue(repository.getMovieActors(id))
-            } catch (t: Throwable) {}
+            } catch (t: Throwable) {
+                Log.e("fetchMovieActors", t.message.toString())
+            }
         }
         return actorList
     }
 
-    fun fetchMovie(id: Int): MutableLiveData<Movie> {
+    fun fetchSingleMovie(id: Int): MutableLiveData<Movie> {
         val movie = MutableLiveData<Movie>()
         scope.launch {
             try {
                 movie.postValue(repository.getMovie(id))
-            } catch (t: Throwable) {}
+            } catch (t: Throwable) {
+                Log.e("fetchSingleMovie", t.message.toString())
+            }
         }
         return movie
     }
@@ -51,7 +58,9 @@ class WatchViewModel(application: Application) : AbsAdjaraViewModel(application)
                     map[season] = repository.getEpisodeList(id, season)!!
                 }
                 tvShowEpisodes.postValue(map)
-            } catch (t: Throwable) {}
+            } catch (t: Throwable) {
+                Log.e("fetchTvShowEpisodes", t.message.toString())
+            }
         }
         return tvShowEpisodes
     }

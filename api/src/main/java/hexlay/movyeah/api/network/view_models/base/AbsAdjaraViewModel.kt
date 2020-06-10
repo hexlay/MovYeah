@@ -14,7 +14,7 @@ abstract class AbsAdjaraViewModel(application: Application) : AndroidViewModel(a
 
     private val coroutineContext: CoroutineContext = Job() + Dispatchers.Default
     protected val scope = CoroutineScope(coroutineContext)
-    protected val repository = AdjaraRepository(AdjaraFactory.createService(application.applicationContext))
+    protected val repository = AdjaraRepository(AdjaraFactory.build(application.applicationContext))
 
     fun cancelAllRequests() = coroutineContext.cancel()
 

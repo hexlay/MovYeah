@@ -7,9 +7,10 @@ import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.api.network.view_models.base.AbsAdjaraViewModel
 import kotlinx.coroutines.launch
 
-class MovieListViewModel(application: Application) : AbsAdjaraViewModel(application) {
+class MovieListViewModelTv(application: Application) : AbsAdjaraViewModel(application) {
 
     val movies = MutableLiveData<List<Movie>>()
+    val shows = MutableLiveData<List<Movie>>()
 
     fun fetchMainMovies(
             page: Int = 1,
@@ -23,6 +24,32 @@ class MovieListViewModel(application: Application) : AbsAdjaraViewModel(applicat
         scope.launch {
             try {
                 movies.postValue(repository.getMainMovies(
+                        page = page,
+                        filtersType = filtersType,
+                        filtersLanguage = filtersLanguage,
+                        filtersGenres = filtersGenres,
+                        filtersCountries = filtersCountries,
+                        filtersYears = filtersYears,
+                        filtersSort = filtersSort
+                ))
+            } catch (t: Throwable) {
+                Log.e("fetchMainMovies", t.message.toString())
+            }
+        }
+    }
+
+    fun fetchMainShows(
+            page: Int = 1,
+            filtersSort: String = "-upload_date",
+            filtersType: String = "series",
+            filtersLanguage: String? = null,
+            filtersGenres: String? = null,
+            filtersCountries: String? = null,
+            filtersYears: String
+    ) {
+        scope.launch {
+            try {
+                shows.postValue(repository.getMainMovies(
                         page = page,
                         filtersType = filtersType,
                         filtersLanguage = filtersLanguage,

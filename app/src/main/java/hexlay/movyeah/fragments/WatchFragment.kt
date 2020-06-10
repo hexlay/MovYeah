@@ -328,7 +328,7 @@ class WatchFragment : Fragment() {
             setupSource()
         } else {
             if (movie.isTvShow) {
-                watchViewModel.fetchMovie(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { movieExtend ->
+                watchViewModel.fetchSingleMovie(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { movieExtend ->
                     if (movieExtend?.seasons != null) {
                         movie.seasons = movieExtend.seasons
                         watchViewModel.fetchTvShowEpisodes(movie.id, movieExtend.seasons!!.data.size)
@@ -370,7 +370,7 @@ class WatchFragment : Fragment() {
     }
 
     private fun loadIndependentData() {
-        watchViewModel.fetchActors(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { cast ->
+        watchViewModel.fetchMovieActors(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { cast ->
             if (cast != null) {
                 setupCast(cast)
             } else {

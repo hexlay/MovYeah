@@ -1,14 +1,12 @@
 package hexlay.movyeah.fragments
 
-import androidx.lifecycle.Observer
 import hexlay.movyeah.fragments.base.AbsMoviesFragment
-import hexlay.movyeah.helpers.observeOnce
 import kotlinx.android.synthetic.main.fragment_movies.*
 
 class MoviesFragment : AbsMoviesFragment() {
 
     override fun loadMovies() {
-        movieListViewModel.fetchMovies(
+        movieListViewModel.fetchMainMovies(
                 page = page,
                 filtersLanguage = language,
                 filtersGenres =  if (categories.size > 0) {
@@ -23,9 +21,7 @@ class MoviesFragment : AbsMoviesFragment() {
                 },
                 filtersSort = sortingMethod,
                 filtersYears = "${startYear},${endYear}"
-        ).observeOnce(viewLifecycleOwner, Observer {
-            handleMovies(it)
-        })
+        )
     }
 
     override fun initFilter() {

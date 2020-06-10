@@ -126,7 +126,7 @@ class TvWatchFragment : DetailsSupportFragment() {
 
     private fun loadData() {
         if (movie.isTvShow) {
-            watchViewModel.fetchMovie(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { movieExtend ->
+            watchViewModel.fetchSingleMovie(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { movieExtend ->
                 if (movieExtend?.seasons != null) {
                     watchViewModel.fetchTvShowEpisodes(movie.id, movieExtend.seasons!!.data.size)
                             .observeOnce(viewLifecycleOwner, Observer { seasons ->
@@ -231,7 +231,7 @@ class TvWatchFragment : DetailsSupportFragment() {
     }
 
     private fun initCast() {
-        watchViewModel.fetchActors(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { cast ->
+        watchViewModel.fetchMovieActors(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { cast ->
             if (cast != null) {
                 val actorAdapter = ArrayObjectAdapter(CastPresenter(requireContext()))
                 actorAdapter.addAll(0, cast)

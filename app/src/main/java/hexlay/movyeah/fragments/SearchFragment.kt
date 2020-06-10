@@ -2,12 +2,9 @@ package hexlay.movyeah.fragments
 
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import hexlay.movyeah.R
-import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.fragments.base.AbsMoviesFragment
 import hexlay.movyeah.helpers.dpOf
-import hexlay.movyeah.helpers.observeOnce
 import hexlay.movyeah.helpers.setMargins
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.piece_scroll_up.*
@@ -21,6 +18,7 @@ class SearchFragment : AbsMoviesFragment() {
         initScrollUp()
         initFilter()
         initSearch()
+        handleObserver()
     }
 
     override fun initScrollUp() {
@@ -40,9 +38,7 @@ class SearchFragment : AbsMoviesFragment() {
     }
 
     override fun loadMovies() {
-        movieListViewModel.fetchSearchMovie(page, searchText).observeOnce(viewLifecycleOwner, Observer {
-            handleMovies(it)
-        })
+        movieListViewModel.fetchSearchMovie(page, searchText)
     }
 
     fun search(text: String) {
@@ -52,8 +48,8 @@ class SearchFragment : AbsMoviesFragment() {
         zeroLoadMovies()
     }
 
-    override fun handleMovies(dataList: List<Movie>) {
-        super.handleMovies(dataList)
+    override fun handleObserver() {
+        super.handleObserver()
         fab_filter.hide()
     }
 

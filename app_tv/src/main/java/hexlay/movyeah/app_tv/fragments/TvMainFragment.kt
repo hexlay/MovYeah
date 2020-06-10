@@ -2,7 +2,6 @@ package hexlay.movyeah.app_tv.fragments
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -15,7 +14,7 @@ import com.afollestad.inlineactivityresult.startActivityForResult
 import hexlay.movyeah.api.database.view_models.DbCategoryViewModel
 import hexlay.movyeah.api.database.view_models.DbMovieViewModel
 import hexlay.movyeah.api.models.Movie
-import hexlay.movyeah.api.network.view_models.MovieListViewModel
+import hexlay.movyeah.api.network.view_models.MovieListViewModelTv
 import hexlay.movyeah.app_tv.R
 import hexlay.movyeah.app_tv.activities.TvSearchActivity
 import hexlay.movyeah.app_tv.activities.TvWatchActivity
@@ -38,7 +37,7 @@ import org.greenrobot.eventbus.Subscribe
 
 class TvMainFragment : BrowseSupportFragment() {
 
-    private val movieListViewModel by viewModels<MovieListViewModel>()
+    private val movieListViewModel by viewModels<MovieListViewModelTv>()
     private val dbMovieViewModel by viewModels<DbMovieViewModel>()
     private val dbCategories by viewModels<DbCategoryViewModel>()
     private var backgroundManager: BackgroundManager? = null
@@ -74,6 +73,8 @@ class TvMainFragment : BrowseSupportFragment() {
         initAdapters()
         initRows()
         initData()
+        handleMovieOserver()
+        handleTvsObserver()
     }
 
     private fun initBackgroundManager() {
@@ -96,7 +97,7 @@ class TvMainFragment : BrowseSupportFragment() {
     }
 
     private fun fetchMovies() {
-        movieListViewModel.fetchMovies(
+        movieListViewModel.fetchMainMovies(
                 page = moviesPage,
                 filtersLanguage = language,
                 filtersGenres = if (categories.size > 0) {
@@ -106,16 +107,12 @@ class TvMainFragment : BrowseSupportFragment() {
                 },
                 filtersSort = sortingMethod,
                 filtersYears = "${startYear},${endYear}"
-        ).observeOnce(viewLifecycleOwner, Observer {
-            handleMovies(it)
-        })
+        )
     }
 
     private fun fetchSeries() {
-        Log.e("das", "fetchSeries")
-        movieListViewModel.fetchMovies(
+        movieListViewModel.fetchMainShows(
                 page = tvsPage,
-                filtersType = "series",
                 filtersLanguage = language,
                 filtersGenres = if (categories.size > 0) {
                     categories.joinToString { it }
@@ -124,10 +121,7 @@ class TvMainFragment : BrowseSupportFragment() {
                 },
                 filtersSort = sortingMethod,
                 filtersYears = "${startYear},${endYear}"
-        ).observeOnce(viewLifecycleOwner, Observer {
-            Log.e("das", it.toString())
-            handleTvs(it)
-        })
+        )
     }
 
     private fun initData() {
@@ -288,18 +282,26 @@ class TvMainFragment : BrowseSupportFragment() {
         fetchSeries()
     }
 
-    private fun handleMovies(dataList: List<Movie>) {
-        if (dataList.isNotEmpty()) {
-            movieAdapter?.addAll(movieAdapter!!.size(), dataList)
-            moviesPage++
-        }
+    private fun handleMovieOserver() {
+        movieListViewModel.movies.observe(viewLifecycleOwner, Observer { dataList ->
+            if (dataList != null) {
+                if (dataList.isNotEmpty()) {
+                    movieAdapter?.addAll(movieAdapter!!.size(), dataList)
+                    moviesPage++
+                }
+            }
+        })
     }
 
-    private fun handleTvs(dataList: List<Movie>) {
-        if (dataList.isNotEmpty()) {
-            seriesAdapter?.addAll(seriesAdapter!!.size(), dataList)
-            tvsPage++
-        }
+    private fun handleTvsObserver() {
+        movieListViewModel.shows.observe(viewLifecycleOwner, Observer { dataList ->
+            if (dataList != null) {
+                if (dataList.isNotEmpty()) {
+                    seriesAdapter?.addAll(seriesAdapter!!.size(), dataList)
+                    tvsPage++
+                }
+            }
+        })
     }
 
     override fun onDestroyView() {

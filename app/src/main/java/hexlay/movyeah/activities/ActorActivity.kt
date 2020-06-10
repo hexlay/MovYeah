@@ -44,6 +44,7 @@ class ActorActivity : AbsWatchModeActivity() {
         initActorInfo()
         initRecyclerView()
         loadMovies()
+        handleObserver()
     }
 
     private fun initToolbar() {
@@ -68,9 +69,7 @@ class ActorActivity : AbsWatchModeActivity() {
 
     private fun loadMovies() {
         actor?.id?.let { id ->
-            actorMoviesViewModel.fetchMovies(id, page).observeOnce(this, Observer {
-                handleMovies(it)
-            })
+            actorMoviesViewModel.fetchActorMovies(id, page)
         }
     }
 
@@ -107,24 +106,28 @@ class ActorActivity : AbsWatchModeActivity() {
         }
     }
 
-    private fun handleMovies(dataList: List<Movie>) {
-        loading_movies.isVisible = false
-        if (dataList.isNotEmpty()) {
-            warning_holder.isGone = true
-            if (page > 1) {
-                source.addAll(dataList)
-                loading = true
-            } else {
-                source.clear()
-                source.addAll(dataList)
+    private fun handleObserver() {
+        actorMoviesViewModel.movies.observe(this, Observer { dataList ->
+            if (dataList != null) {
+                loading_movies.isVisible = false
+                if (dataList.isNotEmpty()) {
+                    warning_holder.isGone = true
+                    if (page > 1) {
+                        source.addAll(dataList)
+                        loading = true
+                    } else {
+                        source.clear()
+                        source.addAll(dataList)
+                    }
+                    page++
+                } else {
+                    if (page == 1) {
+                        warning_holder.text = getString(R.string.loading_news_fail)
+                        warning_holder.isVisible = true
+                    }
+                }
             }
-            page++
-        } else {
-            if (page == 1) {
-                warning_holder.text = getString(R.string.loading_news_fail)
-                warning_holder.isVisible = true
-            }
-        }
+        })
     }
 
     override fun onBackPressed() {

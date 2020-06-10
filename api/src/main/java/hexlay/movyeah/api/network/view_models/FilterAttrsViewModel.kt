@@ -1,6 +1,7 @@
 package hexlay.movyeah.api.network.view_models
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import hexlay.movyeah.api.models.attributes.Category
 import hexlay.movyeah.api.models.attributes.Country
@@ -14,7 +15,9 @@ class FilterAttrsViewModel(application: Application) : AbsAdjaraViewModel(applic
         scope.launch {
             try {
                 categories.postValue(repository.getCategories())
-            } catch (t: Throwable) {}
+            } catch (t: Throwable) {
+                Log.e("fetchCategories", t.message.toString())
+            }
         }
         return categories
     }
@@ -24,7 +27,9 @@ class FilterAttrsViewModel(application: Application) : AbsAdjaraViewModel(applic
         scope.launch {
             try {
                 countries.postValue(repository.getCountries())
-            } catch (t: Throwable) {}
+            } catch (t: Throwable) {
+                Log.e("fetchCountries", t.message.toString())
+            }
         }
         return countries
     }

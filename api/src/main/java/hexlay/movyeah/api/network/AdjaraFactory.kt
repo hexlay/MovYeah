@@ -10,11 +10,11 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object AdjaraFactory {
 
-    private fun buildRetrofit(context: Context): Retrofit {
+    fun build(context: Context): AdjaraAPI {
         val cache = Cache(context.cacheDir, 5 * 1024 * 1024)
         val client = OkHttpClient.Builder()
-                .addInterceptor(ConnectionInterceptor(context))
                 .cache(cache)
+                .addInterceptor(ConnectionInterceptor(context))
                 .build()
         return Retrofit.Builder()
                 .client(client)
@@ -22,10 +22,7 @@ object AdjaraFactory {
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(AdjaraAPI.BASE_URL)
                 .build()
-    }
-
-    fun createService(context: Context): AdjaraAPI {
-        return buildRetrofit(context).create(AdjaraAPI::class.java)
+                .create(AdjaraAPI::class.java)
     }
 
 }
