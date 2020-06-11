@@ -16,12 +16,12 @@ data class Filter(
 
     override fun equals(other: Any?): Boolean {
         if (other is Filter) {
-            return other.sortingMethod != sortingMethod
-                    || other.endYear != endYear
-                    || other.startYear != startYear
-                    || other.language != language
-                    || categories.differsFrom(other.categories)
-                    || countries.differsFrom(other.countries)
+            return other.sortingMethod == sortingMethod
+                    && other.endYear == endYear
+                    && other.startYear == startYear
+                    && other.language == language
+                    && !categories.differsFrom(other.categories)
+                    && !countries.differsFrom(other.countries)
         }
         return super.equals(other)
     }
