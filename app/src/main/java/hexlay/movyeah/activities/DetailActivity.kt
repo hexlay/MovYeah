@@ -36,7 +36,7 @@ class DetailActivity : AppCompatActivity() {
         if (intent.extras == null || intent.extras!!.isEmpty) {
             onBackPressed()
         }
-        movie = intent.getParcelableExtra("movie") as Movie
+        movie = intent.getParcelableExtra("movie")
     }
 
     private fun initMovieView() {

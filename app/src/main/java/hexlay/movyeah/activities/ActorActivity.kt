@@ -57,7 +57,7 @@ class ActorActivity : AbsWatchModeActivity() {
         if (intent.extras == null || intent.extras!!.isEmpty) {
             onBackPressed()
         }
-        actor = intent.getParcelableExtra("actor") as Actor
+        actor = intent.getParcelableExtra("actor")
     }
 
     private fun initActorInfo() {

@@ -5,7 +5,6 @@ import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
@@ -16,6 +15,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.base.AbsWatchModeActivity
@@ -23,7 +23,6 @@ import hexlay.movyeah.adapters.MainPageAdapter
 import hexlay.movyeah.api.database.view_models.DbCategoryViewModel
 import hexlay.movyeah.api.database.view_models.DbCountryViewModel
 import hexlay.movyeah.api.helpers.isNetworkAvailable
-import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.api.network.view_models.FilterAttrsViewModel
 import hexlay.movyeah.fragments.*
 import hexlay.movyeah.helpers.*
@@ -32,6 +31,8 @@ import hexlay.movyeah.services.NotificationServiceJob
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.navigation
 import kotlinx.android.synthetic.main.fragment_watch.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 
 class MainActivity : AbsWatchModeActivity() {
@@ -60,6 +61,7 @@ class MainActivity : AbsWatchModeActivity() {
         initActivity()
     }
 
+
     override fun initActivity() {
         super.initActivity()
         initFiltersApi()
@@ -69,8 +71,8 @@ class MainActivity : AbsWatchModeActivity() {
         initNavigationView()
         initSync()
         initDarkMode()
-        initStarterData()
         initHistory()
+        initStarterData()
     }
 
     private fun initFragments() {
@@ -108,7 +110,7 @@ class MainActivity : AbsWatchModeActivity() {
     }
 
     private fun initHistory() {
-        searchAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, PreferenceHelper.searchHistory!!.toTypedArray())
+        searchAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, PreferenceHelper.searchHistory.toTypedArray())
         toolbar_search.setAdapter(searchAdapter)
     }
 
@@ -212,15 +214,16 @@ class MainActivity : AbsWatchModeActivity() {
     private fun initStarterData() {
         if (intent.extras != null && !intent.extras!!.isEmpty) {
             if (intent.hasExtra("movie")) {
-                Handler().postDelayed({
-                    startWatchMode(intent.getParcelableExtra("movie") as Movie)
-                }, 500)
+                lifecycleScope.launch {
+                    delay(500)
+                    startWatchMode(intent.getParcelableExtra("movie")!!)
+                }
             }
         }
     }
 
     fun initSync() {
-        if (PreferenceHelper.getNotifications!!) {
+        if (PreferenceHelper.getNotifications) {
             if (!isSyncing()) {
                 val jobService = ComponentName(this, NotificationServiceJob::class.java)
                 val syncInfo = JobInfo.Builder(0x1, jobService)

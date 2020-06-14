@@ -2,11 +2,17 @@ package hexlay.movyeah.fragments
 
 import hexlay.movyeah.fragments.base.AbsMoviesFragment
 import hexlay.movyeah.models.Filter
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
 class TvShowFragment : AbsMoviesFragment() {
 
     override var filter: Filter = Filter(this)
+
+    override fun initFragment() {
+        super.initFragment()
+        EventBus.getDefault().register(this)
+    }
 
     override fun loadMovies() {
         movieListViewModel.fetchMainMovies(
@@ -36,6 +42,11 @@ class TvShowFragment : AbsMoviesFragment() {
                 zeroLoadMovies()
             }
         }
+    }
+
+    override fun onDestroyView() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroyView()
     }
 
 }

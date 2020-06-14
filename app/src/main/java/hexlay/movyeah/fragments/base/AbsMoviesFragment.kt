@@ -26,7 +26,6 @@ import hexlay.movyeah.helpers.setMargins
 import hexlay.movyeah.models.Filter
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.piece_scroll_up.*
-import org.greenrobot.eventbus.EventBus
 
 abstract class AbsMoviesFragment : Fragment() {
 
@@ -40,7 +39,6 @@ abstract class AbsMoviesFragment : Fragment() {
     private val source = emptyDataSourceTyped<Movie>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        EventBus.getDefault().register(this)
         return inflater.inflate(R.layout.fragment_movies, container, false)
     }
 
@@ -167,11 +165,6 @@ abstract class AbsMoviesFragment : Fragment() {
                 }
             }
         })
-    }
-
-    override fun onDestroyView() {
-        EventBus.getDefault().unregister(this)
-        super.onDestroyView()
     }
 
 }

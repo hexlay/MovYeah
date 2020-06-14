@@ -7,22 +7,28 @@ import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.pm.ActivityInfo
+import android.content.pm.ShortcutInfo
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.Icon
 import android.net.Uri
-import android.os.Environment
+import android.os.Build
 import android.os.Handler
 import android.text.Html
 import android.text.Spanned
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import hexlay.movyeah.R
 import org.apache.commons.collections4.CollectionUtils
 import java.io.File
@@ -110,6 +116,26 @@ fun ImageView.setUrl(url: String) {
             .thumbnail(Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.loading)))
             .error(Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.no_image)))
             .into(this)
+}
+
+@RequiresApi(Build.VERSION_CODES.N_MR1)
+fun ShortcutInfo.Builder.buildWithGlideIcon(context: Context, url: String?, callback: (item: ShortcutInfo) -> Unit) {
+    Glide.with(context)
+            .asBitmap()
+            .load(url)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    if (Constants.isAndroidO) {
+                        setIcon(Icon.createWithAdaptiveBitmap(resource))
+                    } else {
+                        setIcon(Icon.createWithBitmap(resource))
+                    }
+                    val item = build()
+                    callback(item)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {}
+            })
 }
 
 fun View.fade(alpha: Int, time: Long) {
@@ -229,13 +255,13 @@ fun Fragment.downloadMovie(url: String, title: String): Long {
     request.setAllowedOverRoaming(false)
     request.setTitle(title)
     request.setNotificationVisibility(visibleNotification)
-    request.setDestinationInExternalFilesDir(requireContext(), Environment.DIRECTORY_DOWNLOADS, "$title.mp4")
+    request.setDestinationInExternalFilesDir(requireContext(), Constants.DOWNLOAD_DIRECTORY, "$title.mp4")
     val downloadManager = requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
     return downloadManager.enqueue(request)
 }
 
 fun Fragment.getOfflineMovie(id: String): File {
-    val downloadDirectory = requireContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.absolutePath
+    val downloadDirectory = requireContext().getExternalFilesDir(Constants.DOWNLOAD_DIRECTORY)?.absolutePath
     val path = "${downloadDirectory}/${id}.mp4"
     return File(path)
 }
