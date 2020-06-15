@@ -3,7 +3,6 @@ package hexlay.movyeah.helpers
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.pm.ActivityInfo
@@ -14,7 +13,6 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
-import android.os.Handler
 import android.text.Html
 import android.text.Spanned
 import android.view.*
@@ -23,13 +21,17 @@ import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import hexlay.movyeah.R
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils
 import java.io.File
 import java.util.*
@@ -170,74 +172,78 @@ fun View.hideKeyboard() {
     inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
 }
 
-fun Activity.makeFullscreen() {
+fun FragmentActivity.makeFullscreen() {
     val decorView = window.decorView
     var flags = decorView.systemUiVisibility
     flags = flags or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
     decorView.systemUiVisibility = flags
 }
 
-fun Activity.setLightStatusBar() {
+fun FragmentActivity.setLightStatusBar() {
     val decorView = window.decorView
     var flags = decorView.systemUiVisibility
     flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     decorView.systemUiVisibility = flags
 }
 
-fun Activity.removeLightStatusBar() {
+fun FragmentActivity.removeLightStatusBar() {
     val decorView = window.decorView
     var flags = decorView.systemUiVisibility
     flags = flags xor View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     decorView.systemUiVisibility = flags
 }
 
-fun Activity.isInNightMode(): Boolean {
+fun FragmentActivity.isInNightMode(): Boolean {
     return (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 }
 
-fun Activity.dpOf(value: Int): Int {
+fun FragmentActivity.dpOf(value: Int): Int {
     val scale = resources.displayMetrics.density
     return (value * scale + 0.5f).toInt()
 }
 
-fun Activity.dpOf(value: Float): Float {
+fun FragmentActivity.dpOf(value: Float): Float {
     val scale = resources.displayMetrics.density
     return (value * scale + 0.5f)
 }
 
-fun Activity.isInLandscape(): Boolean {
+fun FragmentActivity.isInLandscape(): Boolean {
     val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
     val display = windowManager.defaultDisplay
     return display.rotation == Surface.ROTATION_90 || display.rotation == Surface.ROTATION_270
 }
 
-@SuppressLint("SourceLockedOrientationActivity")
-fun Activity.requestPortrait() {
+fun FragmentActivity.requestPortrait() {
     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-    Handler().postDelayed({ requestSensorForever() }, 2000)
+    lifecycleScope.launch {
+        delay(2000)
+        requestSensorForever()
+    }
 }
 
-@SuppressLint("SourceLockedOrientationActivity")
-fun Activity.requestLandscape() {
+fun FragmentActivity.requestLandscape() {
     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-    Handler().postDelayed({ requestSensorForever() }, 2000)
+    lifecycleScope.launch {
+        delay(2000)
+        requestSensorForever()
+    }
 }
 
 @SuppressLint("SourceLockedOrientationActivity")
-fun Activity.requestPortraitForever() {
+fun FragmentActivity.requestPortraitForever() {
     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 }
 
-fun Activity.requestSensorForever() {
+fun FragmentActivity.requestSensorForever() {
     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER
 }
 
-fun Activity.getStatusBarHeight(): Int {
+fun FragmentActivity.getStatusBarHeight(): Int {
     val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
     return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
 }
 
-fun Activity.getActionBarSize(): Int {
+fun FragmentActivity.getActionBarSize(): Int {
     val styledAttributes = theme.obtainStyledAttributes(intArrayOf(android.R.attr.actionBarSize))
     val dimension = styledAttributes.getDimension(0, 0F).toInt()
     styledAttributes.recycle()
