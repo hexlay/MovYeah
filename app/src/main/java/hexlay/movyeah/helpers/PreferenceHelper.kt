@@ -84,6 +84,14 @@ object PreferenceHelper {
             }
         }
 
+    var savedAlerts: MutableSet<String>
+        get() = settings?.getStringSet("adj_alerts_ids", mutableSetOf())!!
+        set(value) {
+            settings?.edit {
+                putStringSet("adj_alerts_ids", value)
+            }
+        }
+
     var savedNotificationIds: MutableSet<String>
         get() = settings?.getStringSet("adj_notification_ids", mutableSetOf())!!
         set(value) {
@@ -110,6 +118,12 @@ object PreferenceHelper {
         val current = savedNotificationIds
         current.add(value)
         savedNotificationIds = current
+    }
+
+    fun addAlertHistory(value: String) {
+        val current = savedAlerts
+        current.add(value)
+        savedAlerts = current
     }
 
 }

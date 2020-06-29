@@ -17,9 +17,11 @@ import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
+import com.afollestad.materialdialogs.MaterialDialog
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.base.AbsWatchModeActivity
 import hexlay.movyeah.adapters.MainPageAdapter
+import hexlay.movyeah.api.alerts.view_models.AlertViewModel
 import hexlay.movyeah.api.database.view_models.DbCategoryViewModel
 import hexlay.movyeah.api.database.view_models.DbCountryViewModel
 import hexlay.movyeah.api.helpers.isNetworkAvailable
@@ -53,6 +55,7 @@ class MainActivity : AbsWatchModeActivity() {
     private val apiFilters by viewModels<FilterAttrsViewModel>()
     private val dbCategories by viewModels<DbCategoryViewModel>()
     private val dbCountries by viewModels<DbCountryViewModel>()
+    private val apiAlerts by viewModels<AlertViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +76,27 @@ class MainActivity : AbsWatchModeActivity() {
         initDarkMode()
         initHistory()
         initStarterData()
+        initAlerts()
+    }
+
+    private fun initAlerts() {
+        apiAlerts.fetchAlerts().observeOnce(this, Observer {
+            var message = ""
+            for (alert in it) {
+                if (!PreferenceHelper.savedAlerts.contains(alert.id)) {
+                    message += "<p>&#9679; ${alert.message}</p>"
+                    PreferenceHelper.addAlertHistory(alert.id)
+                }
+            }
+            if (message.isNotEmpty()) {
+                MaterialDialog(this).show {
+                    message(text = message.toHtml())
+                    negativeButton(R.string.done) {
+                        dismiss()
+                    }
+                }
+            }
+        })
     }
 
     private fun initFragments() {
