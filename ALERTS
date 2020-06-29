@@ -1,10 +1,10 @@
 [
   {
     "id": "1",
-    "message": "test"
+    "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nibh sem, tempus sit amet iaculis vitae, rutrum nec enim. Etiam tincidunt nisl massa, vitae pharetra urna imperdiet in. Nulla condimentum et libero eget faucibus. Pellentesque venenatis egestas erat, at semper turpis pulvinar quis. Suspendisse vitae nunc quis nunc molestie iaculis nec a felis. Nullam posuere nunc vel dui aliquet feugiat ac at justo. Praesent dignissim eleifend nisi, a pharetra risus vulputate sit amet. Donec dictum eros lacus, tristique venenatis lacus lobortis lobortis. Integer accumsan, justo vitae molestie dignissim, purus est tempus purus, in rhoncus mi eros eu lacus. Vestibulum fringilla pulvinar lectus."
   },
   {
     "id": "2",
-    "message": "test"
+    "message": "Lorem ipsum not that big"
   }
 ]
