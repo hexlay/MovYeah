@@ -14,8 +14,15 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_outer_player"
+                style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/watch_vlc"
+                app:icon="@drawable/ic_outer_play" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_quality"

@@ -5,6 +5,7 @@ import android.annotation.TargetApi
 import android.app.PendingIntent
 import android.app.PictureInPictureParams
 import android.app.RemoteAction
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.drawable.Icon
@@ -639,6 +640,20 @@ class WatchFragment : Fragment() {
                     setLanguageText(languageKey)
                     restartPlayer()
                 }
+            }
+        }
+        button_outer_player.setOnClickListener {
+            val vlcIntent = Intent(Intent.ACTION_VIEW)
+            vlcIntent.setPackage("org.videolan.vlc")
+            vlcIntent.setDataAndTypeAndNormalize(Uri.parse(generatePlayerUrl()), "video/*")
+            vlcIntent.putExtra("title", movie.getTitle())
+            vlcIntent.putExtra("from_start", false)
+            vlcIntent.putExtra("position", exoPlayer?.currentPosition)
+            pausePlayer()
+            try {
+                startActivity(vlcIntent)
+            } catch (e: ActivityNotFoundException) {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=org.videolan.vlc")))
             }
         }
         navigation.setOnNavigationItemSelectedListener { item ->

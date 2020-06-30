@@ -16,6 +16,7 @@
     <string name="cancel">გაუქმება</string>
     <string name="download_start">გადმოწერა დაწყებულია</string>
     <string name="watch">ყურება</string>
+    <string name="watch_vlc">VLC</string>
 
     <!-- Related -->
     <string name="related_movies">მსგავსი ფილმები</string>
