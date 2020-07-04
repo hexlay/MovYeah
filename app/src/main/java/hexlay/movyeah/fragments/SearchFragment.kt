@@ -1,6 +1,5 @@
 package hexlay.movyeah.fragments
 
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import hexlay.movyeah.R
 import hexlay.movyeah.fragments.base.AbsMoviesFragment
@@ -33,7 +32,6 @@ class SearchFragment : AbsMoviesFragment() {
         warning_holder.isVisible = true
         warning_holder.text = getString(R.string.search_text)
         movies_reloader.isEnabled = false
-        loading_movies.isGone = true
     }
 
     override fun initFilter() {

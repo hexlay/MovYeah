@@ -4,19 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.afollestad.recyclical.datasource.dataSourceOf
+import com.afollestad.recyclical.datasource.emptyDataSource
 import com.afollestad.recyclical.setup
 import com.afollestad.recyclical.withItem
 import hexlay.movyeah.R
 import hexlay.movyeah.adapters.view_holders.MovieViewHolder
 import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.api.network.view_models.MainViewModel
+import hexlay.movyeah.helpers.createSkeleton
 import hexlay.movyeah.helpers.getActionBarSize
 import hexlay.movyeah.helpers.getStatusBarHeight
 import hexlay.movyeah.helpers.observeOnce
@@ -25,6 +24,11 @@ import kotlinx.android.synthetic.main.fragment_main.*
 class MainFragment : Fragment() {
 
     private val mainViewModel by viewModels<MainViewModel>()
+    private val geoMoviesDataSource = emptyDataSource()
+    private val topMoviesDataSource = emptyDataSource()
+    private val topSeriesDataSource = emptyDataSource()
+    private val geoSeriesDataSource = emptyDataSource()
+    private val premiereDataSource = emptyDataSource()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_main, container, false)
@@ -43,31 +47,73 @@ class MainFragment : Fragment() {
 
     private fun init() {
         setupLayout()
+        setupRecyclerViews()
+        val skeleton1 = geo_movies_holder.createSkeleton(R.layout.list_items)
         mainViewModel.fetchGeoMovies().observeOnce(viewLifecycleOwner, Observer {
-            setupView(geo_movies_holder, it)
-            loading_geo_movies.isGone = true
+            geoMoviesDataSource.addAll(it)
+            skeleton1.showOriginal()
         })
+        val skeleton2 = top_movies_holder.createSkeleton(R.layout.list_items)
         mainViewModel.fetchTopMovies().observeOnce(viewLifecycleOwner, Observer {
-            setupView(top_movies_holder, it)
-            loading_top_movies.isGone = true
+            topMoviesDataSource.addAll(it)
+            skeleton2.showOriginal()
         })
+        val skeleton3 = top_series_holder.createSkeleton(R.layout.list_items)
         mainViewModel.fetchTopTvShows().observeOnce(viewLifecycleOwner, Observer {
-            setupView(top_series_holder, it)
-            loading_top_series.isGone = true
+            topSeriesDataSource.addAll(it)
+            skeleton3.showOriginal()
         })
+        val skeleton4 = geo_series_holder.createSkeleton(R.layout.list_items)
         mainViewModel.fetchGeoTvShows().observeOnce(viewLifecycleOwner, Observer {
-            setupView(geo_series_holder, it)
-            loading_geo_series.isGone = true
+            geoSeriesDataSource.addAll(it)
+            skeleton4.showOriginal()
         })
+        val skeleton5 = premiere_movies_holder.createSkeleton(R.layout.list_items)
         mainViewModel.fetchPremieres().observeOnce(viewLifecycleOwner, Observer {
-            setupView(premiere_movies_holder, it)
-            loading_premiere_movies.isGone = true
+            premiereDataSource.addAll(it)
+            skeleton5.showOriginal()
         })
     }
 
-    private fun setupView(recyclerView: RecyclerView, data: List<Movie>) {
-        recyclerView.setup {
-            withDataSource(dataSourceOf(data))
+    private fun setupRecyclerViews() {
+        geo_movies_holder.setup {
+            withDataSource(geoMoviesDataSource)
+            withLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
+            withItem<Movie, MovieViewHolder>(R.layout.list_items) {
+                onBind(::MovieViewHolder) { _, item ->
+                    this.bind(item, requireActivity())
+                }
+            }
+        }
+        top_movies_holder.setup {
+            withDataSource(topMoviesDataSource)
+            withLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
+            withItem<Movie, MovieViewHolder>(R.layout.list_items) {
+                onBind(::MovieViewHolder) { _, item ->
+                    this.bind(item, requireActivity())
+                }
+            }
+        }
+        top_series_holder.setup {
+            withDataSource(topSeriesDataSource)
+            withLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
+            withItem<Movie, MovieViewHolder>(R.layout.list_items) {
+                onBind(::MovieViewHolder) { _, item ->
+                    this.bind(item, requireActivity())
+                }
+            }
+        }
+        geo_series_holder.setup {
+            withDataSource(geoSeriesDataSource)
+            withLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
+            withItem<Movie, MovieViewHolder>(R.layout.list_items) {
+                onBind(::MovieViewHolder) { _, item ->
+                    this.bind(item, requireActivity())
+                }
+            }
+        }
+        premiere_movies_holder.setup {
+            withDataSource(premiereDataSource)
             withLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
             withItem<Movie, MovieViewHolder>(R.layout.list_items) {
                 onBind(::MovieViewHolder) { _, item ->

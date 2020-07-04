@@ -5,6 +5,10 @@
     <color name="color_accent">#1976D2</color>
     <color name="background_splash">#121212</color>
 
+    <!-- Skeleton -->
+    <color name="skeleton_color">#424242</color>
+    <color name="skeleton_shimmer_color">#80FFFFFF</color>
+
     <!-- Background colors -->
     <color name="background">#FFFFFF</color>
     <color name="background_card">#FCFCFC</color>

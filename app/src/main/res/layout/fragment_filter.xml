@@ -30,30 +30,30 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/start_year"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/start_year"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp" />
 
-        <TextView
-            android:id="@+id/dum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text=" - "
-            tools:ignore="HardcodedText" />
+            <TextView
+                android:id="@+id/dum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text=" - "
+                tools:ignore="HardcodedText" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/end_year"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/dum"
-            app:layout_constraintTop_toTopOf="parent" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/end_year"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/dum"
+                app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -92,33 +92,44 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <com.google.android.material.textview.MaterialTextView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="@string/filter_change_country"
-        android:textSize="19sp" />
+        android:layout_height="wrap_content">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/country_holder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/filter_change_country"
+                android:textSize="19sp" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="@string/filter_change_category"
-        android:textSize="19sp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/country_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/category_holder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp" />
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/filter_change_category"
+                android:textSize="19sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/category_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginTop="5dp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

@@ -23,14 +23,6 @@
                 android:text="@string/fragment_main_top_movies"
                 android:textSize="17sp" />
 
-            <ProgressBar
-                android:id="@+id/loading_top_movies"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:theme="@style/AppTheme.ProgressColor"
-                style="?android:attr/progressBarStyle" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/top_movies_holder"
                 android:layout_width="match_parent"
@@ -47,14 +39,6 @@
                 android:gravity="center_vertical"
                 android:text="@string/fragment_main_geo_movies"
                 android:textSize="17sp" />
-
-            <ProgressBar
-                android:id="@+id/loading_geo_movies"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:theme="@style/AppTheme.ProgressColor"
-                style="?android:attr/progressBarStyle" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/geo_movies_holder"
@@ -73,14 +57,6 @@
                 android:text="@string/fragment_main_top_series"
                 android:textSize="17sp" />
 
-            <ProgressBar
-                android:id="@+id/loading_top_series"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:theme="@style/AppTheme.ProgressColor"
-                style="?android:attr/progressBarStyle" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/top_series_holder"
                 android:layout_width="match_parent"
@@ -98,14 +74,6 @@
                 android:text="@string/fragment_main_geo_series"
                 android:textSize="17sp" />
 
-            <ProgressBar
-                android:id="@+id/loading_geo_series"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:theme="@style/AppTheme.ProgressColor"
-                style="?android:attr/progressBarStyle" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/geo_series_holder"
                 android:layout_width="match_parent"
@@ -122,14 +90,6 @@
                 android:gravity="center_vertical"
                 android:text="@string/fragment_main_premieres"
                 android:textSize="17sp" />
-
-            <ProgressBar
-                android:id="@+id/loading_premiere_movies"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:theme="@style/AppTheme.ProgressColor"
-                style="?android:attr/progressBarStyle" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/premiere_movies_holder"

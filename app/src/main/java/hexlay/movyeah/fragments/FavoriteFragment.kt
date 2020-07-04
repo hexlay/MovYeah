@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -55,7 +54,6 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun loadMovies() {
-        loading_movies.isGone = false
         movies_holder.setup {
             withDataSource(source)
             withLayoutManager(GridLayoutManager(requireContext(), 2))
@@ -69,7 +67,6 @@ class FavoriteFragment : Fragment() {
 
     private fun initObserver() {
         dbMovies.getMovies()?.observe(viewLifecycleOwner, Observer {
-            loading_movies.isGone = true
             makeShortcuts(it)
             source.clear()
             if (it.isNotEmpty()) {

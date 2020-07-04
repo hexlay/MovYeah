@@ -192,7 +192,15 @@ class FilterFragment : BottomSheetDialogFragment() {
 
         fun newInstance(filter: Filter): FilterFragment {
             val filterFragment = FilterFragment()
-            filterFragment.filter = filter.copy()
+            filterFragment.filter = Filter(
+                    activeFragment = filter.activeFragment,
+                    sortingMethod = filter.sortingMethod,
+                    startYear = filter.startYear,
+                    endYear = filter.endYear,
+                    categories = ArrayList(filter.categories),
+                    countries = ArrayList(filter.countries),
+                    language = filter.language
+            )
             return filterFragment
         }
 

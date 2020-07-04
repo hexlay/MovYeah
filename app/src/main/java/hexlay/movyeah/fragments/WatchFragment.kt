@@ -12,7 +12,6 @@ import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.util.Rational
 import android.util.SparseArray
@@ -26,6 +25,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.transition.TransitionManager
 import androidx.viewpager.widget.ViewPager
@@ -73,6 +73,8 @@ import kotlinx.android.synthetic.main.fragment_watch.*
 import kotlinx.android.synthetic.main.piece_cast.*
 import kotlinx.android.synthetic.main.piece_episodes.*
 import kotlinx.android.synthetic.main.piece_info.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.jetbrains.anko.support.v4.browse
@@ -287,13 +289,19 @@ class WatchFragment : Fragment() {
                         view_forward.text = getString(R.string.settings_main_seek_seconds).format(seekSecForward.toString())
                         view_forward.fade(1, 150)
                         exoPlayer!!.seekTo(exoPlayer!!.currentPosition + PreferenceHelper.seek)
-                        Handler().postDelayed({ view_forward.fade(0, 150) }, 500)
+                        lifecycleScope.launch {
+                            delay(500)
+                            view_backward.fade(0, 150)
+                        }
                     } else {
                         seekSecBackward += (PreferenceHelper.seek / 1000).toLong()
                         view_backward.text = getString(R.string.settings_main_seek_seconds).format(seekSecBackward.toString())
                         view_backward.fade(1, 150)
                         exoPlayer!!.seekTo(exoPlayer!!.currentPosition - PreferenceHelper.seek)
-                        Handler().postDelayed({ view_backward.fade(0, 150) }, 500)
+                        lifecycleScope.launch {
+                            delay(500)
+                            view_backward.fade(0, 150)
+                        }
                     }
                     return true
                 }

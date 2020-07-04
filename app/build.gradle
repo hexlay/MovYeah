@@ -81,8 +81,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Android KTX
-    implementation 'androidx.core:core-ktx:1.4.0-alpha01'
-    implementation 'androidx.fragment:fragment-ktx:1.2.4'
+    implementation 'androidx.core:core-ktx:1.5.0-alpha01'
+    implementation 'androidx.fragment:fragment-ktx:1.2.5'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     // AndroidX
@@ -108,4 +108,5 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:3.1.1'
     implementation 'com.afollestad.assent:core:3.0.0-RC4'
     implementation 'com.rezwan.knetworklib:knetworklib:1.0.3'
+    implementation 'com.faltenreich:skeletonlayout:2.0.2'
 }

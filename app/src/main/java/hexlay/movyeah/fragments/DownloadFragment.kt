@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -66,9 +65,7 @@ class DownloadFragment : Fragment() {
     }
 
     private fun loadMovies() {
-        loading_movies.isGone = false
         dbDownloadMovies.getMovies()?.observe(viewLifecycleOwner, Observer {
-            loading_movies.isGone = true
             source.clear()
             if (it.isNotEmpty()) {
                 it.groupBy { g -> g.movie!!.id }.forEach { (_, value) ->

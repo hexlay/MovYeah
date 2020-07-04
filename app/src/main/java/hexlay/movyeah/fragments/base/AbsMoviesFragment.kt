@@ -14,15 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.recyclical.datasource.emptyDataSourceTyped
 import com.afollestad.recyclical.setup
 import com.afollestad.recyclical.withItem
+import com.faltenreich.skeletonlayout.Skeleton
 import hexlay.movyeah.R
 import hexlay.movyeah.adapters.view_holders.MovieViewHolder
 import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.api.network.view_models.MovieListViewModel
 import hexlay.movyeah.fragments.FilterFragment
-import hexlay.movyeah.helpers.dpOf
-import hexlay.movyeah.helpers.getActionBarSize
-import hexlay.movyeah.helpers.getStatusBarHeight
-import hexlay.movyeah.helpers.setMargins
+import hexlay.movyeah.helpers.*
 import hexlay.movyeah.models.Filter
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.piece_scroll_up.*
@@ -33,6 +31,8 @@ abstract class AbsMoviesFragment : Fragment() {
     protected var page = 1
     private var loading = true
     private var filterFragment: FilterFragment? = null
+
+    private lateinit var skeleton: Skeleton
 
     protected abstract var filter: Filter
 
@@ -106,6 +106,7 @@ abstract class AbsMoviesFragment : Fragment() {
                 }
             }
         }
+        skeleton = movies_holder.createSkeleton(R.layout.list_items_extended, 10)
     }
 
     protected open fun initFilter() {
@@ -134,9 +135,9 @@ abstract class AbsMoviesFragment : Fragment() {
 
     protected fun zeroLoadMovies() {
         page = 1
-        loading_movies.isGone = false
         fab_filter.hide()
         loadMovies()
+        skeleton.showSkeleton()
     }
 
     protected open fun handleObserver() {
@@ -150,15 +151,14 @@ abstract class AbsMoviesFragment : Fragment() {
                     } else {
                         source.clear()
                         source.addAll(dataList)
-                        loading_movies.isGone = true
                         fab_filter.show()
+                        skeleton.showOriginal()
                     }
                     page++
                 } else {
                     if (page == 1) {
                         warning_holder.text = getString(R.string.loading_news_fail)
                         warning_holder.isVisible = true
-                        loading_movies.isGone = true
                         source.clear()
                         fab_filter.show()
                     }

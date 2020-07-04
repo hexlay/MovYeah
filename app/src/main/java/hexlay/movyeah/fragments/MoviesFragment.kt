@@ -1,5 +1,6 @@
 package hexlay.movyeah.fragments
 
+import android.util.Log
 import hexlay.movyeah.fragments.base.AbsMoviesFragment
 import hexlay.movyeah.models.Filter
 import org.greenrobot.eventbus.EventBus
@@ -32,6 +33,7 @@ class MoviesFragment : AbsMoviesFragment() {
                 filtersSort = filter.sortingMethod,
                 filtersYears = "${filter.startYear},${filter.endYear}"
         )
+        Log.e("this.filter0", this.filter.toString())
     }
 
     @Subscribe

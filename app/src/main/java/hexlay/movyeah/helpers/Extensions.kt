@@ -18,6 +18,7 @@ import android.text.Spanned
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import androidx.annotation.LayoutRes
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -26,9 +27,12 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.faltenreich.skeletonlayout.Skeleton
+import com.faltenreich.skeletonlayout.applySkeleton
 import hexlay.movyeah.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -160,6 +164,17 @@ fun View.fade(alpha: Int, time: Long) {
                     }
                 })
     }
+}
+
+fun RecyclerView.createSkeleton(@LayoutRes resId: Int, itemCount: Int = 3): Skeleton {
+    return applySkeleton(
+            listItemLayoutResId = resId,
+            itemCount = itemCount,
+            maskColor = ContextCompat.getColor(context, R.color.skeleton_color),
+            shimmerColor = ContextCompat.getColor(context, R.color.skeleton_shimmer_color),
+            cornerRadius = 0f,
+            shimmerDurationInMillis = 1000L
+    ).apply { showSkeleton() }
 }
 
 fun View.showKeyboard() {
