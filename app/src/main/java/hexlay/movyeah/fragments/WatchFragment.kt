@@ -19,6 +19,7 @@ import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.util.isEmpty
 import androidx.core.util.isNotEmpty
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -439,6 +440,10 @@ class WatchFragment : Fragment() {
     }
 
     private fun setupTvShowEpisode(episode: Int) {
+        if (tvShowSeasons.isEmpty() || tvShowSeasons[currentSeason].isEmpty()) {
+            showMovieError(R.string.full_error_show)
+            return
+        }
         currentEpisode = episode
         dbEpisodes.insertEpisode(EpisodeCache(movie.id, episode, currentSeason))
         fileData = tvShowSeasons[currentSeason][episode].files.map { it.lang!! to it.files }.toMap()

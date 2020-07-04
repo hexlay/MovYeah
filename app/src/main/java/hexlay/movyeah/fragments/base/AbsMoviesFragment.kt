@@ -137,6 +137,7 @@ abstract class AbsMoviesFragment : Fragment() {
         page = 1
         fab_filter.hide()
         loadMovies()
+        warning_holder.isVisible = false
         skeleton.showSkeleton()
     }
 
@@ -161,6 +162,7 @@ abstract class AbsMoviesFragment : Fragment() {
                         warning_holder.isVisible = true
                         source.clear()
                         fab_filter.show()
+                        skeleton.showOriginal()
                     }
                 }
             }

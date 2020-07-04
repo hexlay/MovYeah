@@ -174,7 +174,7 @@ fun RecyclerView.createSkeleton(@LayoutRes resId: Int, itemCount: Int = 3): Skel
             shimmerColor = ContextCompat.getColor(context, R.color.skeleton_shimmer_color),
             cornerRadius = 0f,
             shimmerDurationInMillis = 1000L
-    ).apply { showSkeleton() }
+    )
 }
 
 fun View.showKeyboard() {
