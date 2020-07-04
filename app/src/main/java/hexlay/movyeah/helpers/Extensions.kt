@@ -238,10 +238,10 @@ fun FragmentActivity.requestPortrait() {
 
 fun FragmentActivity.requestLandscape() {
     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-    lifecycleScope.launch {
+    /*lifecycleScope.launch {
         delay(2000)
         requestSensorForever()
-    }
+    }*/
 }
 
 @SuppressLint("SourceLockedOrientationActivity")
