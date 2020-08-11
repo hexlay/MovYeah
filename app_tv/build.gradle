@@ -86,8 +86,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Android KTX
-    implementation 'androidx.core:core-ktx:1.4.0-alpha01'
-    implementation 'androidx.fragment:fragment-ktx:1.2.4'
+    implementation 'androidx.core:core-ktx:1.5.0-alpha01'
+    implementation 'androidx.fragment:fragment-ktx:1.2.5'
 
     // AndroidX
     implementation 'androidx.leanback:leanback:1.0.0'

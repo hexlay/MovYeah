@@ -12,7 +12,6 @@ import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.util.Rational
 import android.util.SparseArray
 import android.view.*
@@ -393,6 +392,9 @@ class WatchFragment : Fragment() {
 
     private fun setupLanguageAndQuality() {
         languageKey = when {
+            fileData.containsKey(PreferenceHelper.lang) -> {
+                PreferenceHelper.lang
+            }
             fileData.containsKey("GEO") -> {
                 "GEO"
             }
@@ -403,15 +405,21 @@ class WatchFragment : Fragment() {
                 fileData.keys.first()
             }
         }
-        qualityKey = if (fileData[languageKey]?.map { it.quality }?.contains("HIGH")!!) {
-            "HIGH"
-        } else {
-            fileData[languageKey]?.first()?.quality!!
+        val qualities = fileData[languageKey]?.map { it.quality }
+        qualityKey = when {
+            qualities?.contains(PreferenceHelper.quality)!! -> {
+                PreferenceHelper.quality
+            }
+            qualities.contains("HIGH") -> {
+                "HIGH"
+            }
+            else -> {
+                fileData[languageKey]?.first()?.quality!!
+            }
         }
     }
 
     private fun setupMovie() {
-        Log.e("setupMovie", "exec")
         setupLanguageAndQuality()
         button_lang.text = languageKey.translateLanguage(requireContext())
         button_quality.text = qualityKey.translateQuality(requireContext())
@@ -710,6 +718,7 @@ class WatchFragment : Fragment() {
             setupSource()
     }
 
+    @SuppressLint("SwitchIntDef")
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         when (newConfig.orientation) {
