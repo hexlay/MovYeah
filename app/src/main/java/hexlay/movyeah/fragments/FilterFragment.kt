@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -118,7 +117,7 @@ class FilterFragment : BottomSheetDialogFragment() {
 
     private fun setupCategories() {
         val source = emptyDataSource()
-        dbCategories.getCategories()?.observeOnce(viewLifecycleOwner, Observer {
+        dbCategories.getCategories()?.observeOnce(viewLifecycleOwner, {
             source.addAll(it)
         })
         category_holder.setup {
@@ -146,7 +145,7 @@ class FilterFragment : BottomSheetDialogFragment() {
 
     private fun setupCountries() {
         val source = emptyDataSource()
-        dbCountries.getCountries()?.observeOnce(viewLifecycleOwner, Observer {
+        dbCountries.getCountries()?.observeOnce(viewLifecycleOwner, {
             source.addAll(it)
         })
         country_holder.setup {

@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.afollestad.assent.Permission
 import com.afollestad.assent.runWithPermissions
 import com.afollestad.materialdialogs.MaterialDialog
@@ -44,7 +43,7 @@ class SeasonFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dbEpisodes.getEpisode(movie!!.id)?.observeOnce(viewLifecycleOwner, Observer {
+        dbEpisodes.getEpisode(movie!!.id)?.observeOnce(viewLifecycleOwner, {
             if (it != null) {
                 episode_holder.scrollToPosition(it.episode)
             } else {
@@ -57,7 +56,7 @@ class SeasonFragment : Fragment() {
                 onBind(::EpisodeViewHolder) { index, item ->
                     title.text = "${item.episode}. ${item.getEpisodeTitle()}"
                     languages.text = item.files.map { it.lang?.translateLanguage(requireContext()) }.toCommaList()
-                    dbEpisodes.getEpisode(movie!!.id)?.observe(viewLifecycleOwner, Observer {
+                    dbEpisodes.getEpisode(movie!!.id)?.observe(viewLifecycleOwner, {
                         if (it != null && it.episode == index && it.season == season) {
                             paintSelected()
                             itemView.setOnClickListener(null)

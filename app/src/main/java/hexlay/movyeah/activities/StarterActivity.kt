@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import hexlay.movyeah.api.network.view_models.WatchViewModel
 import hexlay.movyeah.helpers.Constants
 import hexlay.movyeah.helpers.observeOnce
@@ -24,7 +23,7 @@ class StarterActivity : AppCompatActivity() {
         if (intent.action == Constants.SHORTCUT_ACTION) {
             if (intent.extras != null && !intent.extras!!.isEmpty) {
                 val id = intent.getIntExtra("movie_id", 0)
-                watchViewModel.fetchSingleMovie(id).observeOnce(this, Observer {
+                watchViewModel.fetchSingleMovie(id).observeOnce(this, {
                     val intent = intentFor<MainActivity>("movie" to it).noAnimation()
                     startActivity(intent)
                     finish()

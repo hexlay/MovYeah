@@ -2,7 +2,7 @@
 
 
 buildscript {
-    ext.kotlin_version = '1.3.72'
+    ext.kotlin_version = '1.4.10'
     ext.compile_version = 30
     ext.min_sdk_app = 23
     ext.min_sdk_tv = 21
@@ -14,7 +14,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.android.tools.build:gradle:4.0.2'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 

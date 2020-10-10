@@ -10,11 +10,11 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
 import com.afollestad.materialdialogs.MaterialDialog
@@ -80,7 +80,7 @@ class MainActivity : AbsWatchModeActivity() {
     }
 
     private fun initAlerts() {
-        apiAlerts.fetchAlerts().observeOnce(this, Observer {
+        apiAlerts.fetchAlerts().observeOnce(this, {
             var message = ""
             for (alert in it) {
                 if (!PreferenceHelper.savedAlerts.contains(alert.id)) {
@@ -108,14 +108,18 @@ class MainActivity : AbsWatchModeActivity() {
     }
 
     private fun initFiltersApi() {
-        apiFilters.fetchCategories().observeOnce(this, Observer {
-            for (category in it) {
-                dbCategories.insertCategory(category)
+        apiFilters.fetchCategories().observeOnce(this, {
+            if (it != null) {
+                for (category in it) {
+                    dbCategories.insertCategory(category)
+                }
             }
         })
-        apiFilters.fetchCountries().observeOnce(this, Observer {
-            for (country in it) {
-                dbCountries.insertCountry(country)
+        apiFilters.fetchCountries().observeOnce(this, {
+            if (it != null) {
+                for (country in it) {
+                    dbCountries.insertCountry(country)
+                }
             }
         })
     }
@@ -124,11 +128,7 @@ class MainActivity : AbsWatchModeActivity() {
         when (PreferenceHelper.darkMode) {
             0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            2 -> if (Constants.isAndroidQ) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
-            }
+            2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
         delegate.applyDayNight()
     }
@@ -189,7 +189,7 @@ class MainActivity : AbsWatchModeActivity() {
             button_search.setOnClickListener {
                 stopSearchMode()
             }
-            button_search.setImageDrawable(getDrawable(R.drawable.ic_arrow_back_w))
+            button_search.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_arrow_back_w))
             toolbar_search.requestFocus()
             toolbar_search.showKeyboard()
         }
@@ -216,7 +216,7 @@ class MainActivity : AbsWatchModeActivity() {
             button_search.setOnClickListener {
                 startSearchMode()
             }
-            button_search.setImageDrawable(getDrawable(R.drawable.ic_search))
+            button_search.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_search))
             toolbar_search.hideKeyboard()
         }
 

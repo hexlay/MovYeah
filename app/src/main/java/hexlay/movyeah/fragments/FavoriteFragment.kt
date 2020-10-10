@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.afollestad.recyclical.datasource.emptyDataSource
 import com.afollestad.recyclical.setup
@@ -66,7 +65,7 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun initObserver() {
-        dbMovies.getMovies()?.observe(viewLifecycleOwner, Observer {
+        dbMovies.getMovies()?.observe(viewLifecycleOwner, {
             makeShortcuts(it)
             source.clear()
             if (it.isNotEmpty()) {

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.fragment.app.commit
-import androidx.lifecycle.Observer
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.base.AbsWatchModeActivity
 import hexlay.movyeah.api.models.Movie
@@ -39,7 +38,7 @@ class BrowserActivity : AbsWatchModeActivity() {
     }
 
     private fun initMovieData() {
-        watchViewModel.fetchSingleMovie(movieId).observeOnce(this, Observer {
+        watchViewModel.fetchSingleMovie(movieId).observeOnce(this, {
             startWatchMode(it)
         })
     }

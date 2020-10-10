@@ -24,7 +24,6 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.transition.TransitionManager
@@ -337,11 +336,11 @@ class WatchFragment : Fragment() {
             setupSource()
         } else {
             if (movie.isTvShow) {
-                watchViewModel.fetchSingleMovie(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { movieExtend ->
+                watchViewModel.fetchSingleMovie(movie.adjaraId).observeOnce(viewLifecycleOwner, { movieExtend ->
                     if (movieExtend?.seasons != null) {
                         movie.seasons = movieExtend.seasons
                         watchViewModel.fetchTvShowEpisodes(movie.id, movieExtend.seasons!!.data.size)
-                                .observeOnce(viewLifecycleOwner, Observer { seasons ->
+                                .observeOnce(viewLifecycleOwner, { seasons ->
                             if (seasons != null && seasons.isNotEmpty()) {
                                 tvShowSeasons = seasons
                                 setupTvShow()
@@ -355,7 +354,7 @@ class WatchFragment : Fragment() {
                 })
             } else {
                 navigation.menu.removeItem(R.id.episodes)
-                watchViewModel.fetchMovieFileData(movie.id).observeOnce(viewLifecycleOwner, Observer { episode ->
+                watchViewModel.fetchMovieFileData(movie.id).observeOnce(viewLifecycleOwner, { episode ->
                     if (episode != null) {
                         fileData = episode.files.map { it.lang!! to it.files }.toMap()
                         subtitleData = episode.files.map { it.lang!! to it.subtitles }.toMap()
@@ -379,7 +378,7 @@ class WatchFragment : Fragment() {
     }
 
     private fun loadIndependentData() {
-        watchViewModel.fetchMovieActors(movie.adjaraId).observeOnce(viewLifecycleOwner, Observer { cast ->
+        watchViewModel.fetchMovieActors(movie.adjaraId).observeOnce(viewLifecycleOwner, { cast ->
             if (cast != null) {
                 setupCast(cast)
             } else {
@@ -433,7 +432,7 @@ class WatchFragment : Fragment() {
     }
 
     private fun setupTvShow() {
-        dbEpisodes.getEpisode(movie.id)?.observeOnce(viewLifecycleOwner, Observer {
+        dbEpisodes.getEpisode(movie.id)?.observeOnce(viewLifecycleOwner, {
             if (it != null) {
                 currentSeason = it.season
                 setupTvShowEpisode(it.episode)
@@ -562,7 +561,7 @@ class WatchFragment : Fragment() {
     }
 
     private fun initFavorite() {
-        dbMovie.getMovie(movie.id)?.observe(viewLifecycleOwner, Observer {
+        dbMovie.getMovie(movie.id)?.observe(viewLifecycleOwner, {
             if (it == null) {
                 button_favorite.setImageDrawable(getDrawable(R.drawable.ic_favorite_empty))
                 button_favorite.setOnClickListener {

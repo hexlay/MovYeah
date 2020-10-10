@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.recyclical.datasource.emptyDataSource
@@ -107,7 +106,7 @@ class ActorActivity : AbsWatchModeActivity() {
     }
 
     private fun handleObserver() {
-        actorMoviesViewModel.movies.observe(this, Observer { dataList ->
+        actorMoviesViewModel.movies.observe(this, { dataList ->
             if (dataList != null) {
                 loading_movies.isVisible = false
                 if (dataList.isNotEmpty()) {

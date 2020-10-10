@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.recyclical.datasource.dataSourceOf
 import com.afollestad.recyclical.setup
@@ -71,7 +70,7 @@ class DetailActivity : AppCompatActivity() {
         } else {
             getString(R.string.related_movies)
         }
-        movieListViewModel.fetchRelated(movie!!.getRealId()).observeOnce(this, Observer {
+        movieListViewModel.fetchRelated(movie!!.getRealId()).observeOnce(this, {
             loading_movies.isGone = true
             if (it != null) {
                 handleRelated(it)

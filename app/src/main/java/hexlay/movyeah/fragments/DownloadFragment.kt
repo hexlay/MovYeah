@@ -3,7 +3,6 @@ package hexlay.movyeah.fragments
 import android.app.DownloadManager
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,7 @@ import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.recyclical.datasource.dataSourceOf
@@ -27,6 +26,8 @@ import hexlay.movyeah.api.models.DownloadMovie
 import hexlay.movyeah.helpers.*
 import hexlay.movyeah.models.events.StartWatchingEvent
 import kotlinx.android.synthetic.main.fragment_movies.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.support.v4.intentFor
 import org.jetbrains.anko.support.v4.runOnUiThread
@@ -65,7 +66,7 @@ class DownloadFragment : Fragment() {
     }
 
     private fun loadMovies() {
-        dbDownloadMovies.getMovies()?.observe(viewLifecycleOwner, Observer {
+        dbDownloadMovies.getMovies()?.observe(viewLifecycleOwner, {
             source.clear()
             if (it.isNotEmpty()) {
                 it.groupBy { g -> g.movie!!.id }.forEach { (_, value) ->
@@ -125,7 +126,8 @@ class DownloadFragment : Fragment() {
                             "${translatedLanguage}, $translatedQuality"
                         }
                         title.text = titleTrue
-                        Handler().postDelayed({
+                        lifecycleScope.launch {
+                            delay(1000)
                             if (downloadExists(item.identifier)) {
                                 download.isVisible = false
                                 downloadProgress.start()
@@ -133,7 +135,7 @@ class DownloadFragment : Fragment() {
                                 download.isVisible = true
                                 progress.progress = 0
                             }
-                        }, 1000)
+                        }
                         remove.setOnClickListener {
                             MaterialDialog(requireContext()).show {
                                 message(R.string.offline_remove_confirm)
