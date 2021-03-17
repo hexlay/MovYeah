@@ -39,7 +39,7 @@
             app:layout_constraintTop_toTopOf="parent"
             style="?attr/actionButtonStyle" />
 
-        <com.google.android.material.textview.MaterialAutoCompleteTextView
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/toolbar_search"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -48,10 +48,10 @@
             android:background="@android:color/transparent"
             android:hint="@string/search"
             android:focusable="false"
-            android:cursorVisible="false"
-            android:focusableInTouchMode="false"
             android:imeOptions="actionSearch"
             android:inputType="text"
+            android:cursorVisible="false"
+            android:focusableInTouchMode="false"
             android:maxLines="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button_settings"
@@ -75,14 +75,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <github.com.st235.lib_expandablebottombar.ExpandableBottomBar
         android:id="@+id/navigation"
         android:layout_width="match_parent"
-        app:labelVisibilityMode="unlabeled"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@drawable/gradient_overlay_navigation"
-        android:layout_gravity="bottom"
-        app:menu="@menu/navigation_main" />
+        app:exb_itemInactiveColor="@color/fontBlackEnable"
+        app:exb_backgroundColor="@color/background"
+        app:layout_behavior="github.com.st235.lib_expandablebottombar.behavior.ExpandableBottomBarScrollableBehavior"
+        app:exb_items="@menu/navigation_main"
+        android:layout_gravity="bottom" />
 
     <FrameLayout
         android:id="@+id/searcher"

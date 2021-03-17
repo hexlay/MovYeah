@@ -1,28 +1,33 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/nav_main"
         android:icon="@drawable/ic_home"
+        app:exb_color="@color/color_accent"
         android:title="@string/menu_main" />
 
     <item
         android:id="@+id/nav_movies"
         android:icon="@drawable/ic_movies"
+        app:exb_color="@color/color_accent"
         android:title="@string/menu_movies" />
 
     <item
         android:id="@+id/nav_series"
         android:icon="@drawable/ic_series"
+        app:exb_color="@color/color_accent"
         android:title="@string/menu_series" />
 
     <item
         android:id="@+id/nav_favorites"
         android:icon="@drawable/ic_favorite"
+        app:exb_color="@color/color_accent"
         android:title="@string/menu_favorites" />
 
     <item
         android:id="@+id/nav_downloads"
         android:icon="@drawable/ic_download"
+        app:exb_color="@color/color_accent"
         android:title="@string/menu_downloads" />
 
 </menu>

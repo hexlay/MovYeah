@@ -105,16 +105,14 @@
     <string name="settings_main_maxbr_title">სიკაშკაშე</string>
     <string name="settings_main_dark_mode">თემის არჩევა</string>
     <string name="settings_main_maxbr_sum">მაქსიმალური სიკაშკაშე ყურების დროს</string>
-    <string name="settings_main_autostart_title">ავტომატური გაშვება</string>
+    <string name="settings_main_autostart_title">აუტომატური გაშვება</string>
     <string name="settings_main_autostart_sum">ფილმის/სერიალის ავტომატური გაშვება არჩევისთანავე</string>
-    <string name="settings_notification">შეტყობინებები</string>
-    <string name="settings_notification_sum">შეტყობინებებს მიიღებთ ფავორიტებში დამატებული სერიალების მიხედვით</string>
     <string name="settings_main_language">აპლიკაციის ენა</string>
     <string name="settings_main_subtitles_title">სუბტიტრები</string>
     <string name="settings_main_subtitles_sum">სუბტიტრების ჩვენება არჩეულ ენაზე როცა შესაძლებელია</string>
     <string name="settings_light">ღია</string>
     <string name="settings_dark">მუქი</string>
-    <string name="settings_auto">აუტომატური</string>
+    <string name="settings_auto">სისტემის მიხედვით</string>
     <string name="settings_about">აპლიკაციის შესახებ</string>
 
     <!-- Categories -->

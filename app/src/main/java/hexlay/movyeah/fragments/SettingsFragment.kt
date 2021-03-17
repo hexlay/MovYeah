@@ -1,6 +1,7 @@
 package hexlay.movyeah.fragments
 
 import android.os.Bundle
+import android.view.View
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -18,7 +19,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private lateinit var brightness: SwitchPreference
     private lateinit var autoPlay: SwitchPreference
-    private lateinit var notifications: SwitchPreference
     private lateinit var downloadNotification: SwitchPreference
     private lateinit var pipMode: SwitchPreference
     private lateinit var seek: ListPreference
@@ -28,8 +28,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private lateinit var about: Preference
     private lateinit var reference: WeakReference<MainActivity>
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         reference = WeakReference(activity as MainActivity)
         val height = getStatusBarHeight() + getActionBarSize()
         toolbar.setNavigationOnClickListener { reference.get()!!.supportFragmentManager.popBackStack() }
@@ -59,7 +59,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         pipMode = preferenceManager.findPreference("pip")!!
         brightness = preferenceManager.findPreference("brightness")!!
         darkMode = preferenceManager.findPreference("darknet")!!
-        notifications = preferenceManager.findPreference("notifications")!!
         downloadNotification = preferenceManager.findPreference("download_notification")!!
         autoPlay = preferenceManager.findPreference("autostart")!!
         seek = preferenceManager.findPreference("seek_value")!!
@@ -98,18 +97,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
             PreferenceHelper.seek = newSeek
             seek.summary = getString(R.string.settings_main_seek_seconds).format((newSeek / 1000).toString())
             true
-        }
-
-        notifications.setOnPreferenceChangeListener { _, newValue ->
-            val currentCase = newValue.toString().toBoolean()
-            notifications.isChecked = currentCase
-            PreferenceHelper.getNotifications = currentCase
-            if (currentCase) {
-                reference.get()!!.initSync()
-            } else {
-                reference.get()!!.stopSync()
-            }
-            currentCase
         }
 
         downloadNotification.setOnPreferenceChangeListener { _, newValue ->

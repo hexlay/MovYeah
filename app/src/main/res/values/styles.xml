@@ -19,6 +19,10 @@
 
     <style name="AppTheme" parent="Movyeah" />
 
+    <style name="AppThemeActivity" parent="Movyeah">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
     <style name="AppThemeTranslucent" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="android:windowNoTitle">true</item>

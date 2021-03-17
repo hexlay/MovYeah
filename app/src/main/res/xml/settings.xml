@@ -74,16 +74,4 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/settings_notification">
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:disableDependentsState="false"
-            android:icon="@drawable/ic_pref_notification"
-            android:key="notifications"
-            android:title="@string/settings_notification"
-            android:summary="@string/settings_notification_sum"/>
-
-    </PreferenceCategory>
-
 </PreferenceScreen>

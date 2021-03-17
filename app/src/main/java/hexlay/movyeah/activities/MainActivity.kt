@@ -1,13 +1,8 @@
 package hexlay.movyeah.activities
 
-import android.app.job.JobInfo
-import android.app.job.JobScheduler
-import android.content.ComponentName
-import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
-import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
@@ -29,7 +24,6 @@ import hexlay.movyeah.api.network.view_models.FilterAttrsViewModel
 import hexlay.movyeah.fragments.*
 import hexlay.movyeah.helpers.*
 import hexlay.movyeah.models.events.NetworkChangeEvent
-import hexlay.movyeah.services.NotificationServiceJob
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.navigation
 import kotlinx.android.synthetic.main.fragment_watch.*
@@ -41,7 +35,6 @@ class MainActivity : AbsWatchModeActivity() {
 
     private var searchFragment: SearchFragment? = null
     private var searchMode = false
-    private var searchAdapter: ArrayAdapter<String>? = null
     private var isNetworkAvailable = true
 
     private lateinit var mainFragment: MainFragment
@@ -72,9 +65,7 @@ class MainActivity : AbsWatchModeActivity() {
         initFragments()
         initToolbar()
         initNavigationView()
-        initSync()
         initDarkMode()
-        initHistory()
         initStarterData()
         initAlerts()
     }
@@ -133,11 +124,6 @@ class MainActivity : AbsWatchModeActivity() {
         delegate.applyDayNight()
     }
 
-    private fun initHistory() {
-        searchAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, PreferenceHelper.searchHistory.toTypedArray())
-        toolbar_search.setAdapter(searchAdapter)
-    }
-
     private fun initToolbar() {
         setupViewPager()
         floating_search.setSize(height = getActionBarSize() - dpOf(7))
@@ -178,8 +164,6 @@ class MainActivity : AbsWatchModeActivity() {
                     if (event == null || !event.isShiftPressed) {
                         val searchText = toolbar_search.text.toString()
                         searchFragment?.search(searchText)
-                        PreferenceHelper.addSearchHistory(searchText)
-                        searchAdapter?.add(searchText)
                         toolbar_search.hideKeyboard()
                         return@setOnEditorActionListener true
                     }
@@ -212,7 +196,7 @@ class MainActivity : AbsWatchModeActivity() {
             toolbar_search.isCursorVisible = false
             toolbar_search.isFocusableInTouchMode = false
             toolbar_search.setOnEditorActionListener(null)
-            toolbar_search.text.clear()
+            toolbar_search.text?.clear()
             button_search.setOnClickListener {
                 startSearchMode()
             }
@@ -223,7 +207,7 @@ class MainActivity : AbsWatchModeActivity() {
     }
 
     private fun initNavigationView() {
-        navigation.setOnNavigationItemSelectedListener { item ->
+        navigation.onItemSelectedListener = { _, item ->
             when (item.itemId) {
                 R.id.nav_main -> fragment_pager.currentItem = 0
                 R.id.nav_movies -> fragment_pager.currentItem = 1
@@ -231,7 +215,6 @@ class MainActivity : AbsWatchModeActivity() {
                 R.id.nav_favorites -> fragment_pager.currentItem = 3
                 R.id.nav_downloads -> fragment_pager.currentItem = 4
             }
-            true
         }
     }
 
@@ -246,41 +229,6 @@ class MainActivity : AbsWatchModeActivity() {
         }
     }
 
-    fun initSync() {
-        if (PreferenceHelper.getNotifications) {
-            if (!isSyncing()) {
-                val jobService = ComponentName(this, NotificationServiceJob::class.java)
-                val syncInfo = JobInfo.Builder(0x1, jobService)
-                        .setPeriodic(3600000) //1h; 4h - 14400000
-                        .setPersisted(true)
-                        .build()
-                val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-                scheduler.schedule(syncInfo)
-            }
-        }
-    }
-
-    private fun isSyncing(): Boolean {
-        val scheduler = getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-        if (Constants.isAndroidN) {
-            return scheduler.getPendingJob(0x1) != null
-        } else {
-            for (jobInfo in scheduler.allPendingJobs) {
-                if (jobInfo.id == 0x1) {
-                    return true
-                }
-            }
-            return false
-        }
-    }
-
-    fun stopSync() {
-        if (isSyncing()) {
-            val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-            scheduler.cancel(0x1)
-        }
-    }
-
     private fun setupViewPagerAdapter() {
         val adapter = MainPageAdapter(supportFragmentManager)
         if (isNetworkAvailable) {
@@ -289,10 +237,7 @@ class MainActivity : AbsWatchModeActivity() {
             adapter.addFragment(tvShowFragment)
             adapter.addFragment(favoriteFragment)
         } else {
-            navigation.menu.hideItem(R.id.nav_main)
-            navigation.menu.hideItem(R.id.nav_movies)
-            navigation.menu.hideItem(R.id.nav_series)
-            navigation.menu.hideItem(R.id.nav_favorites)
+            navigation.hide()
         }
         adapter.addFragment(downloadFragment)
         fragment_pager.adapter = adapter
@@ -308,19 +253,19 @@ class MainActivity : AbsWatchModeActivity() {
             override fun onPageSelected(position: Int) {
                 when (position) {
                     0 -> {
-                        navigation.selectedItemId = R.id.nav_main
+                        navigation.select(R.id.nav_main)
                     }
                     1 -> {
-                        navigation.selectedItemId = R.id.nav_movies
+                        navigation.select(R.id.nav_movies)
                     }
                     2 -> {
-                        navigation.selectedItemId = R.id.nav_series
+                        navigation.select(R.id.nav_series)
                     }
                     3 -> {
-                        navigation.selectedItemId = R.id.nav_favorites
+                        navigation.select(R.id.nav_favorites)
                     }
                     4 -> {
-                        navigation.selectedItemId = R.id.nav_downloads
+                        navigation.select(R.id.nav_downloads)
                     }
                 }
             }
@@ -363,10 +308,7 @@ class MainActivity : AbsWatchModeActivity() {
             isNetworkAvailable = true
             fragment_pager.adapter = null
             setupViewPagerAdapter()
-            navigation.menu.showItem(R.id.nav_main)
-            navigation.menu.showItem(R.id.nav_movies)
-            navigation.menu.showItem(R.id.nav_series)
-            navigation.menu.showItem(R.id.nav_favorites)
+            navigation.show()
         }
     }
 

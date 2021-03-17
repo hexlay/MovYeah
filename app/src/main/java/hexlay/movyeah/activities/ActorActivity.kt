@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.recyclical.datasource.emptyDataSource
 import com.afollestad.recyclical.setup
 import com.afollestad.recyclical.withItem
+import com.jude.swipbackhelper.SwipeBackHelper
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.base.AbsWatchModeActivity
 import hexlay.movyeah.adapters.view_holders.MovieViewHolder
@@ -33,6 +34,17 @@ class ActorActivity : AbsWatchModeActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_actor_movie)
         initActivity()
+        SwipeBackHelper.onCreate(this)
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        SwipeBackHelper.onPostCreate(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        SwipeBackHelper.onDestroy(this)
     }
 
     override fun initActivity() {

@@ -25,7 +25,6 @@ import hexlay.movyeah.helpers.*
 import hexlay.movyeah.models.events.ChooseEpisodeEvent
 import kotlinx.android.synthetic.main.fragment_season.*
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.support.v4.toast
 
 class SeasonFragment : Fragment() {
 
@@ -101,7 +100,7 @@ class SeasonFragment : Fragment() {
                                         val downloadId = downloadMovie(download.url!!, download.identifier)
                                         download.downloadId = downloadId
                                         dbDownloadMovie.insertMovie(download)
-                                        toast(R.string.download_start)
+                                        showAlert(text = getString(R.string.download_start))
                                     }
                                 }
                             }

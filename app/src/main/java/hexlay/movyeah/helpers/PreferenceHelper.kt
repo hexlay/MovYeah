@@ -36,14 +36,6 @@ object PreferenceHelper {
             }
         }
 
-    var getNotifications: Boolean
-        get() = settings?.getBoolean("adj_notification_enabled", false)!!
-        set(value) {
-            settings?.edit {
-                putBoolean("adj_notification_enabled", value)
-            }
-        }
-
     var pictureInPicture: Boolean
         get() = settings?.getBoolean("adj_pip_enabled", false)!!
         set(value) {
@@ -99,20 +91,6 @@ object PreferenceHelper {
                 putStringSet("adj_notification_ids", value)
             }
         }
-
-    var searchHistory: MutableSet<String>
-        get() = settings?.getStringSet("adj_search_history", mutableSetOf())!!
-        set(value) {
-            settings?.edit {
-                putStringSet("adj_search_history", value)
-            }
-        }
-
-    fun addSearchHistory(value: String) {
-        val current = searchHistory
-        current.add(value)
-        searchHistory = current
-    }
 
     fun addNotificationHistory(value: String) {
         val current = savedNotificationIds

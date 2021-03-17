@@ -15,11 +15,13 @@ import android.os.Bundle
 import android.util.Rational
 import android.util.SparseArray
 import android.view.*
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.util.isEmpty
 import androidx.core.util.isNotEmpty
+import androidx.core.view.get
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -79,11 +81,11 @@ import org.greenrobot.eventbus.Subscribe
 import org.jetbrains.anko.support.v4.browse
 import org.jetbrains.anko.support.v4.intentFor
 import org.jetbrains.anko.support.v4.share
-import org.jetbrains.anko.support.v4.toast
 import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+
 
 class WatchFragment : Fragment() {
 
@@ -136,8 +138,8 @@ class WatchFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_watch, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         if (Constants.isAndroidO) {
             pipBuild = PictureInPictureParams.Builder()
         }
@@ -290,7 +292,7 @@ class WatchFragment : Fragment() {
                         exoPlayer!!.seekTo(exoPlayer!!.currentPosition + PreferenceHelper.seek)
                         lifecycleScope.launch {
                             delay(500)
-                            view_backward.fade(0, 150)
+                            view_forward.isVisible = false
                         }
                     } else {
                         seekSecBackward += (PreferenceHelper.seek / 1000).toLong()
@@ -299,7 +301,7 @@ class WatchFragment : Fragment() {
                         exoPlayer!!.seekTo(exoPlayer!!.currentPosition - PreferenceHelper.seek)
                         lifecycleScope.launch {
                             delay(500)
-                            view_backward.fade(0, 150)
+                            view_backward.isVisible = false
                         }
                     }
                     return true
@@ -331,8 +333,8 @@ class WatchFragment : Fragment() {
             button_lang.isVisible = false
             button_quality.isVisible = false
             button_subtitles.isVisible = false
-            navigation.menu.removeItem(R.id.cast)
-            navigation.menu.removeItem(R.id.episodes)
+            navigation.hideItem(1)
+            navigation.hideItem(2)
             setupSource()
         } else {
             if (movie.isTvShow) {
@@ -341,19 +343,19 @@ class WatchFragment : Fragment() {
                         movie.seasons = movieExtend.seasons
                         watchViewModel.fetchTvShowEpisodes(movie.id, movieExtend.seasons!!.data.size)
                                 .observeOnce(viewLifecycleOwner, { seasons ->
-                            if (seasons != null && seasons.isNotEmpty()) {
-                                tvShowSeasons = seasons
-                                setupTvShow()
-                            } else {
-                                showMovieError(R.string.full_error_show)
-                            }
-                        })
+                                    if (seasons != null && seasons.isNotEmpty()) {
+                                        tvShowSeasons = seasons
+                                        setupTvShow()
+                                    } else {
+                                        showMovieError(R.string.full_error_show)
+                                    }
+                                })
                     } else {
                         showMovieError(R.string.full_error_show)
                     }
                 })
             } else {
-                navigation.menu.removeItem(R.id.episodes)
+                navigation.hideItem(1)
                 watchViewModel.fetchMovieFileData(movie.id).observeOnce(viewLifecycleOwner, { episode ->
                     if (episode != null) {
                         fileData = episode.files.map { it.lang!! to it.files }.toMap()
@@ -382,7 +384,7 @@ class WatchFragment : Fragment() {
             if (cast != null) {
                 setupCast(cast)
             } else {
-                navigation.menu.removeItem(R.id.cast)
+                navigation.hideItem(2)
             }
         })
         genres = movie.getGenresString()
@@ -474,7 +476,7 @@ class WatchFragment : Fragment() {
 
             override fun onPageScrollStateChanged(state: Int) {}
         })
-        navigation.menu.findItem(R.id.episodes).isEnabled = true
+        navigation.hideItem(1)
     }
 
     private fun setupMovieSubtitles() {
@@ -511,7 +513,7 @@ class WatchFragment : Fragment() {
 
     private fun setupCast(actors: List<Actor>) {
         if (actors.isNotEmpty()) {
-            navigation.menu.findItem(R.id.cast).isEnabled = true
+            navigation[2].isEnabled = true
             cast_holder.setup {
                 withDataSource(dataSourceOf(actors))
                 withLayoutManager(GridLayoutManager(context, 3))
@@ -527,7 +529,7 @@ class WatchFragment : Fragment() {
                 }
             }
         } else {
-            navigation.menu.removeItem(R.id.cast)
+            navigation.hideItem(1)
         }
     }
 
@@ -558,6 +560,9 @@ class WatchFragment : Fragment() {
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0)
         toolbar.setSize(null, getStatusBarHeight() + getActionBarSize())
         TransitionManager.beginDelayedTransition(main_frame)
+        val surfaceView = SurfaceView(activity)
+        surfaceView.visibility = View.GONE
+        main_frame.addView(surfaceView, ViewGroup.LayoutParams(0, 0))
     }
 
     private fun initFavorite() {
@@ -630,7 +635,7 @@ class WatchFragment : Fragment() {
                             val downloadId = downloadMovie(download.url!!, download.identifier)
                             download.downloadId = downloadId
                             dbDownloadMovie.insertMovie(download)
-                            toast(R.string.download_start)
+                            showAlert(text = getString(R.string.download_start))
                         }
                     }
                 }
@@ -676,7 +681,7 @@ class WatchFragment : Fragment() {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=org.videolan.vlc")))
             }
         }
-        navigation.setOnNavigationItemSelectedListener { item ->
+        navigation.onItemSelectedListener = { _, item ->
             when (item.itemId) {
                 R.id.info -> {
                     sup_cast.isVisible = false
@@ -694,7 +699,6 @@ class WatchFragment : Fragment() {
                     sup_cast.isVisible = true
                 }
             }
-            true
         }
     }
 
@@ -752,6 +756,7 @@ class WatchFragment : Fragment() {
         player_src.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH)
     }
 
+    @Suppress("DEPRECATION")
     private fun layoutFullScreen() {
         getDecorView().systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -761,6 +766,7 @@ class WatchFragment : Fragment() {
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
 
+    @Suppress("DEPRECATION")
     private fun layoutStable() {
         getDecorView().systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
         getDecorView().systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN

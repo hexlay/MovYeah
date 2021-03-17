@@ -5,4 +5,10 @@
         <item name="android:windowLightNavigationBar">true</item>
     </style>
 
+    <style name="AppThemeActivity" parent="Movyeah">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowAnimationStyle">@style/SlideRightAnimation</item>
+    </style>
+
 </resources>

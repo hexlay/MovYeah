@@ -57,6 +57,7 @@
             tools:targetApi="o" />
         <activity
             android:name=".activities.AboutActivity"
+            android:theme="@style/AppThemeActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.DetailActivity"
@@ -67,13 +68,8 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:supportsPictureInPicture="true"
+            android:theme="@style/AppThemeActivity"
             tools:targetApi="o" />
-
-        <service
-            android:name=".services.NotificationServiceJob"
-            android:enabled="true"
-            android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

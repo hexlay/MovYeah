@@ -3,6 +3,7 @@ package hexlay.movyeah.helpers
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.pm.ActivityInfo
@@ -21,6 +22,8 @@ import android.widget.ImageView
 import androidx.annotation.LayoutRes
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
@@ -33,12 +36,24 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.faltenreich.skeletonlayout.Skeleton
 import com.faltenreich.skeletonlayout.applySkeleton
+import com.tapadoo.alerter.Alerter
+import github.com.st235.lib_expandablebottombar.ExpandableBottomBar
 import hexlay.movyeah.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils
 import java.io.File
 import java.util.*
+
+fun Activity.showAlert(title: String = "", text: String) {
+    val alert = Alerter.create(this)
+    if (title.isNotEmpty()) {
+        alert.setTitle(title)
+    }
+    alert.setBackgroundColorRes(R.color.color_accent)
+    alert.setText(text)
+    alert.show()
+}
 
 fun View.setMargins(left: Int? = null, top: Int? = null, right: Int? = null, bottom: Int? = null) {
     val params = layoutParams as ViewGroup.MarginLayoutParams
@@ -69,21 +84,21 @@ fun Int.toHumanDuration(): String {
     return String.format("%d სთ. %02d წთ.", hour, minute)
 }
 
+@Suppress("DEPRECATION")
 fun String.toHtml(): Spanned {
     return if (Constants.isAndroidN) {
         Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY)
     } else {
-        @Suppress("DEPRECATION")
         Html.fromHtml(this)
     }
 }
 
-fun Menu.hideItem(id: Int) {
-    findItem(id).isVisible = false
+fun ExpandableBottomBar.hideItem(id: Int) {
+    this[id].isVisible = false
 }
 
-fun Menu.showItem(id: Int) {
-    findItem(id).isVisible = true
+fun ExpandableBottomBar.showItem(id: Int) {
+    this[id].isVisible = true
 }
 
 fun <T> List<T>.toCommaList(): String = joinToString(separator = ", ")
@@ -187,6 +202,7 @@ fun View.hideKeyboard() {
     inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
 }
 
+@Suppress("DEPRECATION")
 fun FragmentActivity.makeFullscreen() {
     val decorView = window.decorView
     var flags = decorView.systemUiVisibility
@@ -194,6 +210,7 @@ fun FragmentActivity.makeFullscreen() {
     decorView.systemUiVisibility = flags
 }
 
+@Suppress("DEPRECATION")
 fun FragmentActivity.setLightStatusBar() {
     val decorView = window.decorView
     var flags = decorView.systemUiVisibility
@@ -201,6 +218,7 @@ fun FragmentActivity.setLightStatusBar() {
     decorView.systemUiVisibility = flags
 }
 
+@Suppress("DEPRECATION")
 fun FragmentActivity.removeLightStatusBar() {
     val decorView = window.decorView
     var flags = decorView.systemUiVisibility
@@ -222,6 +240,7 @@ fun FragmentActivity.dpOf(value: Float): Float {
     return (value * scale + 0.5f)
 }
 
+@Suppress("DEPRECATION")
 fun FragmentActivity.isInLandscape(): Boolean {
     val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
     val display = windowManager.defaultDisplay
@@ -324,3 +343,5 @@ fun Fragment.getDecorView(): View = getWindow().decorView
 fun Fragment.onBackPressed() = requireActivity().onBackPressed()
 
 fun Fragment.getDrawable(resId: Int): Drawable? = ContextCompat.getDrawable(requireContext(), resId)
+
+fun Fragment.showAlert(title: String = "", text: String) = requireActivity().showAlert(title, text)

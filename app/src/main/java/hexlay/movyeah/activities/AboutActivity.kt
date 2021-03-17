@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.recyclical.datasource.dataSourceOf
 import com.afollestad.recyclical.setup
 import com.afollestad.recyclical.withItem
+import com.jude.swipbackhelper.SwipeBackHelper
 import hexlay.movyeah.R
 import hexlay.movyeah.adapters.view_holders.LibraryViewHolder
 import hexlay.movyeah.models.Library
@@ -19,6 +20,17 @@ class AboutActivity : AppCompatActivity() {
         initToolbar()
         initResources()
         initVersion()
+        SwipeBackHelper.onCreate(this)
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        SwipeBackHelper.onPostCreate(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        SwipeBackHelper.onDestroy(this)
     }
 
     private fun initToolbar() {

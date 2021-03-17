@@ -41,7 +41,7 @@ class PlaybackControlFragment : PlaybackSupportFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         backgroundType = BG_LIGHT
-        isControlsOverlayAutoHideEnabled = false
+        isControlsOverlayAutoHideEnabled = true
         setupPlayerControls()
     }
 

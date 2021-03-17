@@ -92,14 +92,16 @@
         <include layout="@layout/piece_episodes" />
     </FrameLayout>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <github.com.st235.lib_expandablebottombar.ExpandableBottomBar
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@drawable/gradient_overlay_navigation"
+        app:exb_backgroundColor="@color/background"
+        app:exb_itemInactiveColor="@color/fontBlackEnable"
+        android:layout_margin="15dp"
+        app:exb_items="@menu/navigation_full"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/navigation_full" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
