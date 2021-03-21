@@ -64,7 +64,7 @@ abstract class AbsMoviesFragment : Fragment() {
     }
 
     protected fun initRecyclerView() {
-        val gridLayoutManager = GridLayoutManager(requireContext(), 2)
+        val gridLayoutManager = GridLayoutManager(requireContext(), 3)
         val recyclerPaddingTop = getStatusBarHeight() + getActionBarSize() + dpOf(10)
         movies_holder.setPadding(0, recyclerPaddingTop, 0, getActionBarSize())
         movies_holder.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -141,7 +141,7 @@ abstract class AbsMoviesFragment : Fragment() {
     }
 
     protected open fun handleObserver() {
-        movieListViewModel.movies.observe(viewLifecycleOwner, { dataList ->
+        movieListViewModel.movies.observe(requireActivity(), { dataList ->
             if (dataList != null) {
                 if (dataList.isNotEmpty()) {
                     warning_holder.isGone = true

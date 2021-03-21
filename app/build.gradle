@@ -112,4 +112,6 @@ dependencies {
     implementation 'com.afollestad.assent:core:3.0.0-RC4'
     implementation 'com.rezwan.knetworklib:knetworklib:1.0.3'
     implementation 'com.faltenreich:skeletonlayout:2.0.2'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
+    implementation 'com.akaita.android:morphview:1.0.0'
 }

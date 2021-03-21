@@ -11,7 +11,7 @@ import com.afollestad.recyclical.setup
 import com.afollestad.recyclical.withItem
 import com.jude.swipbackhelper.SwipeBackHelper
 import hexlay.movyeah.R
-import hexlay.movyeah.activities.base.AbsWatchModeActivity
+import hexlay.movyeah.activities.base.AbsCoreActivity
 import hexlay.movyeah.adapters.view_holders.MovieViewHolder
 import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.api.models.attributes.Actor
@@ -19,7 +19,7 @@ import hexlay.movyeah.api.network.view_models.ActorMoviesViewModel
 import hexlay.movyeah.helpers.*
 import kotlinx.android.synthetic.main.activity_actor_movie.*
 
-class ActorActivity : AbsWatchModeActivity() {
+class ActorActivity : AbsCoreActivity() {
 
     private val actorMoviesViewModel by viewModels<ActorMoviesViewModel>()
     private var actor: Actor? = null
@@ -28,13 +28,13 @@ class ActorActivity : AbsWatchModeActivity() {
     private var loading = true
     private val source = emptyDataSource()
 
-    override var networkView: Int = android.R.id.content
+    override var networkView: Int = R.id.toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_actor_movie)
-        initActivity()
         SwipeBackHelper.onCreate(this)
+        initActivity()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -51,7 +51,6 @@ class ActorActivity : AbsWatchModeActivity() {
         super.initActivity()
         initActorData()
         initToolbar()
-        makeFullscreen()
         initActorInfo()
         initRecyclerView()
         loadMovies()
@@ -85,7 +84,7 @@ class ActorActivity : AbsWatchModeActivity() {
     }
 
     private fun initRecyclerView() {
-        val gridLayoutManager = GridLayoutManager(this, 2)
+        val gridLayoutManager = GridLayoutManager(this, 3)
         movie_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             var pastVisibleItems = 0
@@ -139,18 +138,6 @@ class ActorActivity : AbsWatchModeActivity() {
                 }
             }
         })
-    }
-
-    override fun onBackPressed() {
-        if (isInWatchMode()) {
-            if (watchFragment!!.isFullscreen) {
-                requestPortrait()
-            } else {
-                endWatchMode()
-            }
-        } else {
-            super.onBackPressed()
-        }
     }
 
 }

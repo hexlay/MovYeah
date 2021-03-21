@@ -28,12 +28,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
+        <com.akaita.android.morphview.MorphView
             android:id="@+id/button_search"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_search"
-            android:clickable="false"
+            app:avdFirst="@drawable/ic_search_to_close"
+            app:avdSecond="@drawable/ic_close_to_search"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -62,7 +62,7 @@
             android:id="@+id/button_settings"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_settings_light"
+            android:src="@drawable/ic_settings"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -81,8 +81,8 @@
         android:layout_height="?android:attr/actionBarSize"
         app:exb_itemInactiveColor="@color/fontBlackEnable"
         app:exb_backgroundColor="@color/background"
-        app:layout_behavior="github.com.st235.lib_expandablebottombar.behavior.ExpandableBottomBarScrollableBehavior"
         app:exb_items="@menu/navigation_main"
+        app:exb_item_horizontal_padding="10dp"
         android:layout_gravity="bottom" />
 
     <FrameLayout

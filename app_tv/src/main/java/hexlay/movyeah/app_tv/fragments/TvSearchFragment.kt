@@ -7,7 +7,6 @@ import androidx.fragment.app.viewModels
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
-import androidx.lifecycle.Observer
 import com.afollestad.assent.Permission
 import com.afollestad.assent.runWithPermissions
 import com.afollestad.inlineactivityresult.startActivityForResult
@@ -125,7 +124,7 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
     }
 
     private fun handleMovieObserver() {
-        movieListViewModel.movies.observe(viewLifecycleOwner, Observer { dataList ->
+        movieListViewModel.movies.observe(viewLifecycleOwner, { dataList ->
             if (dataList.isNotEmpty()) {
                 searchAdapter?.addAll(searchAdapter!!.size(), dataList)
                 page++

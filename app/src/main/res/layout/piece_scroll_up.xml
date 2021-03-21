@@ -11,6 +11,6 @@
     android:textColor="@android:color/white"
     android:visibility="invisible"
     app:backgroundTint="@color/color_accent"
-    app:icon="@drawable/ic_scroll_up"
+    app:icon="@drawable/ic_scroll_up_white"
     app:iconTint="@android:color/white"
     app:pressedTranslationZ="12dp" />

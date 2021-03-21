@@ -9,7 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
-import androidx.lifecycle.Observer
 import com.afollestad.inlineactivityresult.startActivityForResult
 import hexlay.movyeah.api.database.view_models.DbCategoryViewModel
 import hexlay.movyeah.api.database.view_models.DbMovieViewModel
@@ -158,7 +157,7 @@ class TvMainFragment : BrowseSupportFragment() {
         val tvsHeader = HeaderItem(1, getString(R.string.menu_series))
         val preferenceHeader = HeaderItem(2, getString(R.string.settings_title))
         val favoriteHeader = HeaderItem(3, getString(R.string.menu_favorites))
-        dbMovieViewModel.getMovies()?.observe(viewLifecycleOwner, Observer {
+        dbMovieViewModel.getMovies()?.observe(viewLifecycleOwner, {
             favoriteAdapter?.clear()
             for (favorite in it) {
                 favoriteAdapter?.add(favorite)
@@ -210,7 +209,7 @@ class TvMainFragment : BrowseSupportFragment() {
         preferences.forEach {
             // Very bad approach. IDK any other way for GuidedFragment actions :(
             if (it.key == "preference_category") {
-                dbCategories.getCategories()?.observeOnce(viewLifecycleOwner, Observer { dbCats ->
+                dbCategories.getCategories()?.observeOnce(this, { dbCats ->
                     it.fragment = CategoryPreferenceFragment.newInstance(categories, dbCats)
                 })
             }
@@ -283,7 +282,7 @@ class TvMainFragment : BrowseSupportFragment() {
     }
 
     private fun handleMovieOserver() {
-        movieListViewModel.movies.observe(viewLifecycleOwner, Observer { dataList ->
+        movieListViewModel.movies.observe(viewLifecycleOwner, { dataList ->
             if (dataList != null) {
                 if (dataList.isNotEmpty()) {
                     movieAdapter?.addAll(movieAdapter!!.size(), dataList)
@@ -294,7 +293,7 @@ class TvMainFragment : BrowseSupportFragment() {
     }
 
     private fun handleTvsObserver() {
-        movieListViewModel.shows.observe(viewLifecycleOwner, Observer { dataList ->
+        movieListViewModel.shows.observe(viewLifecycleOwner, { dataList ->
             if (dataList != null) {
                 if (dataList.isNotEmpty()) {
                     seriesAdapter?.addAll(seriesAdapter!!.size(), dataList)

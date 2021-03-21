@@ -40,7 +40,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun initMovieView() {
         if (movie == null) {
-            onBackPressed()
+            finish()
         }
         val detailTitle = "${movie!!.getTitle()} <small><small><small>${movie!!.year}</small></small></small>".toHtml()
         val detailImdb = getString(R.string.news_imdb).format(movie!!.getRating("imdb"))

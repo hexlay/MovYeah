@@ -28,14 +28,6 @@ object PreferenceHelper {
             }
         }
 
-    var autoStart: Boolean
-        get() = settings?.getBoolean("adj_auto_start", true)!!
-        set(value) {
-            settings?.edit {
-                putBoolean("adj_auto_start", value)
-            }
-        }
-
     var pictureInPicture: Boolean
         get() = settings?.getBoolean("adj_pip_enabled", false)!!
         set(value) {

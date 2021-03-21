@@ -16,7 +16,7 @@
     <string name="cancel">გაუქმება</string>
     <string name="download_start">გადმოწერა დაწყებულია</string>
     <string name="watch">ყურება</string>
-    <string name="watch_vlc">VLC</string>
+    <string name="unable_search">ძებნისთვის საჭიროა ინტერნეტთან წვდომა</string>
 
     <!-- Related -->
     <string name="related_movies">მსგავსი ფილმები</string>
@@ -99,14 +99,10 @@
     <string name="settings_main_seek_10">10 წამი</string>
     <string name="settings_main_seek_15">15 წამი</string>
     <string name="settings_main_seek_20">20 წამი</string>
-    <string name="settings_main_pip_title">PictureInPicture</string>
-    <string name="settings_main_pip_sum">ფილმის/სერიალის ჩვენება მინიატურულ ფანჯარაში აპლიკაციის ჩაკეცვისას (Android 8.0 და ზემოთ)</string>
     <string name="settings_main_downl_noti_title">გადმოწერის შეტყობინება</string>
     <string name="settings_main_maxbr_title">სიკაშკაშე</string>
     <string name="settings_main_dark_mode">თემის არჩევა</string>
     <string name="settings_main_maxbr_sum">მაქსიმალური სიკაშკაშე ყურების დროს</string>
-    <string name="settings_main_autostart_title">აუტომატური გაშვება</string>
-    <string name="settings_main_autostart_sum">ფილმის/სერიალის ავტომატური გაშვება არჩევისთანავე</string>
     <string name="settings_main_language">აპლიკაციის ენა</string>
     <string name="settings_main_subtitles_title">სუბტიტრები</string>
     <string name="settings_main_subtitles_sum">სუბტიტრების ჩვენება არჩეულ ენაზე როცა შესაძლებელია</string>
@@ -143,5 +139,25 @@
     <string name="cat_316">კონცერტი</string>
     <string name="cat_312">Stand Up</string>
     <string name="cat_317">ავტო</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="title_activity_movie">MovieActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
 
 </resources>

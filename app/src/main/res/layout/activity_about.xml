@@ -7,13 +7,15 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize" />
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="@drawable/ic_back"
+        app:title=""/>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background_card"
         android:layout_margin="8dp"
+        android:background="@color/background_card"
         app:cardCornerRadius="7dp"
         app:cardElevation="3dp">
 
@@ -69,8 +71,8 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background_card"
         android:layout_margin="8dp"
+        android:background="@color/background_card"
         app:cardCornerRadius="7dp"
         app:cardElevation="3dp">
 

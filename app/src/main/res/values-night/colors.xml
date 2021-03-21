@@ -3,6 +3,7 @@
     <color name="color_primary">#E53935</color>
     <color name="color_primary_dark">#E53935</color>
     <color name="color_accent">#E53935</color>
+    <color name="drawable_color">#FFFFFF</color>
 
     <!-- Background colors -->
     <color name="background">#121212</color>

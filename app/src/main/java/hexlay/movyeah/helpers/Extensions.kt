@@ -1,14 +1,9 @@
 package hexlay.movyeah.helpers
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
-import android.content.pm.ActivityInfo
 import android.content.pm.ShortcutInfo
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
@@ -16,11 +11,14 @@ import android.net.Uri
 import android.os.Build
 import android.text.Html
 import android.text.Spanned
-import android.view.*
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.annotation.LayoutRes
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.core.view.isVisible
@@ -29,7 +27,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -39,20 +36,29 @@ import com.faltenreich.skeletonlayout.applySkeleton
 import com.tapadoo.alerter.Alerter
 import github.com.st235.lib_expandablebottombar.ExpandableBottomBar
 import hexlay.movyeah.R
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils
 import java.io.File
 import java.util.*
 
-fun Activity.showAlert(title: String = "", text: String) {
+
+fun Activity.showAlert(title: String = "", text: String, color: Int = R.color.color_accent) {
     val alert = Alerter.create(this)
     if (title.isNotEmpty()) {
         alert.setTitle(title)
     }
-    alert.setBackgroundColorRes(R.color.color_accent)
+    alert.setBackgroundColorRes(color)
     alert.setText(text)
     alert.show()
+}
+
+fun AppCompatActivity.getActDrawable(resId: Int): Drawable? = ContextCompat.getDrawable(this, resId)
+
+fun initDarkMode() {
+    when (PreferenceHelper.darkMode) {
+        0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+    }
 }
 
 fun View.setMargins(left: Int? = null, top: Int? = null, right: Int? = null, bottom: Int? = null) {
@@ -97,8 +103,8 @@ fun ExpandableBottomBar.hideItem(id: Int) {
     this[id].isVisible = false
 }
 
-fun ExpandableBottomBar.showItem(id: Int) {
-    this[id].isVisible = true
+fun ExpandableBottomBar.enableItem(id: Int) {
+    this[id].isEnabled = true
 }
 
 fun <T> List<T>.toCommaList(): String = joinToString(separator = ", ")
@@ -159,28 +165,6 @@ fun ShortcutInfo.Builder.buildWithGlideIcon(context: Context, url: String?, call
             })
 }
 
-fun View.fade(alpha: Int, time: Long) {
-    if (alpha > 0) {
-        animate()
-                .setDuration(time)
-                .alpha(alpha.toFloat())
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationStart(animation: Animator) {
-                        visibility = View.VISIBLE
-                    }
-                })
-    } else {
-        animate()
-                .setDuration(time)
-                .alpha(alpha.toFloat())
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        visibility = View.INVISIBLE
-                    }
-                })
-    }
-}
-
 fun RecyclerView.createSkeleton(@LayoutRes resId: Int, itemCount: Int = 3): Skeleton {
     return applySkeleton(
             listItemLayoutResId = resId,
@@ -210,66 +194,9 @@ fun FragmentActivity.makeFullscreen() {
     decorView.systemUiVisibility = flags
 }
 
-@Suppress("DEPRECATION")
-fun FragmentActivity.setLightStatusBar() {
-    val decorView = window.decorView
-    var flags = decorView.systemUiVisibility
-    flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-    decorView.systemUiVisibility = flags
-}
-
-@Suppress("DEPRECATION")
-fun FragmentActivity.removeLightStatusBar() {
-    val decorView = window.decorView
-    var flags = decorView.systemUiVisibility
-    flags = flags xor View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-    decorView.systemUiVisibility = flags
-}
-
-fun FragmentActivity.isInNightMode(): Boolean {
-    return (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-}
-
 fun FragmentActivity.dpOf(value: Int): Int {
     val scale = resources.displayMetrics.density
     return (value * scale + 0.5f).toInt()
-}
-
-fun FragmentActivity.dpOf(value: Float): Float {
-    val scale = resources.displayMetrics.density
-    return (value * scale + 0.5f)
-}
-
-@Suppress("DEPRECATION")
-fun FragmentActivity.isInLandscape(): Boolean {
-    val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    val display = windowManager.defaultDisplay
-    return display.rotation == Surface.ROTATION_90 || display.rotation == Surface.ROTATION_270
-}
-
-fun FragmentActivity.requestPortrait() {
-    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-    lifecycleScope.launch {
-        delay(2000)
-        requestSensorForever()
-    }
-}
-
-fun FragmentActivity.requestLandscape() {
-    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-    /*lifecycleScope.launch {
-        delay(2000)
-        requestSensorForever()
-    }*/
-}
-
-@SuppressLint("SourceLockedOrientationActivity")
-fun FragmentActivity.requestPortraitForever() {
-    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-}
-
-fun FragmentActivity.requestSensorForever() {
-    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER
 }
 
 fun FragmentActivity.getStatusBarHeight(): Int {
@@ -284,7 +211,7 @@ fun FragmentActivity.getActionBarSize(): Int {
     return dimension
 }
 
-fun Fragment.downloadMovie(url: String, title: String): Long {
+fun AppCompatActivity.downloadMovie(url: String, title: String): Long {
     val visibleNotification = if (PreferenceHelper.downloadNotification) {
         DownloadManager.Request.VISIBILITY_VISIBLE
     } else {
@@ -295,15 +222,27 @@ fun Fragment.downloadMovie(url: String, title: String): Long {
     request.setAllowedOverRoaming(false)
     request.setTitle(title)
     request.setNotificationVisibility(visibleNotification)
-    request.setDestinationInExternalFilesDir(requireContext(), Constants.DOWNLOAD_DIRECTORY, "$title.mp4")
-    val downloadManager = requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+    request.setDestinationInExternalFilesDir(this, Constants.DOWNLOAD_DIRECTORY, "$title.mp4")
+    val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
     return downloadManager.enqueue(request)
 }
 
-fun Fragment.getOfflineMovie(id: String): File {
-    val downloadDirectory = requireContext().getExternalFilesDir(Constants.DOWNLOAD_DIRECTORY)?.absolutePath
+fun AppCompatActivity.getOfflineMovie(id: String): File {
+    val downloadDirectory = getExternalFilesDir(Constants.DOWNLOAD_DIRECTORY)?.absolutePath
     val path = "${downloadDirectory}/${id}.mp4"
     return File(path)
+}
+
+fun AppCompatActivity.downloadExists(id: String): Boolean {
+    return getOfflineMovie(id).exists()
+}
+
+fun Fragment.downloadMovie(url: String, title: String): Long {
+    return (requireActivity() as AppCompatActivity).downloadMovie(url, title)
+}
+
+fun Fragment.getOfflineMovie(id: String): File {
+    return (requireActivity() as AppCompatActivity).getOfflineMovie(id)
 }
 
 fun Fragment.downloadExists(id: String): Boolean {
@@ -315,33 +254,5 @@ fun Fragment.getStatusBarHeight(): Int = requireActivity().getStatusBarHeight()
 fun Fragment.getActionBarSize(): Int = requireActivity().getActionBarSize()
 
 fun Fragment.dpOf(value: Int): Int = requireActivity().dpOf(value)
-
-fun Fragment.dpOf(value: Float): Float = requireActivity().dpOf(value)
-
-fun Fragment.isInLandscape(): Boolean = requireActivity().isInLandscape()
-
-fun Fragment.requestPortrait() = requireActivity().requestPortrait()
-
-fun Fragment.requestLandscape() = requireActivity().requestLandscape()
-
-fun Fragment.requestPortraitForever() = requireActivity().requestPortraitForever()
-
-fun Fragment.requestSensorForever() = requireActivity().requestSensorForever()
-
-fun Fragment.setLightStatusBar() = requireActivity().setLightStatusBar()
-
-fun Fragment.removeLightStatusBar() = requireActivity().removeLightStatusBar()
-
-fun Fragment.isInNightMode(): Boolean = requireActivity().isInNightMode()
-
-fun Fragment.getScreenWidth(): Int = resources.displayMetrics.widthPixels
-
-fun Fragment.getWindow(): Window = requireActivity().window
-
-fun Fragment.getDecorView(): View = getWindow().decorView
-
-fun Fragment.onBackPressed() = requireActivity().onBackPressed()
-
-fun Fragment.getDrawable(resId: Int): Drawable? = ContextCompat.getDrawable(requireContext(), resId)
 
 fun Fragment.showAlert(title: String = "", text: String) = requireActivity().showAlert(title, text)

@@ -8,6 +8,7 @@ import com.afollestad.recyclical.withItem
 import com.jude.swipbackhelper.SwipeBackHelper
 import hexlay.movyeah.R
 import hexlay.movyeah.adapters.view_holders.LibraryViewHolder
+import hexlay.movyeah.helpers.initDarkMode
 import hexlay.movyeah.models.Library
 import kotlinx.android.synthetic.main.activity_about.*
 import org.jetbrains.anko.browse
@@ -17,10 +18,11 @@ class AboutActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_about)
+        SwipeBackHelper.onCreate(this)
+        initDarkMode()
         initToolbar()
         initResources()
         initVersion()
-        SwipeBackHelper.onCreate(this)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -34,9 +36,6 @@ class AboutActivity : AppCompatActivity() {
     }
 
     private fun initToolbar() {
-        toolbar.title = ""
-        setSupportActionBar(toolbar)
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_w)
         toolbar.setNavigationOnClickListener {
             finish()
         }

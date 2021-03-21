@@ -4,38 +4,33 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
 import com.afollestad.materialdialogs.MaterialDialog
 import hexlay.movyeah.R
-import hexlay.movyeah.activities.base.AbsWatchModeActivity
+import hexlay.movyeah.activities.base.AbsCoreActivity
 import hexlay.movyeah.adapters.MainPageAdapter
 import hexlay.movyeah.api.alerts.view_models.AlertViewModel
 import hexlay.movyeah.api.database.view_models.DbCategoryViewModel
 import hexlay.movyeah.api.database.view_models.DbCountryViewModel
-import hexlay.movyeah.api.helpers.isNetworkAvailable
 import hexlay.movyeah.api.network.view_models.FilterAttrsViewModel
 import hexlay.movyeah.fragments.*
 import hexlay.movyeah.helpers.*
 import hexlay.movyeah.models.events.NetworkChangeEvent
+import hexlay.movyeah.models.events.StartWatchingEvent
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.navigation
-import kotlinx.android.synthetic.main.fragment_watch.*
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.jetbrains.anko.startActivity
 
-class MainActivity : AbsWatchModeActivity() {
+class MainActivity : AbsCoreActivity() {
 
     private var searchFragment: SearchFragment? = null
     private var searchMode = false
-    private var isNetworkAvailable = true
 
     private lateinit var mainFragment: MainFragment
     private lateinit var moviesFragment: MoviesFragment
@@ -43,7 +38,7 @@ class MainActivity : AbsWatchModeActivity() {
     private lateinit var favoriteFragment: FavoriteFragment
     private lateinit var downloadFragment: DownloadFragment
 
-    override var networkView: Int = R.id.navigation
+    override var networkView: Int = R.id.floating_search
 
     private val apiFilters by viewModels<FilterAttrsViewModel>()
     private val dbCategories by viewModels<DbCategoryViewModel>()
@@ -53,7 +48,6 @@ class MainActivity : AbsWatchModeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        isNetworkAvailable = isNetworkAvailable()
         initActivity()
     }
 
@@ -61,11 +55,9 @@ class MainActivity : AbsWatchModeActivity() {
     override fun initActivity() {
         super.initActivity()
         initFiltersApi()
-        makeFullscreen()
         initFragments()
         initToolbar()
         initNavigationView()
-        initDarkMode()
         initStarterData()
         initAlerts()
     }
@@ -115,22 +107,13 @@ class MainActivity : AbsWatchModeActivity() {
         })
     }
 
-    fun initDarkMode() {
-        when (PreferenceHelper.darkMode) {
-            0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-        }
-        delegate.applyDayNight()
-    }
-
     private fun initToolbar() {
         setupViewPager()
         floating_search.setSize(height = getActionBarSize() - dpOf(7))
         floating_search.setMargins(top = getStatusBarHeight() + dpOf(7))
         search_overlay.setSize(height = getStatusBarHeight() + getActionBarSize())
         button_settings.setOnClickListener {
-            enterPreference()
+            startActivity<SettingsActivity>()
         }
         toolbar_search.setOnClickListener {
             startSearchMode()
@@ -138,11 +121,14 @@ class MainActivity : AbsWatchModeActivity() {
         button_search.setOnClickListener {
             startSearchMode()
         }
-        setSupportActionBar(toolbar)
     }
 
     private fun startSearchMode() {
-        if (!searchMode && isNetworkAvailable) {
+        if (!isNetworkAvailable) {
+            showAlert(text = getString(R.string.unable_search), color = android.R.color.holo_red_dark)
+            return
+        }
+        if (!searchMode) {
             searchMode = true
             searchFragment = SearchFragment()
             supportFragmentManager.commit {
@@ -173,7 +159,7 @@ class MainActivity : AbsWatchModeActivity() {
             button_search.setOnClickListener {
                 stopSearchMode()
             }
-            button_search.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_arrow_back_w))
+            button_search.morph()
             toolbar_search.requestFocus()
             toolbar_search.showKeyboard()
         }
@@ -197,10 +183,10 @@ class MainActivity : AbsWatchModeActivity() {
             toolbar_search.isFocusableInTouchMode = false
             toolbar_search.setOnEditorActionListener(null)
             toolbar_search.text?.clear()
+            button_search.morph()
             button_search.setOnClickListener {
                 startSearchMode()
             }
-            button_search.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_search))
             toolbar_search.hideKeyboard()
         }
 
@@ -222,8 +208,7 @@ class MainActivity : AbsWatchModeActivity() {
         if (intent.extras != null && !intent.extras!!.isEmpty) {
             if (intent.hasExtra("movie")) {
                 lifecycleScope.launch {
-                    delay(500)
-                    startWatchMode(intent.getParcelableExtra("movie")!!)
+                    EventBus.getDefault().post(StartWatchingEvent(intent.getParcelableExtra("movie")!!))
                 }
             }
         }
@@ -237,7 +222,7 @@ class MainActivity : AbsWatchModeActivity() {
             adapter.addFragment(tvShowFragment)
             adapter.addFragment(favoriteFragment)
         } else {
-            navigation.hide()
+            navigation.isGone = true
         }
         adapter.addFragment(downloadFragment)
         fragment_pager.adapter = adapter
@@ -275,29 +260,18 @@ class MainActivity : AbsWatchModeActivity() {
     }
 
     override fun onBackPressed() {
-        if (isInWatchMode()) {
-            if (watchFragment!!.isFullscreen) {
-                requestPortrait()
-            } else {
-                endWatchMode()
+        when {
+            searchMode -> {
+                stopSearchMode()
             }
-        } else if (searchMode) {
-            stopSearchMode()
-        } else if (supportFragmentManager.findFragmentByTag("settings") != null) {
-            supportFragmentManager.popBackStack()
-        } else if (fragment_pager.currentItem != 0) {
-            fragment_pager.currentItem = 0
-        } else {
-            super.onBackPressed()
-        }
-    }
-
-    private fun enterPreference() {
-        if (supportFragmentManager.findFragmentByTag("settings") == null) {
-            supportFragmentManager.commit {
-                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                add(android.R.id.content, SettingsFragment(), "settings")
-                addToBackStack("")
+            supportFragmentManager.findFragmentByTag("settings") != null -> {
+                supportFragmentManager.popBackStack()
+            }
+            fragment_pager.currentItem != 0 -> {
+                fragment_pager.currentItem = 0
+            }
+            else -> {
+                super.onBackPressed()
             }
         }
     }
@@ -308,7 +282,13 @@ class MainActivity : AbsWatchModeActivity() {
             isNetworkAvailable = true
             fragment_pager.adapter = null
             setupViewPagerAdapter()
-            navigation.show()
+            navigation.isGone = false
+        }
+        if (!event.isConnected && isNetworkAvailable) {
+            isNetworkAvailable = false
+            fragment_pager.adapter = null
+            setupViewPagerAdapter()
+            navigation.isGone = true
         }
     }
 
