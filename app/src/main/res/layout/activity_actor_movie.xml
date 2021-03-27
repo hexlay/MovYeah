@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <androidx.constraintlayout.utils.widget.ImageFilterView
         android:id="@+id/actor_image"
         android:layout_width="140dp"
         android:layout_height="140dp"
@@ -24,8 +24,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="20dp"
         android:scaleType="centerCrop"
-        app:civ_border_color="@color/color_accent"
-        app:civ_border_width="1dp"
+        app:roundPercent="1"
         app:layout_constraintStart_toEndOf="@+id/button_back"
         app:layout_constraintTop_toTopOf="parent" />
 

@@ -64,7 +64,7 @@ abstract class AbsMoviesFragment : Fragment() {
     }
 
     protected fun initRecyclerView() {
-        val gridLayoutManager = GridLayoutManager(requireContext(), 3)
+        val gridLayoutManager = GridLayoutManager(requireContext(), Constants.RECYCLER_GRID_COUNT)
         val recyclerPaddingTop = getStatusBarHeight() + getActionBarSize() + dpOf(10)
         movies_holder.setPadding(0, recyclerPaddingTop, 0, getActionBarSize())
         movies_holder.addOnScrollListener(object : RecyclerView.OnScrollListener() {

@@ -55,7 +55,7 @@ class FavoriteFragment : Fragment() {
     private fun loadMovies() {
         movies_holder.setup {
             withDataSource(source)
-            withLayoutManager(GridLayoutManager(requireContext(), 2))
+            withLayoutManager(GridLayoutManager(requireContext(), Constants.RECYCLER_GRID_COUNT))
             withItem<Movie, MovieViewHolder>(R.layout.list_items_extended) {
                 onBind(::MovieViewHolder) { _, item ->
                     this.bind(item, requireActivity())

@@ -8,8 +8,9 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
-import androidx.viewpager.widget.ViewPager
 import com.afollestad.materialdialogs.MaterialDialog
+import com.skydoves.androidbottombar.BottomMenuItem
+import com.skydoves.androidbottombar.OnMenuItemSelectedListener
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.base.AbsCoreActivity
 import hexlay.movyeah.adapters.MainPageAdapter
@@ -46,6 +47,7 @@ class MainActivity : AbsCoreActivity() {
     private val apiAlerts by viewModels<AlertViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        applyExitMaterialTransform()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initActivity()
@@ -108,7 +110,7 @@ class MainActivity : AbsCoreActivity() {
     }
 
     private fun initToolbar() {
-        setupViewPager()
+        setupViewPagerAdapter()
         floating_search.setSize(height = getActionBarSize() - dpOf(7))
         floating_search.setMargins(top = getStatusBarHeight() + dpOf(7))
         search_overlay.setSize(height = getStatusBarHeight() + getActionBarSize())
@@ -193,15 +195,49 @@ class MainActivity : AbsCoreActivity() {
     }
 
     private fun initNavigationView() {
-        navigation.onItemSelectedListener = { _, item ->
-            when (item.itemId) {
-                R.id.nav_main -> fragment_pager.currentItem = 0
-                R.id.nav_movies -> fragment_pager.currentItem = 1
-                R.id.nav_series -> fragment_pager.currentItem = 2
-                R.id.nav_favorites -> fragment_pager.currentItem = 3
-                R.id.nav_downloads -> fragment_pager.currentItem = 4
-            }
+        navigation.onMenuItemSelectedListener = OnMenuItemSelectedListener { index, _, _ ->
+            fragment_pager.currentItem = index
         }
+        navigation.setOnBottomMenuInitializedListener {
+            navigation.bindViewPager(fragment_pager)
+        }
+        navigation.addBottomMenuItems(mutableListOf(
+                BottomMenuItem(this)
+                        .setTitle(R.string.menu_main)
+                        .setTitleActiveColorRes(R.color.color_accent)
+                        .setIcon(R.drawable.ic_home)
+                        .setIconColorRes(R.color.fontBlackEnable)
+                        .setIconSize(24)
+                        .build(),
+                BottomMenuItem(this)
+                        .setTitle(R.string.menu_movies)
+                        .setTitleActiveColorRes(R.color.color_accent)
+                        .setIcon(R.drawable.ic_movies)
+                        .setIconColorRes(R.color.fontBlackEnable)
+                        .setIconSize(24)
+                        .build(),
+                BottomMenuItem(this)
+                        .setTitle(R.string.menu_series)
+                        .setTitleActiveColorRes(R.color.color_accent)
+                        .setIcon(R.drawable.ic_series)
+                        .setIconColorRes(R.color.fontBlackEnable)
+                        .setIconSize(24)
+                        .build(),
+                BottomMenuItem(this)
+                        .setTitle(R.string.menu_favorites)
+                        .setTitleActiveColorRes(R.color.color_accent)
+                        .setIcon(R.drawable.ic_favorite)
+                        .setIconColorRes(R.color.fontBlackEnable)
+                        .setIconSize(24)
+                        .build(),
+                BottomMenuItem(this)
+                        .setTitle(R.string.menu_downloads)
+                        .setTitleActiveColorRes(R.color.color_accent)
+                        .setIcon(R.drawable.ic_download)
+                        .setIconColorRes(R.color.fontBlackEnable)
+                        .setIconSize(24)
+                        .build()
+        ))
     }
 
     private fun initStarterData() {
@@ -228,35 +264,6 @@ class MainActivity : AbsCoreActivity() {
         fragment_pager.adapter = adapter
         fragment_pager.offscreenPageLimit = adapter.count
         fragment_pager.currentItem = 0
-    }
-
-    private fun setupViewPager() {
-        setupViewPagerAdapter()
-        fragment_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-
-            override fun onPageSelected(position: Int) {
-                when (position) {
-                    0 -> {
-                        navigation.select(R.id.nav_main)
-                    }
-                    1 -> {
-                        navigation.select(R.id.nav_movies)
-                    }
-                    2 -> {
-                        navigation.select(R.id.nav_series)
-                    }
-                    3 -> {
-                        navigation.select(R.id.nav_favorites)
-                    }
-                    4 -> {
-                        navigation.select(R.id.nav_downloads)
-                    }
-                }
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {}
-        })
     }
 
     override fun onBackPressed() {

@@ -59,6 +59,16 @@ class DetailActivity : AppCompatActivity() {
         movie!!.getCover()?.let { cover_image.setUrl(it) }
         title_text.isSelected = true
         title_genres.isSelected = true
+        if (movie!!.duration > 0) {
+            title_duration.isSelected = true
+        } else {
+            title_duration.isGone = true
+        }
+        if (movie!!.getRating("imdb") > 0.0) {
+            title_imdb.isSelected = true
+        } else {
+            title_imdb.isGone = true
+        }
         frame.setOnClickListener {
             onBackPressed()
         }

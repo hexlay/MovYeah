@@ -15,6 +15,7 @@
     <string name="no">არა</string>
     <string name="cancel">გაუქმება</string>
     <string name="download_start">გადმოწერა დაწყებულია</string>
+    <string name="download_done_all">ყველა შესაძლო ვერსია უკვე გადმოწერილია</string>
     <string name="watch">ყურება</string>
     <string name="unable_search">ძებნისთვის საჭიროა ინტერნეტთან წვდომა</string>
 
@@ -44,6 +45,8 @@
     <string name="full_error_movie">ფილმის ჩვენება შეუძლებელია</string>
     <string name="full_error_show">სერიალის ჩვენება შეუძლებელია</string>
     <string name="full_error_button">დახურვა</string>
+    <string name="full_choose_episode">ეპიზოდის არჩევა</string>
+    <string name="full_show_info">ამჟამად არჩეულია %s</string>
 
     <!-- Languages -->
     <string name="full_geo">ქართული</string>
@@ -54,6 +57,7 @@
     <string name="full_tur">თურქული</string>
     <string name="full_spa">ესპანური</string>
     <string name="full_ara">არაბული</string>
+    <string name="full_ita">იტალიური</string>
 
     <!-- News -->
     <string name="news_year">გამოშვების წელი: %s</string>
@@ -67,7 +71,6 @@
     <string name="filter_change_category">აირჩიეთ კატეგორია</string>
     <string name="filter_change_country">აირჩიეთ ქვეყანა</string>
     <string name="filter_change_lang">აირჩიეთ ენა</string>
-    <string name="filter_change_episode">აირჩიეთ ეპიზოდი</string>
     <string name="filter_change_sort">სორტირება</string>
 
     <!-- Fragment: Main -->
@@ -91,21 +94,13 @@
     <string name="settings_title">პარამეტრები</string>
     <string name="settings_main">მთავარი</string>
     <string name="settings_player">ფლეიერი</string>
-    <string name="settings_main_seek_title">გადახვევის დრო</string>
     <string name="settings_main_qual_title">ხარისხი</string>
     <string name="settings_main_lang_title">ენა</string>
-    <string name="settings_main_seek_seconds">%s წამი</string>
-    <string name="settings_main_seek_5">5 წამი</string>
-    <string name="settings_main_seek_10">10 წამი</string>
-    <string name="settings_main_seek_15">15 წამი</string>
-    <string name="settings_main_seek_20">20 წამი</string>
     <string name="settings_main_downl_noti_title">გადმოწერის შეტყობინება</string>
     <string name="settings_main_maxbr_title">სიკაშკაშე</string>
     <string name="settings_main_dark_mode">თემის არჩევა</string>
     <string name="settings_main_maxbr_sum">მაქსიმალური სიკაშკაშე ყურების დროს</string>
     <string name="settings_main_language">აპლიკაციის ენა</string>
-    <string name="settings_main_subtitles_title">სუბტიტრები</string>
-    <string name="settings_main_subtitles_sum">სუბტიტრების ჩვენება არჩეულ ენაზე როცა შესაძლებელია</string>
     <string name="settings_light">ღია</string>
     <string name="settings_dark">მუქი</string>
     <string name="settings_auto">სისტემის მიხედვით</string>
@@ -139,25 +134,5 @@
     <string name="cat_316">კონცერტი</string>
     <string name="cat_312">Stand Up</string>
     <string name="cat_317">ავტო</string>
-
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="title_activity_movie">MovieActivity</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
-    <string name="hello_world">Hello Square World!</string>
 
 </resources>

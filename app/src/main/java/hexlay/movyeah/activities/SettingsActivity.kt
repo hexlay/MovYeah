@@ -3,7 +3,6 @@ package hexlay.movyeah.activities
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.jude.swipbackhelper.SwipeBackHelper
 import hexlay.movyeah.R
 import hexlay.movyeah.fragments.SettingsFragment
 import hexlay.movyeah.helpers.initDarkMode
@@ -14,7 +13,6 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState ?: intent.getBundleExtra("saved_state"))
         setContentView(R.layout.activity_settings)
-        SwipeBackHelper.onCreate(this)
         initDarkMode()
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -23,16 +21,6 @@ class SettingsActivity : AppCompatActivity() {
                     .commit()
         }
         toolbar.setNavigationOnClickListener { finish() }
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        SwipeBackHelper.onPostCreate(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        SwipeBackHelper.onDestroy(this)
     }
 
     fun transitionRecreate() {

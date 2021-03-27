@@ -17,6 +17,8 @@ object Constants {
     val START_YEAR = Calendar.getInstance().get(Calendar.YEAR) - 100
     val END_YEAR = Calendar.getInstance().get(Calendar.YEAR)
 
+    val RECYCLER_GRID_COUNT = 3
+
     // PIP
     const val CONTROL_TYPE_PLAY = 1
     const val CONTROL_TYPE_PAUSE = 2

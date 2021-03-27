@@ -26,6 +26,7 @@ import hexlay.movyeah.models.events.ChooseEpisodeEvent
 import kotlinx.android.synthetic.main.fragment_season.*
 import org.greenrobot.eventbus.EventBus
 
+
 class SeasonFragment : Fragment() {
 
     private var movie: Movie? = null
@@ -58,12 +59,11 @@ class SeasonFragment : Fragment() {
                     dbEpisodes.getEpisode(movie!!.id)?.observe(viewLifecycleOwner, {
                         if (it != null && it.episode == index && it.season == season) {
                             paintSelected()
-                            itemView.setOnClickListener(null)
                         } else {
                             paintDeSelected()
-                            itemView.setOnClickListener {
-                                EventBus.getDefault().post(ChooseEpisodeEvent(index))
-                            }
+                        }
+                        itemView.setOnClickListener {
+                            EventBus.getDefault().post(ChooseEpisodeEvent(index, season))
                         }
                     })
                     download.setOnClickListener {
@@ -104,6 +104,8 @@ class SeasonFragment : Fragment() {
                                     }
                                 }
                             }
+                        } else {
+                            showAlert(text = getString(R.string.download_done_all))
                         }
                     }
                 }

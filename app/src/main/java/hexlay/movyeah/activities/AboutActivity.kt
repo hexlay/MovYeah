@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.recyclical.datasource.dataSourceOf
 import com.afollestad.recyclical.setup
 import com.afollestad.recyclical.withItem
-import com.jude.swipbackhelper.SwipeBackHelper
 import hexlay.movyeah.R
 import hexlay.movyeah.adapters.view_holders.LibraryViewHolder
 import hexlay.movyeah.helpers.initDarkMode
@@ -18,21 +17,10 @@ class AboutActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_about)
-        SwipeBackHelper.onCreate(this)
         initDarkMode()
         initToolbar()
         initResources()
         initVersion()
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        SwipeBackHelper.onPostCreate(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        SwipeBackHelper.onDestroy(this)
     }
 
     private fun initToolbar() {
@@ -78,9 +66,6 @@ class AboutActivity : AppCompatActivity() {
                 Library("ExoPlayer 2",
                         "Google",
                         "https://github.com/google/ExoPlayer"),
-                Library("CircleImageView",
-                        "Henning Dodenhof",
-                        "https://github.com/hdodenhof/CircleImageView"),
                 Library("Android Room",
                         "Google",
                         "https://developer.android.com/topic/libraries/architecture/room"),
@@ -90,6 +75,12 @@ class AboutActivity : AppCompatActivity() {
                 Library("Expandable Layout",
                         "Daniel Cachapa",
                         "https://github.com/cachapa/ExpandableLayout"),
+                Library("Alerter",
+                        "Tapadoo",
+                        "https://github.com/Tapadoo/Alerter"),
+                Library("MorphView",
+                        "Mikel (akaita)",
+                        "https://github.com/akaita/MorphView"),
                 Library("EventBus",
                         "Markus Junginger",
                         "https://github.com/greenrobot/EventBus")

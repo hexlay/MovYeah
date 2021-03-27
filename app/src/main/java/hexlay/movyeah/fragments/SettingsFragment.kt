@@ -17,7 +17,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private lateinit var brightness: SwitchPreference
     private lateinit var downloadNotification: SwitchPreference
-    private lateinit var seek: ListPreference
     private lateinit var lang: ListPreference
     private lateinit var quality: ListPreference
     private lateinit var darkMode: ListPreference
@@ -32,12 +31,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         brightness = preferenceManager.findPreference("brightness")!!
         darkMode = preferenceManager.findPreference("darknet")!!
         downloadNotification = preferenceManager.findPreference("download_notification")!!
-        seek = preferenceManager.findPreference("seek_value")!!
         lang = preferenceManager.findPreference("lang_value")!!
         quality = preferenceManager.findPreference("qual_value")!!
         about = preferenceManager.findPreference("about_pref")!!
 
-        seek.summary = getString(R.string.settings_main_seek_seconds).format((PreferenceHelper.seek / 1000))
         lang.summary = PreferenceHelper.lang.translateLanguage(requireContext())
         quality.summary = PreferenceHelper.quality.translateQuality(requireContext())
 
@@ -57,13 +54,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
             val newQuality = newValue.toString()
             PreferenceHelper.quality = newQuality
             quality.summary = newQuality.translateQuality(requireContext())
-            true
-        }
-
-        seek.setOnPreferenceChangeListener { _, newValue ->
-            val newSeek = newValue.toString().toInt()
-            PreferenceHelper.seek = newSeek
-            seek.summary = getString(R.string.settings_main_seek_seconds).format((newSeek / 1000).toString())
             true
         }
 

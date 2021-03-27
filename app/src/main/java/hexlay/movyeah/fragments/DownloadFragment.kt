@@ -19,16 +19,19 @@ import com.afollestad.recyclical.setup
 import com.afollestad.recyclical.withItem
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.DetailActivity
+import hexlay.movyeah.activities.PlayerActivity
 import hexlay.movyeah.adapters.view_holders.DownloadGroupViewHolder
 import hexlay.movyeah.adapters.view_holders.DownloadMovieViewHolder
 import hexlay.movyeah.api.database.view_models.DbDownloadMovieViewModel
 import hexlay.movyeah.api.models.DownloadMovie
 import hexlay.movyeah.helpers.*
+import hexlay.movyeah.models.PlayerData
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.support.v4.intentFor
 import org.jetbrains.anko.support.v4.runOnUiThread
+import org.jetbrains.anko.support.v4.startActivity
 import java.lang.ref.WeakReference
 
 
@@ -159,9 +162,10 @@ class DownloadFragment : Fragment() {
                             download.isVisible = false
                         }
                         itemView.setOnClickListener {
-                            item.movie?.let { movie ->
-                                //TODO
-                            }
+                            startActivity<PlayerActivity>("player_data" to PlayerData(
+                                    movieName = item.movie?.getTitle()!!,
+                                    offlineIdentifier = item.identifier
+                            ))
                         }
                         itemView.setOnLongClickListener {
                             startActivity(intentFor<DetailActivity>("movie" to item.movie))

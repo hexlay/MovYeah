@@ -75,15 +75,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <github.com.st235.lib_expandablebottombar.ExpandableBottomBar
+    <com.skydoves.androidbottombar.AndroidBottomBarView
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        app:exb_itemInactiveColor="@color/fontBlackEnable"
-        app:exb_backgroundColor="@color/background"
-        app:exb_items="@menu/navigation_main"
-        app:exb_item_horizontal_padding="10dp"
-        android:layout_gravity="bottom" />
+        android:layout_gravity="bottom"
+        android:background="@color/background"
+        app:bottomBar_menuAnimation="overshoot"
+        app:bottomBar_selectedIndex="0"
+        app:bottomBar_flavor="icon" />
 
     <FrameLayout
         android:id="@+id/searcher"

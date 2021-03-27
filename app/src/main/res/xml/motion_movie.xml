@@ -11,25 +11,27 @@
             app:touchAnchorSide="top" />
     </Transition>
     <ConstraintSet android:id="@+id/start">
-
+        <Constraint android:id="@id/poster">
+            <CustomAttribute
+                app:attributeName="roundPercent"
+                app:customFloatValue="0.000001" />
+        </Constraint>
     </ConstraintSet>
     <ConstraintSet android:id="@+id/end">
-        <Constraint
-            android:id="@id/poster"
-            android:layout_width="130dp"
-            android:layout_height="180dp"
-            android:alpha="0.1"
-            app:layout_constraintEnd_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="@+id/cover"
-            app:layout_constraintTop_toBottomOf="@+id/cover"/>
-        <Constraint
-            android:id="@id/movie_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
-            app:layout_constraintStart_toEndOf="@+id/guidelineLeft"
-            app:layout_constraintTop_toBottomOf="@+id/cover" />
+        <Constraint android:id="@id/poster">
+            <Layout
+                android:layout_width="70dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toTopOf="@id/scroller"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintTop_toBottomOf="@id/cover" />
+
+            <CustomAttribute
+                app:attributeName="roundPercent"
+                app:customFloatValue="1" />
+        </Constraint>
         <Constraint
             android:id="@id/cover"
             android:layout_width="match_parent"

@@ -4,7 +4,6 @@
     package="hexlay.movyeah">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -52,34 +51,30 @@
         </activity>
         <activity
             android:name=".activities.MainActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.PlayerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|layoutDirection"
+            android:screenOrientation="sensorLandscape"
             android:supportsPictureInPicture="true"
+            android:theme="@style/AppThemeFullscreen"
             tools:targetApi="o" />
         <activity
             android:name=".activities.AboutActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeActivity" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SettingsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeActivity" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.MovieActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeActivity" />
+            android:theme="@style/AppThemeMovie" />
         <activity
             android:name=".activities.DetailActivity"
             android:theme="@style/AppThemeTranslucent" />
         <activity
             android:name=".activities.ActorActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:supportsPictureInPicture="true"
-            android:theme="@style/AppThemeActivity"
-            tools:targetApi="o" />
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

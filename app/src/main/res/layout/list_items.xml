@@ -2,9 +2,11 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/movie_container"
     android:layout_width="135dp"
     android:layout_height="200dp"
     android:layout_margin="4dp"
+    android:transitionName="movie_transition"
     app:cardCornerRadius="7dp"
     app:cardElevation="5dp"
     tools:ignore="ContentDescription">

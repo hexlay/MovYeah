@@ -27,7 +27,7 @@ interface AdjaraAPI {
     @GET("movies")
     suspend fun getMainMoviesAsync(
             @Query("page") page: Int = 1,
-            @Query("per_page") perPage: Int = 20,
+            @Query("per_page") perPage: Int = 30,
             @Query("filters[type]") filtersType: String = "movie",
             @Query("filters[language]") filtersLanguage: String? = null,
             @Query("filters[genre]") filtersGenres: String? = null,
@@ -53,7 +53,7 @@ interface AdjaraAPI {
             @Query("filters[with_directors]") filtersDirectors: Int = 1,
             @Query("filters[with_files]") filtersFiles: String = "yes",
             @Query("page") page: Int = 1,
-            @Query("per_page") perPage: Int = 20,
+            @Query("per_page") perPage: Int = 30,
             @Query("source") source: String = "adjaranet"
     ): Response<GenericList<Movie>>
 
@@ -86,7 +86,7 @@ interface AdjaraAPI {
     suspend fun getActorMoviesAsync(
             @Path("id") id: Int,
             @Query("page") page: Int = 1,
-            @Query("per_page") perPage: Int = 20,
+            @Query("per_page") perPage: Int = 30,
             @Query("sort") sort: String = "-year",
             @Query("filters[with_actors]") filtersActors: Int = 3,
             @Query("filters[with_directors]") filtersDirectors: Int = 1,

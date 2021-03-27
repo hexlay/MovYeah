@@ -17,7 +17,6 @@ import com.afollestad.materialdialogs.list.listItems
 import com.afollestad.recyclical.datasource.dataSourceOf
 import com.afollestad.recyclical.setup
 import com.afollestad.recyclical.withItem
-import com.jude.swipbackhelper.SwipeBackHelper
 import hexlay.movyeah.R
 import hexlay.movyeah.adapters.view_holders.CastViewHolder
 import hexlay.movyeah.api.database.view_models.DbDownloadMovieViewModel
@@ -32,14 +31,17 @@ import hexlay.movyeah.api.models.attributes.show.Episode
 import hexlay.movyeah.api.models.attributes.show.EpisodeCache
 import hexlay.movyeah.api.models.attributes.show.EpisodeFileData
 import hexlay.movyeah.api.network.view_models.WatchViewModel
+import hexlay.movyeah.fragments.EpisodeChooserFragment
 import hexlay.movyeah.helpers.*
+import hexlay.movyeah.models.PlayerData
 import hexlay.movyeah.models.events.ChooseEpisodeEvent
 import kotlinx.android.synthetic.main.activity_movie.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.jetbrains.anko.browse
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.share
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.startActivity
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -52,9 +54,6 @@ class MovieActivity : AppCompatActivity() {
 
     // Movie attributes
     private lateinit var movie: Movie
-    private var qualityKey = "NONE"
-    private var languageKey = "NONE"
-    private var subtitleKey = "NONE"
     private var currentSeason = 1
     private var currentEpisode = 1
     private var genres = ""
@@ -66,8 +65,10 @@ class MovieActivity : AppCompatActivity() {
     private var isNetworkAvailable = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        applyMaterialTransform("movie_transition")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie)
+        EventBus.getDefault().register(this)
         initDarkMode()
         initStarterData()
         makeFullscreen()
@@ -77,14 +78,7 @@ class MovieActivity : AppCompatActivity() {
         loadData()
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        SwipeBackHelper.onPostCreate(this)
-    }
-
     private fun initStarterData() {
-        EventBus.getDefault().register(this)
-        SwipeBackHelper.onCreate(this)
         isNetworkAvailable = isNetworkAvailable()
         movie = intent!!.extras!!.getParcelable("movie")!!
     }
@@ -100,13 +94,13 @@ class MovieActivity : AppCompatActivity() {
                 button_favorite.showAvdSecond()
                 button_favorite.setOnClickListener {
                     dbMovie.insertMovie(movie)
-                    button_favorite.morph()
+                    button_favorite.showAvdFirst()
                 }
             } else {
                 button_favorite.showAvdFirst()
                 button_favorite.setOnClickListener {
                     dbMovie.deleteMovie(movie)
-                    button_favorite.morph()
+                    button_favorite.showAvdSecond()
                 }
             }
             button_favorite.isVisible = true
@@ -118,7 +112,6 @@ class MovieActivity : AppCompatActivity() {
         if (!isNetworkAvailable) {
             showMovieError(R.string.full_error_movie)
             button_watch.hide()
-            button_episodes.hide()
         } else {
             if (movie.isTvShow) {
                 watchViewModel.fetchSingleMovie(movie.adjaraId).observeOnce(this, { movieExtend ->
@@ -137,9 +130,7 @@ class MovieActivity : AppCompatActivity() {
                         showMovieError(R.string.full_error_show)
                     }
                 })
-                button_watch.hide()
             } else {
-                button_episodes.hide()
                 watchViewModel.fetchMovieFileData(movie.id).observeOnce(this, { episode ->
                     if (episode != null) {
                         fileData = episode.files.map { it.lang!! to it.files }.toMap()
@@ -175,45 +166,11 @@ class MovieActivity : AppCompatActivity() {
         setupMovieInformation()
     }
 
-    private fun setupLanguageAndQuality() {
-        languageKey = when {
-            fileData.containsKey(PreferenceHelper.lang) -> {
-                PreferenceHelper.lang
-            }
-            fileData.containsKey("GEO") -> {
-                "GEO"
-            }
-            fileData.containsKey("ENG") -> {
-                "ENG"
-            }
-            else -> {
-                fileData.keys.first()
-            }
-        }
-        val qualities = fileData[languageKey]?.map { it.quality }
-        qualityKey = when {
-            qualities?.contains(PreferenceHelper.quality)!! -> {
-                PreferenceHelper.quality
-            }
-            qualities.contains("HIGH") -> {
-                "HIGH"
-            }
-            else -> {
-                fileData[languageKey]?.first()?.quality!!
-            }
-        }
-        button_lang.isEnabled = true
-        button_quality.isEnabled = true
-    }
-
     private fun setupMovie() {
-        setupLanguageAndQuality()
-        button_lang.text = languageKey.translateLanguage(this)
-        button_quality.text = qualityKey.translateQuality(this)
         if (isNetworkAvailable) {
-            button_download.isVisible = true
+            button_download.isGone = false
+            button_watch.isEnabled = true
         }
-        setupMovieSubtitles()
     }
 
     private fun setupTvShow() {
@@ -221,12 +178,10 @@ class MovieActivity : AppCompatActivity() {
             if (it != null) {
                 currentSeason = it.season
                 setupTvShowEpisode(it.episode)
-                //episode_holder.currentItem = currentSeason - 1
             } else {
                 setupTvShowEpisode(0)
             }
         })
-        //setupTvShowSeasons()
     }
 
     private fun setupTvShowEpisode(episode: Int) {
@@ -238,54 +193,7 @@ class MovieActivity : AppCompatActivity() {
         dbEpisodes.insertEpisode(EpisodeCache(movie.id, episode, currentSeason))
         fileData = tvShowSeasons[currentSeason][episode].files.map { it.lang!! to it.files }.toMap()
         subtitleData = tvShowSeasons[currentSeason][episode].files.map { it.lang!! to it.subtitles }.toMap()
-        setupLanguageAndQuality()
-        button_lang.text = languageKey.translateLanguage(this)
-        button_quality.text = qualityKey.translateQuality(this)
-        setupMovieSubtitles()
-    }
-
-    /*private fun setupTvShowSeasons() {
-        episode_holder.adapter = SeasonPageAdapter(supportFragmentManager, movie, tvShowSeasons)
-        season_tabs.setupWithViewPager(episode_holder)
-        episode_holder.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-
-            override fun onPageSelected(position: Int) {
-                currentSeason = position + 1
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {}
-        })
-        episodes.isEnabled = true
-    }*/
-
-    private fun setupMovieSubtitles() {
-        if (subtitleData[languageKey]?.isNotEmpty()!!) {
-            val list = subtitleData[languageKey]?.map { it.lang?.toUpperCase(Locale.ENGLISH)!! }
-            subtitleKey = if (subtitleKey == "NONE")
-                if (list?.contains(languageKey)!!) {
-                    list[list.indexOf(languageKey)]
-                } else {
-                    list.first()
-                }
-            else
-                subtitleKey
-            button_subtitles.text = subtitleKey.translateLanguage(this)
-            button_subtitles.setOnClickListener {
-                MaterialDialog(this).show {
-                    title(R.string.full_chsubtitles)
-                    listItems(items = list) { _, _, text ->
-                        subtitleKey = text.toString()
-                        setSubtitlesText(subtitleKey)
-                    }
-                }
-            }
-            button_subtitles.isGone = false
-            button_subtitles.isEnabled = true
-        } else {
-            subtitleKey = "NONE"
-            button_subtitles.isGone = true
-        }
+        button_watch.isEnabled = true
     }
 
     private fun setupCast(actors: List<Actor>) {
@@ -310,22 +218,31 @@ class MovieActivity : AppCompatActivity() {
 
     private fun setupMovieInformation() {
         movie_title.text = movie.getTitle()
-        /*description_date.text = getString(R.string.news_year).format(movie.year)
+        description_date.text = getString(R.string.news_year).format(movie.year)
         description_imdb.text = getString(R.string.news_imdb).format(movie.getRating("imdb"))
         description_duration.text = getString(R.string.news_duration).format(movie.duration.toHumanDuration())
         description_imdb.setOnClickListener {
             movie.imdbUrl?.let { it1 -> browse(it1, true) }
         }
-        watch_text.text = getString(R.string.news_watch).format(movie.getWatchString())*/
+        watch_text.text = getString(R.string.news_watch).format(movie.getWatchString())
         movie_categories.text = if (genres.isEmpty())
             getString(R.string.full_cats_not_found)
         else
             genres
         movie_title.isSelected = true
         movie_categories.isSelected = true
-        /*description_duration.isSelected = true
-        description_imdb.isSelected = true
-        watch_text.isSelected = true*/
+        description_date.isSelected = true
+        if (movie.duration > 0) {
+            description_duration.isSelected = true
+        } else {
+            description_duration.isGone = true
+        }
+        if (movie.getRating("imdb") > 0.0) {
+            description_imdb.isSelected = true
+        } else {
+            description_imdb.isGone = true
+        }
+        watch_text.isSelected = true
         movie.getTruePoster()?.let { poster.setUrl(it) }
         movie.getCover()?.let { cover.setUrl(it) }
         movie_text.text = movie.getDescription()
@@ -375,66 +292,37 @@ class MovieActivity : AppCompatActivity() {
                         }
                     }
                 }
-            }
-        }
-        button_quality.setOnClickListener {
-            MaterialDialog(this).show {
-                title(R.string.full_chquality)
-                listItems(items = fileData[languageKey]?.map { it.quality!! }) { _, _, text ->
-                    qualityKey = text.toString()
-                    setQualityText(qualityKey)
-                    setupMovieSubtitles()
-                }
-            }
-        }
-        button_lang.setOnClickListener {
-            MaterialDialog(this).show {
-                title(R.string.full_chlang)
-                listItems(items = fileData.keys.toList()) { _, _, text ->
-                    languageKey = text.toString()
-                    setLanguageText(languageKey)
-                    setupMovieSubtitles()
-                }
+            } else {
+                showAlert(text = getString(R.string.download_done_all))
             }
         }
         button_watch.setOnClickListener {
-            toast(generatePlayerUrl())
+            if (movie.isTvShow) {
+                val episodeChooserFragment = EpisodeChooserFragment.newInstance(movie, tvShowSeasons, currentSeason)
+                episodeChooserFragment.show(supportFragmentManager, episodeChooserFragment.tag)
+            } else {
+                startActivity<PlayerActivity>("player_data" to generatePlayerData())
+            }
         }
     }
 
-    private fun generatePlayerUrl(): String {
-        return fileData[languageKey]?.first { it.quality == qualityKey }?.src.toString()
-    }
-
-    private fun generateSubtitleUrl(): String {
-        return subtitleData[languageKey]?.first { it.lang == subtitleKey.toLowerCase(Locale.ENGLISH) }?.url.toString()
-    }
-
-    private fun setLanguageText(text: String) {
-        button_lang.text = text.translateLanguage(this)
-    }
-
-    private fun setQualityText(text: String) {
-        button_quality.text = text.translateQuality(this)
-    }
-
-    private fun setSubtitlesText(text: String) {
-        button_subtitles.text = text.translateLanguage(this)
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        overridePendingTransition(R.style.SlideRightAnimation, R.style.SlideRightAnimation)
+    private fun generatePlayerData(): PlayerData {
+        return PlayerData(
+                movie.getTitle(),
+                fileData,
+                subtitleData
+        )
     }
 
     @Subscribe
     fun listenEpisodeChange(event: ChooseEpisodeEvent) {
+        currentSeason = event.season
         setupTvShowEpisode(event.position)
+        startActivity<PlayerActivity>("player_data" to generatePlayerData())
     }
 
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
-        SwipeBackHelper.onDestroy(this)
     }
 }

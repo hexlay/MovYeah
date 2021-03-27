@@ -34,14 +34,6 @@
     <PreferenceCategory android:title="@string/settings_player">
 
         <hexlay.movyeah.layouts.CustomListPreferenceLayout
-            android:defaultValue="5000"
-            android:entries="@array/seek"
-            android:entryValues="@array/seek_value"
-            android:icon="@drawable/ic_pref_seek"
-            android:key="seek_value"
-            android:title="@string/settings_main_seek_title" />
-
-        <hexlay.movyeah.layouts.CustomListPreferenceLayout
             android:defaultValue="MEDIUM"
             android:entries="@array/quality"
             android:entryValues="@array/quality_value"

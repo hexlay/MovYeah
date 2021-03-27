@@ -18,9 +18,16 @@
 
     <style name="AppTheme" parent="Movyeah" />
 
-    <style name="AppThemeActivity" parent="Movyeah">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@style/SlideRightAnimation</item>
+    <style name="AppThemeMovie" parent="Movyeah">
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="AppThemeFullscreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="AppThemeTranslucent" parent="Theme.MaterialComponents.DayNight.NoActionBar">

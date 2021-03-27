@@ -11,8 +11,8 @@ import hexlay.movyeah.models.events.NetworkChangeEvent
 import hexlay.movyeah.models.events.StartWatchingEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.jetbrains.anko.clearTop
 import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.newTask
 
 abstract class AbsCoreActivity : AppCompatActivity() {
 
@@ -43,6 +43,20 @@ abstract class AbsCoreActivity : AppCompatActivity() {
         EventBus.getDefault().register(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this)
+        }
+    }
+
     public override fun onStop() {
         EventBus.getDefault().unregister(this)
         super.onStop()
@@ -50,7 +64,7 @@ abstract class AbsCoreActivity : AppCompatActivity() {
 
     @Subscribe
     fun listenWatch(event: StartWatchingEvent) {
-        startActivity(intentFor<MovieActivity>("movie" to event.item).newTask())
+        startActivity(intentFor<MovieActivity>("movie" to event.item).clearTop())
     }
 
 }

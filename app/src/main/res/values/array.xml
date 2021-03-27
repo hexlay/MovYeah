@@ -23,20 +23,6 @@
         <item name="RUS">RUS</item>
     </string-array>
 
-    <string-array name="seek">
-        <item name="5000">@string/settings_main_seek_5</item>
-        <item name="10000">@string/settings_main_seek_10</item>
-        <item name="15000">@string/settings_main_seek_15</item>
-        <item name="20000">@string/settings_main_seek_20</item>
-    </string-array>
-
-    <string-array name="seek_value">
-        <item name="5000">5000</item>
-        <item name="10000">10000</item>
-        <item name="15000">15000</item>
-        <item name="20000">20000</item>
-    </string-array>
-
     <string-array name="darkmode">
         <item name="0">@string/settings_light</item>
         <item name="1">@string/settings_dark</item>

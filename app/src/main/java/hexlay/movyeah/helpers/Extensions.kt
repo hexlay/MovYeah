@@ -1,8 +1,11 @@
 package hexlay.movyeah.helpers
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -13,6 +16,7 @@ import android.text.Html
 import android.text.Spanned
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.annotation.LayoutRes
@@ -20,8 +24,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
-import androidx.core.view.isVisible
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
@@ -33,13 +36,41 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.faltenreich.skeletonlayout.Skeleton
 import com.faltenreich.skeletonlayout.applySkeleton
+import com.google.android.material.transition.platform.MaterialArcMotion
+import com.google.android.material.transition.platform.MaterialContainerTransform
+import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.tapadoo.alerter.Alerter
-import github.com.st235.lib_expandablebottombar.ExpandableBottomBar
 import hexlay.movyeah.R
 import org.apache.commons.collections4.CollectionUtils
 import java.io.File
 import java.util.*
 
+
+internal fun getContentTransform(context: Context): MaterialContainerTransform {
+    return MaterialContainerTransform().apply {
+        addTarget(android.R.id.content)
+        duration = 350
+        pathMotion = MaterialArcMotion()
+        isElevationShadowEnabled = false
+        startElevation = 9f
+        endElevation = 9f
+        startContainerColor = ContextCompat.getColor(context, R.color.color_primary)
+    }
+}
+
+fun AppCompatActivity.applyExitMaterialTransform() {
+    window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
+    setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
+    window.sharedElementsUseOverlay = false
+}
+
+fun AppCompatActivity.applyMaterialTransform(transitionName: String?) {
+    window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
+    ViewCompat.setTransitionName(findViewById(android.R.id.content), transitionName)
+    setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
+    window.sharedElementEnterTransition = getContentTransform(this)
+    window.sharedElementReturnTransition = getContentTransform(this)
+}
 
 fun Activity.showAlert(title: String = "", text: String, color: Int = R.color.color_accent) {
     val alert = Alerter.create(this)
@@ -51,13 +82,39 @@ fun Activity.showAlert(title: String = "", text: String, color: Int = R.color.co
     alert.show()
 }
 
-fun AppCompatActivity.getActDrawable(resId: Int): Drawable? = ContextCompat.getDrawable(this, resId)
-
 fun initDarkMode() {
     when (PreferenceHelper.darkMode) {
         0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+    }
+}
+
+fun Context.playeExternally(url: String) {
+    val intent = Intent(Intent.ACTION_VIEW)
+    intent.setDataAndType(Uri.parse(url), "video/*")
+    startActivity(Intent.createChooser(intent, "Complete action using"))
+}
+
+fun View.fade(alpha: Int, time: Long) {
+    if (alpha > 0) {
+        animate()
+                .setDuration(time)
+                .alpha(alpha.toFloat())
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationStart(animation: Animator) {
+                        visibility = View.VISIBLE
+                    }
+                })
+    } else {
+        animate()
+                .setDuration(time)
+                .alpha(alpha.toFloat())
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        visibility = View.INVISIBLE
+                    }
+                })
     }
 }
 
@@ -97,14 +154,6 @@ fun String.toHtml(): Spanned {
     } else {
         Html.fromHtml(this)
     }
-}
-
-fun ExpandableBottomBar.hideItem(id: Int) {
-    this[id].isVisible = false
-}
-
-fun ExpandableBottomBar.enableItem(id: Int) {
-    this[id].isEnabled = true
 }
 
 fun <T> List<T>.toCommaList(): String = joinToString(separator = ", ")
