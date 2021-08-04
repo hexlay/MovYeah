@@ -14,6 +14,8 @@ class BrowserActivity : AbsCoreActivity() {
     private var movieId = 0
     private val watchViewModel by viewModels<WatchViewModel>()
 
+    override var useEventBus = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initData()
@@ -28,6 +30,8 @@ class BrowserActivity : AbsCoreActivity() {
             } else {
                 finish()
             }
+        } else {
+            finish()
         }
     }
 

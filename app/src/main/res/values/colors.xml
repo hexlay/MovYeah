@@ -5,6 +5,13 @@
     <color name="color_accent">#1976D2</color>
     <color name="background_splash">#121212</color>
     <color name="drawable_color">#000000</color>
+    <color name="tab_layout_color">#FFFFFF</color>
+
+    <!-- Navigation bar -->
+    <color name="nav_tint_color">#C8000000</color>
+    <color name="nav_tint_active_color">#000000</color>
+    <color name="nav_text_color">#000000</color>
+    <color name="nav_indicator_color">#2D212121</color>
 
     <!-- Skeleton -->
     <color name="skeleton_color">#424242</color>

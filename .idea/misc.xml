@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="../../../../../../layout/custom_preview.xml" value="0.44074074074074077" />
+        <entry key="app/src/main/res/drawable/filter_rounded.xml" value="0.27072368421052634" />
+        <entry key="app/src/main/res/drawable/gradient_overlay_search.xml" value="0.2680781758957655" />
+        <entry key="app/src/main/res/drawable/ic_empty_to_favorite.xml" value="0.2680781758957655" />
+        <entry key="app/src/main/res/drawable/ic_favorite.xml" value="0.2680781758957655" />
+        <entry key="app/src/main/res/drawable/ic_favorite_empty.xml" value="0.2680781758957655" />
+        <entry key="app/src/main/res/drawable/ic_favorite_to_empty.xml" value="0.2680781758957655" />
+        <entry key="app/src/main/res/drawable/ic_scroll_up_white.xml" value="0.27072368421052634" />
+        <entry key="app/src/main/res/drawable/ic_sort.xml" value="0.27072368421052634" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1279896574014221" />
+        <entry key="app/src/main/res/layout/activity_movie.xml" value="0.25381214951301473" />
+        <entry key="app/src/main/res/layout/activity_player.xml" value="0.1279896574014221" />
+        <entry key="app/src/main/res/layout/fragment_episode_chooser.xml" value="0.18442622950819673" />
+        <entry key="app/src/main/res/layout/fragment_filter.xml" value="0.18442622950819673" />
+        <entry key="app/src/main/res/layout/fragment_movies.xml" value="0.3305439330543933" />
+        <entry key="app/src/main/res/layout/fragment_season.xml" value="0.18442622950819673" />
+        <entry key="app/src/main/res/layout/piece_scroll_up.xml" value="0.1279896574014221" />
+        <entry key="app/src/main/res/menu/navigation_main.xml" value="0.2579804560260586" />
+      </map>
+    </option>
+  </component>
   <component name="EntryPointsManager">
     <list size="3">
       <item index="0" class="java.lang.String" itemvalue="androidx.room.TypeConverter" />
@@ -12,7 +36,7 @@
     <option name="myDefaultNotNull" value="android.support.annotation.NonNull" />
     <option name="myNullables">
       <value>
-        <list size="12">
+        <list size="15">
           <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.Nullable" />
           <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nullable" />
           <item index="2" class="java.lang.String" itemvalue="javax.annotation.CheckForNull" />
@@ -25,12 +49,15 @@
           <item index="9" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NullableType" />
           <item index="10" class="java.lang.String" itemvalue="android.annotation.Nullable" />
           <item index="11" class="java.lang.String" itemvalue="com.android.annotations.Nullable" />
+          <item index="12" class="java.lang.String" itemvalue="org.eclipse.jdt.annotation.Nullable" />
+          <item index="13" class="java.lang.String" itemvalue="io.reactivex.annotations.Nullable" />
+          <item index="14" class="java.lang.String" itemvalue="io.reactivex.rxjava3.annotations.Nullable" />
         </list>
       </value>
     </option>
     <option name="myNotNulls">
       <value>
-        <list size="11">
+        <list size="15">
           <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.NotNull" />
           <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nonnull" />
           <item index="2" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.NonNull" />
@@ -42,11 +69,15 @@
           <item index="8" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NonNullType" />
           <item index="9" class="java.lang.String" itemvalue="android.annotation.NonNull" />
           <item index="10" class="java.lang.String" itemvalue="com.android.annotations.NonNull" />
+          <item index="11" class="java.lang.String" itemvalue="org.eclipse.jdt.annotation.NonNull" />
+          <item index="12" class="java.lang.String" itemvalue="io.reactivex.annotations.NonNull" />
+          <item index="13" class="java.lang.String" itemvalue="io.reactivex.rxjava3.annotations.NonNull" />
+          <item index="14" class="java.lang.String" itemvalue="lombok.NonNull" />
         </list>
       </value>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

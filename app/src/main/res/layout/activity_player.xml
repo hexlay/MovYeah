@@ -10,11 +10,15 @@
         android:id="@+id/player_src"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:keepScreenOn="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:resize_mode="fit"
+        app:show_shuffle_button="false"
+        app:show_subtitle_button="true"
+        app:show_vr_button="false"
         app:surface_type="surface_view" />
 
     <androidx.constraintlayout.widget.ConstraintLayout

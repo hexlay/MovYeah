@@ -81,20 +81,21 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Android KTX
-    implementation 'androidx.core:core-ktx:1.6.0-alpha01'
-    implementation 'androidx.fragment:fragment-ktx:1.3.2'
+    implementation 'androidx.core:core-ktx:1.7.0-alpha01'
+    implementation 'androidx.fragment:fragment-ktx:1.3.6'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     // AndroidX
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.1.1'
 
     // Google
-    implementation 'com.google.android.exoplayer:exoplayer:2.13.2'
-    implementation 'com.google.android.material:material:1.4.0-alpha01'
+    implementation 'com.google.android.exoplayer:exoplayer:2.14.2'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.play:core:1.10.0'
 
     // Apache
     implementation 'org.apache.commons:commons-collections4:4.4'
@@ -102,14 +103,14 @@ dependencies {
 
     // Other...
     implementation 'com.tapadoo.android:alerter:7.0.1'
-    implementation 'com.github.skydoves:androidbottombar:1.0.2'
+    implementation 'com.github.ibrahimsn98:SmoothBottomBar:1.7.6'
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     implementation 'com.afollestad:recyclical:1.1.1'
     implementation 'org.greenrobot:eventbus:3.2.0'
     implementation 'com.afollestad.material-dialogs:core:3.3.0'
     implementation 'com.afollestad.assent:core:3.0.0-RC4'
     implementation 'com.rezwan.knetworklib:knetworklib:1.0.3'
-    implementation 'com.faltenreich:skeletonlayout:2.0.2'
+    implementation 'com.faltenreich:skeletonlayout:4.0.0'
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'com.akaita.android:morphview:1.0.0'
 }

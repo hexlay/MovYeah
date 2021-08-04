@@ -87,7 +87,9 @@
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:scrollbars="none"
-        app:layout_constraintBottom_toBottomOf="@id/guidelineBottom"
+        android:paddingBottom="?attr/actionBarSize"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guidelineRight"
         app:layout_constraintStart_toStartOf="@id/guidelineLeft"
         app:layout_constraintTop_toBottomOf="@+id/movie_categories">
@@ -115,14 +117,12 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_share" />
 
-                <com.akaita.android.morphview.MorphView
+                <ImageButton
                     android:id="@+id/button_favorite"
                     style="?attr/actionButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="invisible"
-                    app:avdFirst="@drawable/ic_empty_to_favorite"
-                    app:avdSecond="@drawable/ic_favorite_to_empty" />
+                    android:src="@drawable/ic_favorite" />
 
                 <ImageButton
                     android:id="@+id/button_download"
@@ -231,10 +231,9 @@
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/button_watch"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="15dp"
         android:elevation="6dp"
         android:enabled="false"
         android:text="@string/watch"
@@ -244,8 +243,6 @@
         app:iconTint="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guidelineBottom"
         app:pressedTranslationZ="12dp" />
 
     <com.google.android.material.appbar.MaterialToolbar

@@ -70,20 +70,22 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/fragment_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.skydoves.androidbottombar.AndroidBottomBarView
+    <me.ibrahimsn.lib.SmoothBottomBar
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_gravity="bottom"
-        android:background="@color/background"
-        app:bottomBar_menuAnimation="overshoot"
-        app:bottomBar_selectedIndex="0"
-        app:bottomBar_flavor="icon" />
+        app:backgroundColor="@color/background"
+        app:indicatorColor="@color/nav_indicator_color"
+        app:iconTint="@color/nav_tint_color"
+        app:iconTintActive="@color/nav_tint_active_color"
+        app:textColor="@color/nav_text_color"
+        app:menu="@menu/navigation_main"/>
 
     <FrameLayout
         android:id="@+id/searcher"

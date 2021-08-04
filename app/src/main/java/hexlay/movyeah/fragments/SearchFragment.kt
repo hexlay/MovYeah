@@ -7,7 +7,6 @@ import hexlay.movyeah.helpers.dpOf
 import hexlay.movyeah.helpers.setMargins
 import hexlay.movyeah.models.Filter
 import kotlinx.android.synthetic.main.fragment_movies.*
-import kotlinx.android.synthetic.main.piece_scroll_up.*
 
 class SearchFragment : AbsMoviesFragment() {
 

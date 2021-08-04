@@ -3,21 +3,18 @@ package hexlay.movyeah.activities.base
 import androidx.appcompat.app.AppCompatActivity
 import com.rezwan.knetworklib.KNetwork
 import hexlay.movyeah.R
-import hexlay.movyeah.activities.MovieActivity
 import hexlay.movyeah.api.helpers.isNetworkAvailable
 import hexlay.movyeah.helpers.initDarkMode
 import hexlay.movyeah.helpers.makeFullscreen
 import hexlay.movyeah.models.events.NetworkChangeEvent
-import hexlay.movyeah.models.events.StartWatchingEvent
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.jetbrains.anko.clearTop
-import org.jetbrains.anko.intentFor
 
 abstract class AbsCoreActivity : AppCompatActivity() {
 
-    protected open var networkView: Int = android.R.id.content
-    protected open var isNetworkAvailable = true
+    private var networkView = android.R.id.content
+
+    protected var isNetworkAvailable = true
+    protected open var useEventBus = true
 
     protected open fun initActivity() {
         initDarkMode()
@@ -40,12 +37,14 @@ abstract class AbsCoreActivity : AppCompatActivity() {
 
     public override fun onStart() {
         super.onStart()
-        EventBus.getDefault().register(this)
+        if (useEventBus) {
+            EventBus.getDefault().register(this)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        if (!EventBus.getDefault().isRegistered(this)) {
+        if (!EventBus.getDefault().isRegistered(this) && useEventBus) {
             EventBus.getDefault().register(this)
         }
     }
@@ -58,13 +57,10 @@ abstract class AbsCoreActivity : AppCompatActivity() {
     }
 
     public override fun onStop() {
-        EventBus.getDefault().unregister(this)
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this)
+        }
         super.onStop()
-    }
-
-    @Subscribe
-    fun listenWatch(event: StartWatchingEvent) {
-        startActivity(intentFor<MovieActivity>("movie" to event.item).clearTop())
     }
 
 }

@@ -11,6 +11,7 @@
     <string name="back">უკან</string>
     <string name="done">დასრულება</string>
     <string name="search_text">შეიყვანეთ საძიებო სიტყვა</string>
+    <string name="choose">არჩევა</string>
     <string name="yes">კი</string>
     <string name="no">არა</string>
     <string name="cancel">გაუქმება</string>
@@ -68,6 +69,8 @@
 
     <!-- Filter -->
     <string name="filter_change_year">აირჩიეთ წელი</string>
+    <string name="filter_change_start_year">აირჩიეთ დაწყების წელი</string>
+    <string name="filter_change_end_year">აირჩიეთ დასრულების წელი</string>
     <string name="filter_change_category">აირჩიეთ კატეგორია</string>
     <string name="filter_change_country">აირჩიეთ ქვეყანა</string>
     <string name="filter_change_lang">აირჩიეთ ენა</string>

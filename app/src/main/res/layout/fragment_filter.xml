@@ -19,65 +19,31 @@
         app:navigationIcon="@drawable/ic_sort"
         app:title="@string/menu_sort" />
 
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:scrollbars="none">
-
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
-
+            android:orientation="vertical"
+            android:layout_margin="10dp">
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/start_year"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="2dp" />
-
-            <TextView
-                android:id="@+id/dum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text=" - "
-                tools:ignore="HardcodedText" />
+                android:layout_marginStart="10dp"
+                android:maxLines="1"
+                android:text="@string/filter_change_start_year" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/end_year"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="2dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/dum"
-                app:layout_constraintTop_toTopOf="parent" />
-        </LinearLayout>
-    </HorizontalScrollView>
-
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:scrollbars="none">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/language_changer"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginBottom="2dp"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:text="@string/filter_change_end_year" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/sort_changer"
@@ -85,51 +51,36 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginBottom="2dp"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:text="@string/filter_change_sort" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/language_changer"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:maxLines="1"
+                android:text="@string/filter_change_lang" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/country_changer"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:maxLines="1"
+                android:text="@string/filter_change_country" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/category_changer"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:maxLines="1"
+                android:text="@string/filter_change_category" />
         </LinearLayout>
-    </HorizontalScrollView>
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text="@string/filter_change_country"
-                android:textSize="19sp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/country_holder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text="@string/filter_change_category"
-                android:textSize="19sp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/category_holder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                android:layout_marginTop="5dp" />
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
 
 </LinearLayout>

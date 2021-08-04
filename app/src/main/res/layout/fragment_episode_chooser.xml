@@ -21,11 +21,11 @@
         android:id="@+id/season_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabBackground="@color/background"
+        android:background="@color/tab_layout_color"
         app:tabGravity="fill"
         app:tabMode="scrollable" />
 
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/episode_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

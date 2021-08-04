@@ -1,9 +1,11 @@
 package hexlay.movyeah.activities
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.SparseArray
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.util.isEmpty
 import androidx.core.util.isNotEmpty
 import androidx.core.view.isGone
@@ -68,6 +70,7 @@ class MovieActivity : AppCompatActivity() {
         applyMaterialTransform("movie_transition")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie)
+        postponeEnterTransition()
         EventBus.getDefault().register(this)
         initDarkMode()
         initStarterData()
@@ -91,20 +94,25 @@ class MovieActivity : AppCompatActivity() {
     private fun initFavorite() {
         dbMovie.getMovie(movie.id)?.observe(this, {
             if (it == null) {
-                button_favorite.showAvdSecond()
+                makeFavoriteButton(false)
                 button_favorite.setOnClickListener {
                     dbMovie.insertMovie(movie)
-                    button_favorite.showAvdFirst()
+                    makeFavoriteButton(true)
                 }
             } else {
-                button_favorite.showAvdFirst()
+                makeFavoriteButton(true)
                 button_favorite.setOnClickListener {
                     dbMovie.deleteMovie(movie)
-                    button_favorite.showAvdSecond()
+                    makeFavoriteButton(false)
                 }
             }
             button_favorite.isVisible = true
         })
+    }
+
+    private fun makeFavoriteButton(showFilled: Boolean) {
+        val drawable = if (showFilled) R.drawable.ic_favorite else R.drawable.ic_favorite_empty
+        button_favorite.setImageDrawable(ContextCompat.getDrawable(this, drawable))
     }
 
     private fun loadData() {
@@ -156,6 +164,7 @@ class MovieActivity : AppCompatActivity() {
 
     private fun loadIndependentData() {
         watchViewModel.fetchMovieActors(movie.adjaraId).observeOnce(this, { cast ->
+            startPostponedEnterTransition()
             if (cast != null) {
                 setupCast(cast)
             } else {
@@ -248,6 +257,7 @@ class MovieActivity : AppCompatActivity() {
         movie_text.text = movie.getDescription()
     }
 
+    @SuppressLint("CheckResult")
     private fun initLayoutActions() {
         toolbar.setNavigationOnClickListener {
             onBackPressed()

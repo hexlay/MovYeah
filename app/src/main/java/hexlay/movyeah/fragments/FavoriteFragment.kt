@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -58,7 +59,7 @@ class FavoriteFragment : Fragment() {
             withLayoutManager(GridLayoutManager(requireContext(), Constants.RECYCLER_GRID_COUNT))
             withItem<Movie, MovieViewHolder>(R.layout.list_items_extended) {
                 onBind(::MovieViewHolder) { _, item ->
-                    this.bind(item, requireActivity())
+                    this.bind(item, requireActivity() as AppCompatActivity)
                 }
             }
         }

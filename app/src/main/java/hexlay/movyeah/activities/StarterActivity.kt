@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import hexlay.movyeah.api.network.view_models.WatchViewModel
 import hexlay.movyeah.helpers.Constants
+import hexlay.movyeah.helpers.initDarkMode
 import hexlay.movyeah.helpers.observeOnce
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.noAnimation
@@ -16,6 +17,7 @@ class StarterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initDarkMode()
         startMainActivity()
     }
 

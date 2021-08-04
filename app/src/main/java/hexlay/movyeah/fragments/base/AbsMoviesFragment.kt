@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -22,7 +23,6 @@ import hexlay.movyeah.fragments.FilterFragment
 import hexlay.movyeah.helpers.*
 import hexlay.movyeah.models.Filter
 import kotlinx.android.synthetic.main.fragment_movies.*
-import kotlinx.android.synthetic.main.piece_scroll_up.*
 
 abstract class AbsMoviesFragment : Fragment() {
 
@@ -101,7 +101,7 @@ abstract class AbsMoviesFragment : Fragment() {
             withLayoutManager(gridLayoutManager)
             withItem<Movie, MovieViewHolder>(R.layout.list_items_extended) {
                 onBind(::MovieViewHolder) { _, item ->
-                    this.bind(item, requireActivity())
+                    this.bind(item, requireActivity() as AppCompatActivity)
                 }
             }
         }
@@ -118,7 +118,7 @@ abstract class AbsMoviesFragment : Fragment() {
 
     protected open fun initScrollUp() {
         var scrolling = false
-        scroll_up.setMargins(bottom = getActionBarSize() + dpOf(20))
+        scroll_up.setMargins(bottom = getActionBarSize() + dpOf(15))
         scroll_up.setOnClickListener {
             scrolling = if (!scrolling) {
                 movies_holder.smoothScrollToPosition(0)

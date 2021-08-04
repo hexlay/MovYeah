@@ -35,6 +35,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.faltenreich.skeletonlayout.Skeleton
+import com.faltenreich.skeletonlayout.SkeletonConfig
 import com.faltenreich.skeletonlayout.applySkeleton
 import com.google.android.material.transition.platform.MaterialArcMotion
 import com.google.android.material.transition.platform.MaterialContainerTransform
@@ -82,12 +83,13 @@ fun Activity.showAlert(title: String = "", text: String, color: Int = R.color.co
     alert.show()
 }
 
-fun initDarkMode() {
+fun AppCompatActivity.initDarkMode() {
     when (PreferenceHelper.darkMode) {
         0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
     }
+    delegate.applyDayNight()
 }
 
 fun Context.playeExternally(url: String) {
@@ -170,7 +172,7 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observ
 }
 
 fun String.translateLanguage(context: Context): String {
-    val name = "full_${this.toLowerCase(Locale.ENGLISH)}"
+    val name = "full_${this.lowercase(Locale.ENGLISH)}"
     val identifier = context.resources.getIdentifier(name, "string", context.packageName)
     if (identifier == 0) {
         return this
@@ -215,14 +217,12 @@ fun ShortcutInfo.Builder.buildWithGlideIcon(context: Context, url: String?, call
 }
 
 fun RecyclerView.createSkeleton(@LayoutRes resId: Int, itemCount: Int = 3): Skeleton {
-    return applySkeleton(
-            listItemLayoutResId = resId,
-            itemCount = itemCount,
-            maskColor = ContextCompat.getColor(context, R.color.skeleton_color),
-            shimmerColor = ContextCompat.getColor(context, R.color.skeleton_shimmer_color),
-            cornerRadius = 0f,
-            shimmerDurationInMillis = 1000L
-    )
+    val config = SkeletonConfig.default(context)
+    config.maskColor = ContextCompat.getColor(context, R.color.skeleton_color)
+    config.shimmerColor = ContextCompat.getColor(context, R.color.skeleton_shimmer_color)
+    config.shimmerDurationInMillis = 1000L
+    config.maskCornerRadius = 5f
+    return applySkeleton(resId, itemCount, config)
 }
 
 fun View.showKeyboard() {

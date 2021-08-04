@@ -27,7 +27,7 @@ class ActorActivity : AbsCoreActivity() {
     private var loading = true
     private val source = emptyDataSource()
 
-    override var networkView: Int = R.id.toolbar
+    override var useEventBus = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

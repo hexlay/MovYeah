@@ -4,6 +4,13 @@
     <color name="color_primary_dark">#E53935</color>
     <color name="color_accent">#E53935</color>
     <color name="drawable_color">#FFFFFF</color>
+    <color name="tab_layout_color">#000000</color>
+
+    <!-- Navigation bar -->
+    <color name="nav_tint_color">#C8FFFFFF</color>
+    <color name="nav_tint_active_color">#FFFFFF</color>
+    <color name="nav_text_color">#FFFFFF</color>
+    <color name="nav_indicator_color">#2DFFFFFF</color>
 
     <!-- Background colors -->
     <color name="background">#121212</color>

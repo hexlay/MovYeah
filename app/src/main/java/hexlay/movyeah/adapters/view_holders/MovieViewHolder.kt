@@ -1,10 +1,10 @@
 package hexlay.movyeah.adapters.view_holders
 
-import android.app.Activity
 import android.app.ActivityOptions
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.afollestad.recyclical.ViewHolder
 import com.google.android.material.card.MaterialCardView
@@ -31,7 +31,7 @@ class MovieViewHolder(itemView: View) : ViewHolder(itemView) {
         imdb.bringToFront()
     }
 
-    fun bind(movie: Movie, activity: Activity) {
+    fun bind(movie: Movie, activity: AppCompatActivity) {
         title.isSelected = true
         title.text = movie.getTitle()
         year.text = movie.year.toString()

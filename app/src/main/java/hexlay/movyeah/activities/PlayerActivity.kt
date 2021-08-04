@@ -1,16 +1,16 @@
 package hexlay.movyeah.activities
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isGone
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.list.listItems
+import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ui.StyledPlayerView
@@ -47,14 +47,17 @@ class PlayerActivity : AppCompatActivity() {
         playerData = intent!!.extras!!.getParcelable("player_data")!!
     }
 
+    @SuppressLint("CheckResult")
     private fun initLayoutActions() {
+        val qualities = playerData.fileData.getValue(languageKey).map { it.quality!! }
+        val languages = playerData.fileData.keys.toList()
         button_back.setOnClickListener {
             finish()
         }
         button_quality.setOnClickListener {
             MaterialDialog(this).show {
                 title(R.string.full_chquality)
-                listItems(items = playerData.fileData[languageKey]?.map { it.quality!! }) { _, _, text ->
+                listItemsSingleChoice(items = qualities, initialSelection = qualities.indexOf(qualityKey)) { _, _, text ->
                     qualityKey = text.toString()
                     setupSource()
                 }
@@ -68,7 +71,7 @@ class PlayerActivity : AppCompatActivity() {
         button_lang.setOnClickListener {
             MaterialDialog(this).show {
                 title(R.string.full_chlang)
-                listItems(items = playerData.fileData.keys.toList()) { _, _, text ->
+                listItemsSingleChoice(items = languages, initialSelection = languages.indexOf(languageKey)) { _, _, text ->
                     languageKey = text.toString()
                     setupSource()
                 }
@@ -113,23 +116,22 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun setupQuality() {
-        val qualities = playerData.fileData[languageKey]?.map { it.quality }
+        val qualities = playerData.fileData.getValue(languageKey).map { it.quality }
         qualityKey = when {
-            qualities?.contains(PreferenceHelper.quality)!! -> {
+            qualities.contains(PreferenceHelper.quality) -> {
                 PreferenceHelper.quality
             }
             qualities.contains("HIGH") -> {
                 "HIGH"
             }
             else -> {
-                playerData.fileData[languageKey]?.first()?.quality!!
+                playerData.fileData.getValue(languageKey).first().toString()
             }
         }
         button_quality.isEnabled = true
     }
 
     private fun initActivityProperties() {
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         if (PreferenceHelper.maxBrightness) {
             val layoutParams = window.attributes
             layoutParams?.screenBrightness = 100 / 100.0f
@@ -139,19 +141,18 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun initExoPlayer() {
         val audioAttributes = AudioAttributes.Builder()
-                .setUsage(C.USAGE_MEDIA)
-                .setContentType(C.CONTENT_TYPE_MOVIE)
-                .build()
+            .setUsage(C.USAGE_MEDIA)
+            .setContentType(C.CONTENT_TYPE_MOVIE)
+            .build()
         exoPlayer = SimpleExoPlayer.Builder(this)
-                .setAudioAttributes(audioAttributes, true)
-                .build()
+            .setAudioAttributes(audioAttributes, true)
+            .build()
         player_src.player = exoPlayer
         player_src.controllerShowTimeoutMs = 2000
         player_src.useController = true
         player_src.requestFocus()
         player_src.setShowNextButton(false)
         player_src.setShowPreviousButton(false)
-        player_src.setShowSubtitleButton(true)
         player_src.setShowBuffering(StyledPlayerView.SHOW_BUFFERING_WHEN_PLAYING)
         player_src.setControllerVisibilityListener { visibility ->
             toolbar.fade(if (visibility == View.VISIBLE) 1 else 0, 100)
@@ -164,7 +165,7 @@ class PlayerActivity : AppCompatActivity() {
 
             if (playerData.subtitleData.isNotEmpty()) {
                 val subtitleList = ArrayList<MediaItem.Subtitle>()
-                val list = playerData.subtitleData[languageKey]?.map { it.lang?.toUpperCase(Locale.ENGLISH)!! }
+                val list = playerData.subtitleData[languageKey]?.map { it.lang?.uppercase(Locale.ENGLISH)!! }
                 if (list != null) {
                     for (item in list) {
                         val url = generateSubtitleUrl(item)
@@ -184,11 +185,11 @@ class PlayerActivity : AppCompatActivity() {
         if (playerData.offlineIdentifier != null) {
             return getOfflineMovie(playerData.offlineIdentifier!!).absolutePath
         }
-        return playerData.fileData[languageKey]?.first { it.quality == qualityKey }?.src.toString()
+        return playerData.fileData.getValue(languageKey).first { it.quality == qualityKey }.src.toString()
     }
 
     private fun generateSubtitleUrl(subtitleKey: String): String {
-        return playerData.subtitleData[languageKey]?.first { it.lang == subtitleKey.toLowerCase(Locale.ENGLISH) }?.url.toString()
+        return playerData.subtitleData.getValue(languageKey).first { it.lang == subtitleKey.lowercase(Locale.ENGLISH) }.url.toString()
     }
 
     private fun releaseVideo() {
@@ -201,7 +202,6 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun releaseActivityProperties() {
-        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         if (PreferenceHelper.maxBrightness) {
             val layoutParams = window.attributes
             layoutParams?.screenBrightness = -1f

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.tabs.TabLayoutMediator
 import hexlay.movyeah.R
 import hexlay.movyeah.adapters.SeasonPageAdapter
 import hexlay.movyeah.api.models.Movie
@@ -24,10 +25,12 @@ class EpisodeChooserFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        episode_holder.adapter = SeasonPageAdapter(childFragmentManager, movie!!, tvShowSeasons)
-        season_tabs.setupWithViewPager(episode_holder)
+        episode_holder.adapter = SeasonPageAdapter(requireActivity(), movie!!, tvShowSeasons)
+        TabLayoutMediator(season_tabs, episode_holder) { tab, position ->
+            tab.text = "სეზონი ${position + 1}"
+        }.attach()
         episode_holder.currentItem = currentSeason - 1
-        episode_holder.setPageTransformer(false) { page, position ->
+        episode_holder.setPageTransformer { page, position ->
             if (position == 0.0f) {
                 page.isNestedScrollingEnabled = true
             } else if (position % 1 == 0.0f) {

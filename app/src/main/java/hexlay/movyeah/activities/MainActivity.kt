@@ -8,9 +8,8 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import com.afollestad.materialdialogs.MaterialDialog
-import com.skydoves.androidbottombar.BottomMenuItem
-import com.skydoves.androidbottombar.OnMenuItemSelectedListener
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.base.AbsCoreActivity
 import hexlay.movyeah.adapters.MainPageAdapter
@@ -38,8 +37,6 @@ class MainActivity : AbsCoreActivity() {
     private lateinit var tvShowFragment: TvShowFragment
     private lateinit var favoriteFragment: FavoriteFragment
     private lateinit var downloadFragment: DownloadFragment
-
-    override var networkView: Int = R.id.floating_search
 
     private val apiFilters by viewModels<FilterAttrsViewModel>()
     private val dbCategories by viewModels<DbCategoryViewModel>()
@@ -195,49 +192,9 @@ class MainActivity : AbsCoreActivity() {
     }
 
     private fun initNavigationView() {
-        navigation.onMenuItemSelectedListener = OnMenuItemSelectedListener { index, _, _ ->
-            fragment_pager.currentItem = index
+        navigation.onItemSelected = {
+            fragment_pager.currentItem = it
         }
-        navigation.setOnBottomMenuInitializedListener {
-            navigation.bindViewPager(fragment_pager)
-        }
-        navigation.addBottomMenuItems(mutableListOf(
-                BottomMenuItem(this)
-                        .setTitle(R.string.menu_main)
-                        .setTitleActiveColorRes(R.color.color_accent)
-                        .setIcon(R.drawable.ic_home)
-                        .setIconColorRes(R.color.fontBlackEnable)
-                        .setIconSize(24)
-                        .build(),
-                BottomMenuItem(this)
-                        .setTitle(R.string.menu_movies)
-                        .setTitleActiveColorRes(R.color.color_accent)
-                        .setIcon(R.drawable.ic_movies)
-                        .setIconColorRes(R.color.fontBlackEnable)
-                        .setIconSize(24)
-                        .build(),
-                BottomMenuItem(this)
-                        .setTitle(R.string.menu_series)
-                        .setTitleActiveColorRes(R.color.color_accent)
-                        .setIcon(R.drawable.ic_series)
-                        .setIconColorRes(R.color.fontBlackEnable)
-                        .setIconSize(24)
-                        .build(),
-                BottomMenuItem(this)
-                        .setTitle(R.string.menu_favorites)
-                        .setTitleActiveColorRes(R.color.color_accent)
-                        .setIcon(R.drawable.ic_favorite)
-                        .setIconColorRes(R.color.fontBlackEnable)
-                        .setIconSize(24)
-                        .build(),
-                BottomMenuItem(this)
-                        .setTitle(R.string.menu_downloads)
-                        .setTitleActiveColorRes(R.color.color_accent)
-                        .setIcon(R.drawable.ic_download)
-                        .setIconColorRes(R.color.fontBlackEnable)
-                        .setIconSize(24)
-                        .build()
-        ))
     }
 
     private fun initStarterData() {
@@ -251,7 +208,7 @@ class MainActivity : AbsCoreActivity() {
     }
 
     private fun setupViewPagerAdapter() {
-        val adapter = MainPageAdapter(supportFragmentManager)
+        val adapter = MainPageAdapter(this)
         if (isNetworkAvailable) {
             adapter.addFragment(mainFragment)
             adapter.addFragment(moviesFragment)
@@ -262,8 +219,18 @@ class MainActivity : AbsCoreActivity() {
         }
         adapter.addFragment(downloadFragment)
         fragment_pager.adapter = adapter
-        fragment_pager.offscreenPageLimit = adapter.count
+        fragment_pager.offscreenPageLimit = adapter.itemCount
         fragment_pager.currentItem = 0
+
+        fragment_pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+
+            override fun onPageSelected(position: Int) {
+                navigation.itemActiveIndex = position
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {}
+        })
     }
 
     override fun onBackPressed() {
