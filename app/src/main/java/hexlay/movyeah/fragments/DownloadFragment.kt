@@ -162,10 +162,13 @@ class DownloadFragment : Fragment() {
                             download.isVisible = false
                         }
                         itemView.setOnClickListener {
-                            startActivity<PlayerActivity>("player_data" to PlayerData(
+                            startActivity<PlayerActivity>(
+                                "player_data" to PlayerData(
+                                    movieId = item.movie?.getRealId().toString(),
                                     movieName = item.movie?.getTitle()!!,
                                     offlineIdentifier = item.identifier
-                            ))
+                                )
+                            )
                         }
                         itemView.setOnLongClickListener {
                             startActivity(intentFor<DetailActivity>("movie" to item.movie))

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -81,46 +80,51 @@ class MainFragment : Fragment() {
             withLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
             withItem<Movie, MovieViewHolder>(R.layout.list_items) {
                 onBind(::MovieViewHolder) { _, item ->
-                    this.bind(item, requireActivity() as AppCompatActivity)
+                    this.bind(item, requireActivity())
                 }
             }
         }
+        geo_movies_holder.setHasFixedSize(true)
         top_movies_holder.setup {
             withDataSource(topMoviesDataSource)
             withLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
             withItem<Movie, MovieViewHolder>(R.layout.list_items) {
                 onBind(::MovieViewHolder) { _, item ->
-                    this.bind(item, requireActivity() as AppCompatActivity)
+                    this.bind(item, requireActivity())
                 }
             }
         }
+        top_movies_holder.setHasFixedSize(true)
         top_series_holder.setup {
             withDataSource(topSeriesDataSource)
             withLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
             withItem<Movie, MovieViewHolder>(R.layout.list_items) {
                 onBind(::MovieViewHolder) { _, item ->
-                    this.bind(item, requireActivity() as AppCompatActivity)
+                    this.bind(item, requireActivity())
                 }
             }
         }
+        top_series_holder.setHasFixedSize(true)
         geo_series_holder.setup {
             withDataSource(geoSeriesDataSource)
             withLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
             withItem<Movie, MovieViewHolder>(R.layout.list_items) {
                 onBind(::MovieViewHolder) { _, item ->
-                    this.bind(item, requireActivity() as AppCompatActivity)
+                    this.bind(item, requireActivity())
                 }
             }
         }
+        geo_series_holder.setHasFixedSize(true)
         premiere_movies_holder.setup {
             withDataSource(premiereDataSource)
             withLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
             withItem<Movie, MovieViewHolder>(R.layout.list_items) {
                 onBind(::MovieViewHolder) { _, item ->
-                    this.bind(item, requireActivity() as AppCompatActivity)
+                    this.bind(item, requireActivity())
                 }
             }
         }
+        premiere_movies_holder.setHasFixedSize(true)
     }
 
 }

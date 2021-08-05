@@ -29,14 +29,9 @@
 -keep class okhttp3.** { *; }
 -keep interface okhttp3.** { *; }
 -dontwarn okhttp3.**
--keep class sun.misc.Unsafe { *; }
 -dontwarn java.nio.file.*
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn okio.**
--keep class android.support.v7.widget.SearchView { *; }
--keep public class * extends android.support.design.widget.CoordinatorLayout.Behavior { *; }
--keep public class * extends android.support.design.widget.ViewOffsetBehavior { *; }
--keep class * extends com.dbflow5.config.DatabaseHolder { *; }
 -keepclassmembers class * {
     @org.greenrobot.eventbus.Subscribe <methods>;
 }
@@ -45,7 +40,6 @@
     <init>(java.lang.Throwable);
 }
 -keep class com.zerobranch.androidremotedebugger.source.models.** { *; }
--keep class com.zerobranch.androidremotedebugger.source.local.LogLevel
 
 ################ rxjava2 ###########
 -dontwarn java.util.concurrent.Flow*

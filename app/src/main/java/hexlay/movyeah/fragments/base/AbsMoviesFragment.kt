@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -101,11 +100,12 @@ abstract class AbsMoviesFragment : Fragment() {
             withLayoutManager(gridLayoutManager)
             withItem<Movie, MovieViewHolder>(R.layout.list_items_extended) {
                 onBind(::MovieViewHolder) { _, item ->
-                    this.bind(item, requireActivity() as AppCompatActivity)
+                    this.bind(item, requireActivity())
                 }
             }
         }
         skeleton = movies_holder.createSkeleton(R.layout.list_items_extended, 10)
+        movies_holder.setHasFixedSize(true)
     }
 
     protected open fun initFilter() {

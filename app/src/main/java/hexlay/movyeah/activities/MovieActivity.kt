@@ -126,14 +126,14 @@ class MovieActivity : AppCompatActivity() {
                     if (movieExtend?.seasons != null) {
                         movie.seasons = movieExtend.seasons
                         watchViewModel.fetchTvShowEpisodes(movie.id, movieExtend.seasons!!.data.size)
-                                .observeOnce(this, { seasons ->
-                                    if (seasons != null && seasons.isNotEmpty()) {
-                                        tvShowSeasons = seasons
-                                        setupTvShow()
-                                    } else {
-                                        showMovieError(R.string.full_error_show)
-                                    }
-                                })
+                            .observeOnce(this, { seasons ->
+                                if (seasons != null && seasons.isNotEmpty()) {
+                                    tvShowSeasons = seasons
+                                    setupTvShow()
+                                } else {
+                                    showMovieError(R.string.full_error_show)
+                                }
+                            })
                     } else {
                         showMovieError(R.string.full_error_show)
                     }
@@ -274,13 +274,13 @@ class MovieActivity : AppCompatActivity() {
                     val downloadTitle = "${movie.id}_${qualKey}_${langKey}"
                     if (!downloadExists(downloadTitle)) {
                         val download = DownloadMovie(
-                                currentEpisode = currentEpisode,
-                                currentSeason = currentSeason,
-                                language = langKey,
-                                quality = qualKey,
-                                movie = movie,
-                                url = qualValue.src,
-                                identifier = downloadTitle
+                            currentEpisode = currentEpisode,
+                            currentSeason = currentSeason,
+                            language = langKey,
+                            quality = qualKey,
+                            movie = movie,
+                            url = qualValue.src,
+                            identifier = downloadTitle
                         )
                         dataDownload.add(download)
                         val rQuality = qualKey?.translateQuality(this)
@@ -316,11 +316,13 @@ class MovieActivity : AppCompatActivity() {
         }
     }
 
-    private fun generatePlayerData(): PlayerData {
+    private fun generatePlayerData(episode: Int = 0): PlayerData {
         return PlayerData(
-                movie.getTitle(),
-                fileData,
-                subtitleData
+            movie.getRealId().toString(),
+            movie.getTitle(),
+            fileData,
+            subtitleData,
+            episode
         )
     }
 
@@ -328,7 +330,7 @@ class MovieActivity : AppCompatActivity() {
     fun listenEpisodeChange(event: ChooseEpisodeEvent) {
         currentSeason = event.season
         setupTvShowEpisode(event.position)
-        startActivity<PlayerActivity>("player_data" to generatePlayerData())
+        startActivity<PlayerActivity>("player_data" to generatePlayerData(event.position))
     }
 
     override fun onDestroy() {

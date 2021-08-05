@@ -40,7 +40,7 @@ class SeasonFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_season, container, false)
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "CheckResult")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dbEpisodes.getEpisode(movie!!.id)?.observeOnce(viewLifecycleOwner, {

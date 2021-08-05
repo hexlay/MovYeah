@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../../layout/custom_preview.xml" value="0.44074074074074077" />
+        <entry key="app/src/main/res/drawable/checkable_button.xml" value="0.27072368421052634" />
+        <entry key="app/src/main/res/drawable/checkable_button_checked.xml" value="0.27072368421052634" />
         <entry key="app/src/main/res/drawable/filter_rounded.xml" value="0.27072368421052634" />
         <entry key="app/src/main/res/drawable/gradient_overlay_search.xml" value="0.2680781758957655" />
         <entry key="app/src/main/res/drawable/ic_empty_to_favorite.xml" value="0.2680781758957655" />
@@ -12,13 +14,24 @@
         <entry key="app/src/main/res/drawable/ic_favorite_to_empty.xml" value="0.2680781758957655" />
         <entry key="app/src/main/res/drawable/ic_scroll_up_white.xml" value="0.27072368421052634" />
         <entry key="app/src/main/res/drawable/ic_sort.xml" value="0.27072368421052634" />
+        <entry key="app/src/main/res/layout/activity_actor_movie.xml" value="0.10484972677595629" />
+        <entry key="app/src/main/res/layout/activity_details.xml" value="0.1493421052631579" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1279896574014221" />
         <entry key="app/src/main/res/layout/activity_movie.xml" value="0.25381214951301473" />
         <entry key="app/src/main/res/layout/activity_player.xml" value="0.1279896574014221" />
         <entry key="app/src/main/res/layout/fragment_episode_chooser.xml" value="0.18442622950819673" />
         <entry key="app/src/main/res/layout/fragment_filter.xml" value="0.18442622950819673" />
+        <entry key="app/src/main/res/layout/fragment_main.xml" value="0.1837431693989071" />
         <entry key="app/src/main/res/layout/fragment_movies.xml" value="0.3305439330543933" />
         <entry key="app/src/main/res/layout/fragment_season.xml" value="0.18442622950819673" />
+        <entry key="app/src/main/res/layout/list_about.xml" value="0.26052631578947366" />
+        <entry key="app/src/main/res/layout/list_categories.xml" value="0.26052631578947366" />
+        <entry key="app/src/main/res/layout/list_episodes.xml" value="0.26052631578947366" />
+        <entry key="app/src/main/res/layout/list_items.xml" value="0.1493421052631579" />
+        <entry key="app/src/main/res/layout/list_items_cast.xml" value="0.1493421052631579" />
+        <entry key="app/src/main/res/layout/list_items_download.xml" value="0.26052631578947366" />
+        <entry key="app/src/main/res/layout/list_items_download_group.xml" value="0.1493421052631579" />
+        <entry key="app/src/main/res/layout/list_items_extended.xml" value="0.1493421052631579" />
         <entry key="app/src/main/res/layout/piece_scroll_up.xml" value="0.1279896574014221" />
         <entry key="app/src/main/res/menu/navigation_main.xml" value="0.2579804560260586" />
       </map>

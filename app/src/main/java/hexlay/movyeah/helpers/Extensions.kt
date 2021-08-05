@@ -24,6 +24,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -31,15 +32,14 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.faltenreich.skeletonlayout.Skeleton
 import com.faltenreich.skeletonlayout.SkeletonConfig
 import com.faltenreich.skeletonlayout.applySkeleton
 import com.google.android.material.transition.platform.MaterialArcMotion
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
+import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
 import com.tapadoo.alerter.Alerter
 import hexlay.movyeah.R
 import org.apache.commons.collections4.CollectionUtils
@@ -59,13 +59,13 @@ internal fun getContentTransform(context: Context): MaterialContainerTransform {
     }
 }
 
-fun AppCompatActivity.applyExitMaterialTransform() {
+fun FragmentActivity.applyExitMaterialTransform() {
     window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
     setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
     window.sharedElementsUseOverlay = false
 }
 
-fun AppCompatActivity.applyMaterialTransform(transitionName: String?) {
+fun FragmentActivity.applyMaterialTransform(transitionName: String?) {
     window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
     ViewCompat.setTransitionName(findViewById(android.R.id.content), transitionName)
     setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
@@ -83,13 +83,12 @@ fun Activity.showAlert(title: String = "", text: String, color: Int = R.color.co
     alert.show()
 }
 
-fun AppCompatActivity.initDarkMode() {
+fun initDarkMode() {
     when (PreferenceHelper.darkMode) {
         0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
     }
-    delegate.applyDayNight()
 }
 
 fun Context.playeExternally(url: String) {
@@ -101,32 +100,32 @@ fun Context.playeExternally(url: String) {
 fun View.fade(alpha: Int, time: Long) {
     if (alpha > 0) {
         animate()
-                .setDuration(time)
-                .alpha(alpha.toFloat())
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationStart(animation: Animator) {
-                        visibility = View.VISIBLE
-                    }
-                })
+            .setDuration(time)
+            .alpha(alpha.toFloat())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    visibility = View.VISIBLE
+                }
+            })
     } else {
         animate()
-                .setDuration(time)
-                .alpha(alpha.toFloat())
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        visibility = View.INVISIBLE
-                    }
-                })
+            .setDuration(time)
+            .alpha(alpha.toFloat())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    visibility = View.INVISIBLE
+                }
+            })
     }
 }
 
 fun View.setMargins(left: Int? = null, top: Int? = null, right: Int? = null, bottom: Int? = null) {
     val params = layoutParams as ViewGroup.MarginLayoutParams
     params.setMargins(
-            left ?: params.leftMargin,
-            top ?: params.topMargin,
-            right ?: params.rightMargin,
-            bottom ?: params.rightMargin
+        left ?: params.leftMargin,
+        top ?: params.topMargin,
+        right ?: params.rightMargin,
+        bottom ?: params.rightMargin
     )
     layoutParams = params
 }
@@ -189,31 +188,46 @@ fun String.translateQuality(context: Context): String {
 }
 
 fun ImageView.setUrl(url: String) {
-    Glide.with(context)
-            .load(url)
-            .thumbnail(Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.loading)))
-            .error(Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.no_image)))
-            .into(this)
+    Picasso.get()
+        .load(Uri.parse(url))
+        .placeholder(R.drawable.loading)
+        .error(R.drawable.no_image)
+        .into(this)
 }
 
 @RequiresApi(Build.VERSION_CODES.N_MR1)
-fun ShortcutInfo.Builder.buildWithGlideIcon(context: Context, url: String?, callback: (item: ShortcutInfo) -> Unit) {
-    Glide.with(context)
-            .asBitmap()
-            .load(url)
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    if (Constants.isAndroidO) {
-                        setIcon(Icon.createWithAdaptiveBitmap(resource))
-                    } else {
-                        setIcon(Icon.createWithBitmap(resource))
-                    }
-                    val item = build()
-                    callback(item)
+fun ShortcutInfo.Builder.buildWithPicassoIcon(url: String?, callback: (item: ShortcutInfo) -> Unit) {
+    Picasso.get()
+        .load(url)
+        .into(object : Target {
+            override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                if (Constants.isAndroidO) {
+                    setIcon(Icon.createWithAdaptiveBitmap(bitmap))
+                } else {
+                    setIcon(Icon.createWithBitmap(bitmap))
                 }
+                callback(build())
+            }
 
-                override fun onLoadCleared(placeholder: Drawable?) {}
-            })
+            override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+                if (Constants.isAndroidO) {
+                    setIcon(Icon.createWithAdaptiveBitmap(errorDrawable?.toBitmap()))
+                } else {
+                    setIcon(Icon.createWithBitmap(errorDrawable?.toBitmap()))
+                }
+                callback(build())
+            }
+
+            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+                if (Constants.isAndroidO) {
+                    setIcon(Icon.createWithAdaptiveBitmap(placeHolderDrawable?.toBitmap()))
+                } else {
+                    setIcon(Icon.createWithBitmap(placeHolderDrawable?.toBitmap()))
+                }
+                callback(build())
+            }
+
+        })
 }
 
 fun RecyclerView.createSkeleton(@LayoutRes resId: Int, itemCount: Int = 3): Skeleton {

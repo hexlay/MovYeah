@@ -67,19 +67,19 @@ interface AdjaraAPI {
             @Query("source") source: String = "adjaranet"
     ): Response<GenericList<Movie>>
 
-    @GET("movies/premiere-day?page=1&per_page=20&filters=&source=adjaranet")
+    @GET("movies/premiere-day?page=1&per_page=10&filters=&source=adjaranet")
     suspend fun getPremieresAsync(): Response<GenericList<Movie>>
 
-    @GET("movies/top?type=movie&period=day&page=1&per_page=20&filters[with_actors]=3&filters[with_files]=yes&filters[with_directors]=1&source=adjaranet")
+    @GET("movies/top?type=movie&period=day&page=1&per_page=10&filters[with_actors]=3&filters[with_files]=yes&filters[with_directors]=1&source=adjaranet")
     suspend fun getTopMoviesAsync(): Response<GenericList<Movie>>
 
-    @GET("movies?page=1&per_page=20&filters[language]=GEO&filters[type]=movie&filters[with_actors]=3&filters[with_directors]=1&filters[with_files]=yes&sort=-upload_date&source=adjaranet")
+    @GET("movies?page=1&per_page=10&filters[language]=GEO&filters[type]=movie&filters[with_actors]=3&filters[with_directors]=1&filters[with_files]=yes&sort=-upload_date&source=adjaranet")
     suspend fun getGeoMoviesAsync(): Response<GenericList<Movie>>
 
-    @GET("movies/top?type=series&period=day&page=1&per_page=20&filters[with_actors]=3&filters[with_files]=yes&filters[with_directors]=1&source=adjaranet")
+    @GET("movies/top?type=series&period=day&page=1&per_page=10&filters[with_actors]=3&filters[with_files]=yes&filters[with_directors]=1&source=adjaranet")
     suspend fun getTopTvShowsAsync(): Response<GenericList<Movie>>
 
-    @GET("movies?page=1&per_page=20&filters[language]=GEO&filters[type]=series&filters[with_actors]=3&filters[with_directors]=1&filters[with_files]=yes&sort=-upload_date&source=adjaranet")
+    @GET("movies?page=1&per_page=10&filters[language]=GEO&filters[type]=series&filters[with_actors]=3&filters[with_directors]=1&filters[with_files]=yes&sort=-upload_date&source=adjaranet")
     suspend fun getGeoTvShowsAsync(): Response<GenericList<Movie>>
 
     @GET("casts/{id}/movies")

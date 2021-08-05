@@ -102,6 +102,7 @@ class ActorActivity : AbsCoreActivity() {
                 }
             }
         }
+        movie_list.setHasFixedSize(true)
     }
 
     private fun handleObserver() {

@@ -13,7 +13,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 object AdjaraFactory {
 
     fun build(context: Context): AdjaraAPI {
-        val cache = Cache(context.cacheDir, 5 * 1024 * 1024)
+        val size = 5 * 1024 * 1024
+        val cache = Cache(context.cacheDir, size.toLong())
         val client = OkHttpClient.Builder()
                 .cache(cache)
                 .addInterceptor(ConnectionInterceptor(context))

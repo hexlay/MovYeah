@@ -51,6 +51,8 @@ class FilterFragment : BottomSheetDialogFragment() {
                 listItemsSingleChoice(items = yearList, initialSelection = yearList.indexOf(filter.startYear.toString())) { _, index, _ ->
                     filter.startYear = yearList[index].toInt()
                 }
+                positiveButton(R.string.choose)
+                negativeButton(R.string.cancel)
             }
         }
 
@@ -62,6 +64,8 @@ class FilterFragment : BottomSheetDialogFragment() {
                 listItemsSingleChoice(items = endYears, initialSelection = endYears.indexOf(filter.endYear.toString())) { _, index, _ ->
                     filter.endYear = endYears[index].toInt()
                 }
+                positiveButton(R.string.choose)
+                negativeButton(R.string.cancel)
             }
         }
     }
@@ -75,6 +79,8 @@ class FilterFragment : BottomSheetDialogFragment() {
                 listItemsSingleChoice(items = items, initialSelection = itemValues.indexOf(filter.sortingMethod)) { _, index, _ ->
                     filter.sortingMethod = itemValues[index]
                 }
+                positiveButton(R.string.choose)
+                negativeButton(R.string.cancel)
             }
         }
     }
@@ -88,6 +94,8 @@ class FilterFragment : BottomSheetDialogFragment() {
                 listItemsSingleChoice(items = items, initialSelection = itemValues.indexOf(filter.language)) { _, index, _ ->
                     filter.language = itemValues[index]
                 }
+                positiveButton(R.string.choose)
+                negativeButton(R.string.cancel)
             }
         }
     }
@@ -116,6 +124,7 @@ class FilterFragment : BottomSheetDialogFragment() {
                         }
                     }
                     positiveButton(R.string.choose)
+                    negativeButton(R.string.cancel)
                 }
             }
         })
@@ -137,6 +146,7 @@ class FilterFragment : BottomSheetDialogFragment() {
                         }
                     }
                     positiveButton(R.string.choose)
+                    negativeButton(R.string.cancel)
                 }
             }
         })

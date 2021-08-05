@@ -23,11 +23,15 @@
                 android:text="@string/fragment_main_top_movies"
                 android:textSize="17sp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/top_movies_holder"
+            <hexlay.movyeah.views.NestedScrollableHost
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"/>
+                android:layout_height="wrap_content">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/top_movies_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+            </hexlay.movyeah.views.NestedScrollableHost>
 
             <TextView
                 android:layout_width="match_parent"
@@ -40,11 +44,15 @@
                 android:text="@string/fragment_main_geo_movies"
                 android:textSize="17sp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/geo_movies_holder"
+            <hexlay.movyeah.views.NestedScrollableHost
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"/>
+                android:layout_height="wrap_content">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/geo_movies_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+            </hexlay.movyeah.views.NestedScrollableHost>
 
             <TextView
                 android:layout_width="match_parent"
@@ -57,11 +65,15 @@
                 android:text="@string/fragment_main_top_series"
                 android:textSize="17sp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/top_series_holder"
+            <hexlay.movyeah.views.NestedScrollableHost
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"/>
+                android:layout_height="wrap_content">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/top_series_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+            </hexlay.movyeah.views.NestedScrollableHost>
 
             <TextView
                 android:layout_width="match_parent"
@@ -74,11 +86,15 @@
                 android:text="@string/fragment_main_geo_series"
                 android:textSize="17sp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/geo_series_holder"
+            <hexlay.movyeah.views.NestedScrollableHost
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"/>
+                android:layout_height="wrap_content">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/geo_series_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+            </hexlay.movyeah.views.NestedScrollableHost>
 
             <TextView
                 android:layout_width="match_parent"
@@ -91,11 +107,15 @@
                 android:text="@string/fragment_main_premieres"
                 android:textSize="17sp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/premiere_movies_holder"
+            <hexlay.movyeah.views.NestedScrollableHost
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"/>
+                android:layout_height="wrap_content">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/premiere_movies_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+            </hexlay.movyeah.views.NestedScrollableHost>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

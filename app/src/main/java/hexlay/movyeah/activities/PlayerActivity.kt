@@ -177,6 +177,7 @@ class PlayerActivity : AppCompatActivity() {
 
             exoPlayer!!.setMediaItem(mediaItemBuilder.build())
             exoPlayer!!.prepare()
+            exoPlayer!!.seekTo(PreferenceHelper.getWatchProgress(getSaveKey()))
             exoPlayer!!.play()
         }
     }
@@ -217,6 +218,10 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
+    private fun getSaveKey(): String {
+        return playerData.movieId + playerData.episode
+    }
+
     override fun onResume() {
         super.onResume()
         exoPlayer?.play()
@@ -224,10 +229,12 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         exoPlayer?.pause()
+        exoPlayer?.currentPosition?.let { PreferenceHelper.saveWatchProgress(getSaveKey(), it) }
         super.onPause()
     }
 
     override fun onDestroy() {
+        exoPlayer?.currentPosition?.let { PreferenceHelper.saveWatchProgress(getSaveKey(), it) }
         releaseActivityProperties()
         releaseVideo()
         super.onDestroy()

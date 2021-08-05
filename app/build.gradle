@@ -13,7 +13,7 @@ android {
     def versionPropsFile = file('version.properties')
     Properties versionProps = new Properties()
     if (!versionPropsFile.exists()) {
-        versionProps['VERSION_CODE'] = "5"
+        versionProps['VERSION_CODE'] = "190"
         versionProps.store(versionPropsFile.newWriter(), null)
     }
     versionProps.load(new FileInputStream(versionPropsFile))
@@ -104,7 +104,7 @@ dependencies {
     // Other...
     implementation 'com.tapadoo.android:alerter:7.0.1'
     implementation 'com.github.ibrahimsn98:SmoothBottomBar:1.7.6'
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.afollestad:recyclical:1.1.1'
     implementation 'org.greenrobot:eventbus:3.2.0'
     implementation 'com.afollestad.material-dialogs:core:3.3.0'

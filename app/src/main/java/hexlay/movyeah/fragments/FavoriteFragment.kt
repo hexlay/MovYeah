@@ -91,7 +91,7 @@ class FavoriteFragment : Fragment() {
                         .setShortLabel(movie.getTitle())
                         .setLongLabel(movie.getTitle())
                         .setIntent(intent)
-                        .buildWithGlideIcon(requireContext(), movie.getTruePoster()) {
+                        .buildWithPicassoIcon(movie.getTruePoster()) {
                             shortcutList.add(it)
                         }
             }

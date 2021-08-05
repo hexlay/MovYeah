@@ -76,18 +76,14 @@ object PreferenceHelper {
             }
         }
 
-    var savedNotificationIds: MutableSet<String>
-        get() = settings?.getStringSet("adj_notification_ids", mutableSetOf())!!
-        set(value) {
-            settings?.edit {
-                putStringSet("adj_notification_ids", value)
-            }
+    fun saveWatchProgress(key: String, value: Long) {
+        settings?.edit {
+            putLong(key, value)
         }
+    }
 
-    fun addNotificationHistory(value: String) {
-        val current = savedNotificationIds
-        current.add(value)
-        savedNotificationIds = current
+    fun getWatchProgress(key: String): Long {
+        return settings?.getLong(key, 0)!!
     }
 
     fun addAlertHistory(value: String) {
