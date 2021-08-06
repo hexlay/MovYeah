@@ -1,6 +1,6 @@
 package hexlay.movyeah.activities.base
 
-import androidx.fragment.app.FragmentActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.rezwan.knetworklib.KNetwork
 import hexlay.movyeah.R
 import hexlay.movyeah.api.helpers.isNetworkAvailable
@@ -9,7 +9,7 @@ import hexlay.movyeah.helpers.makeFullscreen
 import hexlay.movyeah.models.events.NetworkChangeEvent
 import org.greenrobot.eventbus.EventBus
 
-abstract class AbsCoreActivity : FragmentActivity() {
+abstract class AbsCoreActivity : AppCompatActivity() {
 
     private var networkView = android.R.id.content
 

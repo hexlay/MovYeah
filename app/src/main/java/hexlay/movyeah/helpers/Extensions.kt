@@ -83,12 +83,13 @@ fun Activity.showAlert(title: String = "", text: String, color: Int = R.color.co
     alert.show()
 }
 
-fun initDarkMode() {
+fun AppCompatActivity.initDarkMode() {
     when (PreferenceHelper.darkMode) {
         0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
     }
+    delegate.applyDayNight()
 }
 
 fun Context.playeExternally(url: String) {
@@ -199,6 +200,7 @@ fun ImageView.setUrl(url: String) {
 fun ShortcutInfo.Builder.buildWithPicassoIcon(url: String?, callback: (item: ShortcutInfo) -> Unit) {
     Picasso.get()
         .load(url)
+        .error(R.drawable.no_image)
         .into(object : Target {
             override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
                 if (Constants.isAndroidO) {
@@ -218,14 +220,7 @@ fun ShortcutInfo.Builder.buildWithPicassoIcon(url: String?, callback: (item: Sho
                 callback(build())
             }
 
-            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                if (Constants.isAndroidO) {
-                    setIcon(Icon.createWithAdaptiveBitmap(placeHolderDrawable?.toBitmap()))
-                } else {
-                    setIcon(Icon.createWithBitmap(placeHolderDrawable?.toBitmap()))
-                }
-                callback(build())
-            }
+            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
 
         })
 }
@@ -250,24 +245,24 @@ fun View.hideKeyboard() {
 }
 
 @Suppress("DEPRECATION")
-fun FragmentActivity.makeFullscreen() {
+fun AppCompatActivity.makeFullscreen() {
     val decorView = window.decorView
     var flags = decorView.systemUiVisibility
     flags = flags or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
     decorView.systemUiVisibility = flags
 }
 
-fun FragmentActivity.dpOf(value: Int): Int {
+fun AppCompatActivity.dpOf(value: Int): Int {
     val scale = resources.displayMetrics.density
     return (value * scale + 0.5f).toInt()
 }
 
-fun FragmentActivity.getStatusBarHeight(): Int {
+fun AppCompatActivity.getStatusBarHeight(): Int {
     val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
     return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
 }
 
-fun FragmentActivity.getActionBarSize(): Int {
+fun AppCompatActivity.getActionBarSize(): Int {
     val styledAttributes = theme.obtainStyledAttributes(intArrayOf(android.R.attr.actionBarSize))
     val dimension = styledAttributes.getDimension(0, 0F).toInt()
     styledAttributes.recycle()
@@ -300,22 +295,26 @@ fun AppCompatActivity.downloadExists(id: String): Boolean {
     return getOfflineMovie(id).exists()
 }
 
+fun Fragment.reqActivity(): AppCompatActivity {
+    return (requireActivity() as AppCompatActivity)
+}
+
 fun Fragment.downloadMovie(url: String, title: String): Long {
-    return (requireActivity() as AppCompatActivity).downloadMovie(url, title)
+    return reqActivity().downloadMovie(url, title)
 }
 
 fun Fragment.getOfflineMovie(id: String): File {
-    return (requireActivity() as AppCompatActivity).getOfflineMovie(id)
+    return reqActivity().getOfflineMovie(id)
 }
 
 fun Fragment.downloadExists(id: String): Boolean {
     return getOfflineMovie(id).exists()
 }
 
-fun Fragment.getStatusBarHeight(): Int = requireActivity().getStatusBarHeight()
+fun Fragment.getStatusBarHeight(): Int = reqActivity().getStatusBarHeight()
 
-fun Fragment.getActionBarSize(): Int = requireActivity().getActionBarSize()
+fun Fragment.getActionBarSize(): Int = reqActivity().getActionBarSize()
 
-fun Fragment.dpOf(value: Int): Int = requireActivity().dpOf(value)
+fun Fragment.dpOf(value: Int): Int = reqActivity().dpOf(value)
 
-fun Fragment.showAlert(title: String = "", text: String) = requireActivity().showAlert(title, text)
+fun Fragment.showAlert(title: String = "", text: String) = reqActivity().showAlert(title, text)

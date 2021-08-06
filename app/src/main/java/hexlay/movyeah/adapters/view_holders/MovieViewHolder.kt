@@ -4,8 +4,8 @@ import android.app.ActivityOptions
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentActivity
 import com.afollestad.recyclical.ViewHolder
 import com.google.android.material.card.MaterialCardView
 import hexlay.movyeah.R
@@ -31,7 +31,7 @@ class MovieViewHolder(itemView: View) : ViewHolder(itemView) {
         imdb.bringToFront()
     }
 
-    fun bind(movie: Movie, activity: FragmentActivity) {
+    fun bind(movie: Movie, activity: AppCompatActivity) {
         title.isSelected = true
         title.text = movie.getTitle()
         year.text = movie.year.toString()

@@ -11,6 +11,7 @@ import hexlay.movyeah.R
 import hexlay.movyeah.adapters.SeasonPageAdapter
 import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.api.models.attributes.show.Episode
+import hexlay.movyeah.helpers.reqActivity
 import kotlinx.android.synthetic.main.fragment_episode_chooser.*
 
 class EpisodeChooserFragment : BottomSheetDialogFragment() {
@@ -25,7 +26,7 @@ class EpisodeChooserFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        episode_holder.adapter = SeasonPageAdapter(requireActivity(), movie!!, tvShowSeasons)
+        episode_holder.adapter = SeasonPageAdapter(reqActivity(), movie!!, tvShowSeasons)
         TabLayoutMediator(season_tabs, episode_holder) { tab, position ->
             tab.text = "სეზონი ${position + 1}"
         }.attach()

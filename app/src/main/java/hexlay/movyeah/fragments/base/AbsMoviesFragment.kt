@@ -100,7 +100,7 @@ abstract class AbsMoviesFragment : Fragment() {
             withLayoutManager(gridLayoutManager)
             withItem<Movie, MovieViewHolder>(R.layout.list_items_extended) {
                 onBind(::MovieViewHolder) { _, item ->
-                    this.bind(item, requireActivity())
+                    this.bind(item, reqActivity())
                 }
             }
         }
@@ -141,7 +141,7 @@ abstract class AbsMoviesFragment : Fragment() {
     }
 
     protected open fun handleObserver() {
-        movieListViewModel.movies.observe(requireActivity(), { dataList ->
+        movieListViewModel.movies.observe(reqActivity(), { dataList ->
             if (dataList != null) {
                 if (dataList.isNotEmpty()) {
                     warning_holder.isGone = true

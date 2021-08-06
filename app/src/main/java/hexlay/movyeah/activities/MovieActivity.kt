@@ -116,30 +116,30 @@ class MovieActivity : AppCompatActivity() {
     }
 
     private fun loadData() {
-        loadIndependentData()
+        setupMovieInformation()
         if (!isNetworkAvailable) {
             showMovieError(R.string.full_error_movie)
-            button_watch.hide()
         } else {
             if (movie.isTvShow) {
                 watchViewModel.fetchSingleMovie(movie.adjaraId).observeOnce(this, { movieExtend ->
+                    startPostponedEnterTransition()
                     if (movieExtend?.seasons != null) {
                         movie.seasons = movieExtend.seasons
-                        watchViewModel.fetchTvShowEpisodes(movie.id, movieExtend.seasons!!.data.size)
-                            .observeOnce(this, { seasons ->
-                                if (seasons != null && seasons.isNotEmpty()) {
-                                    tvShowSeasons = seasons
-                                    setupTvShow()
-                                } else {
-                                    showMovieError(R.string.full_error_show)
-                                }
-                            })
+                        watchViewModel.fetchTvShowEpisodes(movie.id, movieExtend.seasons!!.data.size).observeOnce(this, { seasons ->
+                            if (seasons != null && seasons.isNotEmpty()) {
+                                tvShowSeasons = seasons
+                                setupTvShow()
+                            } else {
+                                showMovieError(R.string.full_error_show)
+                            }
+                        })
                     } else {
                         showMovieError(R.string.full_error_show)
                     }
                 })
             } else {
                 watchViewModel.fetchMovieFileData(movie.id).observeOnce(this, { episode ->
+                    startPostponedEnterTransition()
                     if (episode != null) {
                         fileData = episode.files.map { it.lang!! to it.files }.toMap()
                         subtitleData = episode.files.map { it.lang!! to it.subtitles }.toMap()
@@ -160,19 +160,17 @@ class MovieActivity : AppCompatActivity() {
                 finish()
             }
         }
+        button_watch.hide()
     }
 
-    private fun loadIndependentData() {
+    private fun setupActors() {
         watchViewModel.fetchMovieActors(movie.adjaraId).observeOnce(this, { cast ->
-            startPostponedEnterTransition()
             if (cast != null) {
                 setupCast(cast)
             } else {
                 cast_holder.isGone = true
             }
         })
-        genres = movie.getGenresString()
-        setupMovieInformation()
     }
 
     private fun setupMovie() {
@@ -180,6 +178,7 @@ class MovieActivity : AppCompatActivity() {
             button_download.isGone = false
             button_watch.isEnabled = true
         }
+        setupActors()
     }
 
     private fun setupTvShow() {
@@ -191,6 +190,7 @@ class MovieActivity : AppCompatActivity() {
                 setupTvShowEpisode(0)
             }
         })
+        setupActors()
     }
 
     private fun setupTvShowEpisode(episode: Int) {
@@ -226,6 +226,7 @@ class MovieActivity : AppCompatActivity() {
     }
 
     private fun setupMovieInformation() {
+        genres = movie.getGenresString()
         movie_title.text = movie.getTitle()
         description_date.text = getString(R.string.news_year).format(movie.year)
         description_imdb.text = getString(R.string.news_imdb).format(movie.getRating("imdb"))

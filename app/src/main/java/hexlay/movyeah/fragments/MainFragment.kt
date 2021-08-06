@@ -14,10 +14,7 @@ import hexlay.movyeah.R
 import hexlay.movyeah.adapters.view_holders.MovieViewHolder
 import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.api.network.view_models.MainViewModel
-import hexlay.movyeah.helpers.createSkeleton
-import hexlay.movyeah.helpers.getActionBarSize
-import hexlay.movyeah.helpers.getStatusBarHeight
-import hexlay.movyeah.helpers.observeOnce
+import hexlay.movyeah.helpers.*
 import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : Fragment() {
@@ -80,7 +77,7 @@ class MainFragment : Fragment() {
             withLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
             withItem<Movie, MovieViewHolder>(R.layout.list_items) {
                 onBind(::MovieViewHolder) { _, item ->
-                    this.bind(item, requireActivity())
+                    this.bind(item, reqActivity())
                 }
             }
         }
@@ -90,7 +87,7 @@ class MainFragment : Fragment() {
             withLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
             withItem<Movie, MovieViewHolder>(R.layout.list_items) {
                 onBind(::MovieViewHolder) { _, item ->
-                    this.bind(item, requireActivity())
+                    this.bind(item, reqActivity())
                 }
             }
         }
@@ -100,7 +97,7 @@ class MainFragment : Fragment() {
             withLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
             withItem<Movie, MovieViewHolder>(R.layout.list_items) {
                 onBind(::MovieViewHolder) { _, item ->
-                    this.bind(item, requireActivity())
+                    this.bind(item, reqActivity())
                 }
             }
         }
@@ -110,7 +107,7 @@ class MainFragment : Fragment() {
             withLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
             withItem<Movie, MovieViewHolder>(R.layout.list_items) {
                 onBind(::MovieViewHolder) { _, item ->
-                    this.bind(item, requireActivity())
+                    this.bind(item, reqActivity())
                 }
             }
         }
@@ -120,7 +117,7 @@ class MainFragment : Fragment() {
             withLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
             withItem<Movie, MovieViewHolder>(R.layout.list_items) {
                 onBind(::MovieViewHolder) { _, item ->
-                    this.bind(item, requireActivity())
+                    this.bind(item, reqActivity())
                 }
             }
         }
