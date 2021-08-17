@@ -1,4 +1,4 @@
-package hexlay.movyeah.api.alerts
+package hexlay.movyeah.api.github
 
 import hexlay.movyeah.api.models.alert.BasicAlert
 import retrofit2.Response

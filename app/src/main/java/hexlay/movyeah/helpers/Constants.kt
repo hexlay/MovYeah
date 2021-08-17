@@ -6,8 +6,6 @@ import java.util.*
 
 object Constants {
 
-    const val SHORTCUT_ACTION = "START_MOVIE_FROM_SHORTCUT"
-
     val DOWNLOAD_DIRECTORY: String = if (isAndroidR) {
         Environment.DIRECTORY_MOVIES
     } else {
@@ -17,11 +15,7 @@ object Constants {
     val START_YEAR = Calendar.getInstance().get(Calendar.YEAR) - 100
     val END_YEAR = Calendar.getInstance().get(Calendar.YEAR)
 
-    val RECYCLER_GRID_COUNT = 3
-
-    // PIP
-    const val CONTROL_TYPE_PLAY = 1
-    const val CONTROL_TYPE_PAUSE = 2
+    const val RECYCLER_GRID_COUNT = 3
 
     val isAndroidN: Boolean
         get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N

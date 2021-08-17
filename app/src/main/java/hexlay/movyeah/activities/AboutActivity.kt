@@ -1,18 +1,24 @@
 package hexlay.movyeah.activities
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.recyclical.datasource.dataSourceOf
 import com.afollestad.recyclical.setup
 import com.afollestad.recyclical.withItem
 import hexlay.movyeah.R
 import hexlay.movyeah.adapters.view_holders.LibraryViewHolder
+import hexlay.movyeah.api.github.view_models.GithubViewModel
 import hexlay.movyeah.helpers.initDarkMode
+import hexlay.movyeah.helpers.observeOnce
+import hexlay.movyeah.helpers.showUpdateDialog
 import hexlay.movyeah.models.Library
 import kotlinx.android.synthetic.main.activity_about.*
 import org.jetbrains.anko.browse
 
 class AboutActivity : AppCompatActivity() {
+
+    private val apiGithub by viewModels<GithubViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +38,12 @@ class AboutActivity : AppCompatActivity() {
         }
         author_holder.setOnClickListener {
             browse("https://github.com/hexlay", true)
+        }
+        update_holder.setOnClickListener {
+            apiGithub.fetchReleases().observeOnce(this, {
+                val latest = it.first()
+                showUpdateDialog(latest)
+            })
         }
     }
 

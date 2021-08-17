@@ -296,7 +296,7 @@ class MovieActivity : AppCompatActivity() {
                     listItems(items = dialogItems) { _, index, _ ->
                         runWithPermissions(Permission.WRITE_EXTERNAL_STORAGE) {
                             val download = dataDownload[index]
-                            val downloadId = downloadMovie(download.url!!, download.identifier)
+                            val downloadId = downloadFile(download.url!!, download.identifier)
                             download.downloadId = downloadId
                             dbDownloadMovie.insertMovie(download)
                             showAlert(text = getString(R.string.download_start))

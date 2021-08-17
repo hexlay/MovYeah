@@ -6,30 +6,11 @@ android {
     compileSdkVersion compile_version
     buildToolsVersion tools_version
 
-    def buildType = gradle.startParameter.taskNames.any {
-        it.toLowerCase().contains("debug")
-    } ? "debug" : "release"
-
-    def versionPropsFile = file('version.properties')
-    Properties versionProps = new Properties()
-    if (!versionPropsFile.exists()) {
-        versionProps['VERSION_CODE'] = "190"
-        versionProps.store(versionPropsFile.newWriter(), null)
-    }
-    versionProps.load(new FileInputStream(versionPropsFile))
-
-    def code = versionProps['VERSION_CODE'].toInteger()
-    if (buildType == "release") {
-        code = code + 1
-    }
-    versionProps['VERSION_CODE'] = code.toString()
-    versionProps.store(versionPropsFile.newWriter(), null)
-
     defaultConfig {
         applicationId 'hexlay.movyeah'
         minSdkVersion min_sdk_app
         targetSdkVersion target_sdk
-        versionCode code
+        versionCode 205
         versionName "${getDate('YY')}${getDate('M')}${getDate('D')}"
         vectorDrawables.useSupportLibrary = true
     }
@@ -78,7 +59,6 @@ dependencies {
     implementation project(':api')
     // Kotlin
     implementation 'org.jetbrains.anko:anko:0.10.8'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Android KTX
     implementation 'androidx.core:core-ktx:1.7.0-alpha01'

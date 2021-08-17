@@ -1,6 +1,6 @@
-package hexlay.movyeah.api.alerts.repositories
+package hexlay.movyeah.api.github.repositories
 
-import hexlay.movyeah.api.alerts.AlertAPI
+import hexlay.movyeah.api.github.AlertAPI
 import hexlay.movyeah.api.models.alert.BasicAlert
 import hexlay.movyeah.api.network.repositories.base.AbsAdjaraRepository
 

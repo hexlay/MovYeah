@@ -14,11 +14,13 @@
         <entry key="app/src/main/res/drawable/ic_favorite_to_empty.xml" value="0.2680781758957655" />
         <entry key="app/src/main/res/drawable/ic_scroll_up_white.xml" value="0.27072368421052634" />
         <entry key="app/src/main/res/drawable/ic_sort.xml" value="0.27072368421052634" />
+        <entry key="app/src/main/res/layout/activity_about.xml" value="0.42971616747164343" />
         <entry key="app/src/main/res/layout/activity_actor_movie.xml" value="0.10484972677595629" />
         <entry key="app/src/main/res/layout/activity_details.xml" value="0.1493421052631579" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1279896574014221" />
         <entry key="app/src/main/res/layout/activity_movie.xml" value="0.25381214951301473" />
         <entry key="app/src/main/res/layout/activity_player.xml" value="0.1279896574014221" />
+        <entry key="app/src/main/res/layout/dialog_updater.xml" value="0.17383879781420766" />
         <entry key="app/src/main/res/layout/fragment_episode_chooser.xml" value="0.18442622950819673" />
         <entry key="app/src/main/res/layout/fragment_filter.xml" value="0.18442622950819673" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.1837431693989071" />
@@ -34,6 +36,7 @@
         <entry key="app/src/main/res/layout/list_items_extended.xml" value="0.1493421052631579" />
         <entry key="app/src/main/res/layout/piece_scroll_up.xml" value="0.1279896574014221" />
         <entry key="app/src/main/res/menu/navigation_main.xml" value="0.2579804560260586" />
+        <entry key="app/src/main/res/xml/settings.xml" value="0.14407894736842106" />
       </map>
     </option>
   </component>

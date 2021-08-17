@@ -1,6 +1,5 @@
 package hexlay.movyeah.fragments
 
-import android.content.pm.ShortcutInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,14 +12,11 @@ import com.afollestad.recyclical.datasource.emptyDataSource
 import com.afollestad.recyclical.setup
 import com.afollestad.recyclical.withItem
 import hexlay.movyeah.R
-import hexlay.movyeah.activities.StarterActivity
 import hexlay.movyeah.adapters.view_holders.MovieViewHolder
 import hexlay.movyeah.api.database.view_models.DbMovieViewModel
 import hexlay.movyeah.api.models.Movie
 import hexlay.movyeah.helpers.*
 import kotlinx.android.synthetic.main.fragment_movies.*
-import org.jetbrains.anko.shortcutManager
-import org.jetbrains.anko.support.v4.intentFor
 
 class FavoriteFragment : Fragment() {
 
@@ -66,7 +62,6 @@ class FavoriteFragment : Fragment() {
 
     private fun initObserver() {
         dbMovies.getMovies()?.observe(viewLifecycleOwner, {
-            makeShortcuts(it)
             source.clear()
             if (it.isNotEmpty()) {
                 source.addAll(it)
@@ -76,26 +71,6 @@ class FavoriteFragment : Fragment() {
                 warning_holder.isVisible = true
             }
         })
-    }
-
-    private fun makeShortcuts(data: List<Movie>) {
-        if (Constants.isAndroidN_MR1) {
-            val manager = reqActivity().shortcutManager
-            val shortcutList = mutableListOf<ShortcutInfo>()
-            manager.removeAllDynamicShortcuts()
-            for (movie in data) {
-                val intent = intentFor<StarterActivity>("movie_id" to movie.getRealId())
-                intent.action = Constants.SHORTCUT_ACTION
-                ShortcutInfo.Builder(requireContext(), movie.id.toString())
-                        .setShortLabel(movie.getTitle())
-                        .setLongLabel(movie.getTitle())
-                        .setIntent(intent)
-                        .buildWithPicassoIcon(movie.getTruePoster()) {
-                            shortcutList.add(it)
-                        }
-            }
-            manager.addDynamicShortcuts(shortcutList)
-        }
     }
 
 }

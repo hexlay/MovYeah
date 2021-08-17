@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -30,9 +29,7 @@ import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.support.v4.intentFor
-import org.jetbrains.anko.support.v4.runOnUiThread
 import org.jetbrains.anko.support.v4.startActivity
-import java.lang.ref.WeakReference
 
 
 class DownloadFragment : Fragment() {
@@ -116,7 +113,7 @@ class DownloadFragment : Fragment() {
             withItem<DownloadMovie, DownloadMovieViewHolder>(R.layout.list_items_download) {
                 onBind(::DownloadMovieViewHolder) { _, item ->
                     val movie = item.movie
-                    val downloadProgress = DownloadProgress(item.downloadId, progress)
+                    val downloadProgress = DownloadProgress(requireActivity(), item.downloadId, progress, downloadManager)
                     if (movie != null) {
                         title.isSelected = true
                         val translatedLanguage = item.language?.translateLanguage(requireContext())
@@ -156,7 +153,7 @@ class DownloadFragment : Fragment() {
                             if (downloadExists(item.identifier)) {
                                 getOfflineMovie(item.identifier).delete()
                             }
-                            item.downloadId = downloadMovie(item.url!!, item.identifier)
+                            item.downloadId = downloadFile(item.url!!, item.identifier)
                             downloadProgress.setDownloadId(item.downloadId)
                             downloadProgress.start()
                             download.isVisible = false
@@ -180,48 +177,4 @@ class DownloadFragment : Fragment() {
         }
     }
 
-    inner class DownloadProgress(downloadId: Long, progressBar: ProgressBar) : Thread() {
-
-        private val weakProgressBar = WeakReference(progressBar)
-        private val query = DownloadManager.Query()
-
-        init {
-            setDownloadId(downloadId)
-        }
-
-        fun setDownloadId(downloadId: Long) {
-            query.setFilterById(downloadId)
-        }
-
-        override fun run() {
-            while (true) {
-                try {
-                    sleep(300)
-                    val cursor = downloadManager?.query(query)
-                    if (cursor != null) {
-                        if (cursor.moveToFirst()) {
-                            val bytesDownloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
-                            val bytesTotal = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
-                            when (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
-                                DownloadManager.STATUS_SUCCESSFUL, DownloadManager.STATUS_FAILED -> {
-                                    interrupt()
-                                }
-                            }
-                            if (bytesTotal > 0) {
-                                val progress = (bytesDownloaded * 100L / bytesTotal).toInt()
-                                runOnUiThread {
-                                    weakProgressBar.get()?.progress = progress
-                                }
-                            }
-                        }
-                        cursor.close()
-                    }
-                } catch (e: Exception) {
-                    interrupt()
-                    return
-                }
-            }
-        }
-
-    }
 }

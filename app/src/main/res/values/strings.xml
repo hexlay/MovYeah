@@ -19,6 +19,7 @@
     <string name="download_done_all">ყველა შესაძლო ვერსია უკვე გადმოწერილია</string>
     <string name="watch">ყურება</string>
     <string name="unable_search">ძებნისთვის საჭიროა ინტერნეტთან წვდომა</string>
+    <string name="new_update">აპლიკაციის განახლება</string>
 
     <!-- Related -->
     <string name="related_movies">მსგავსი ფილმები</string>
@@ -31,6 +32,7 @@
 
     <!-- About -->
     <string name="about_developer">Hexlay</string>
+    <string name="about_check_update">აპლიკაციის განახლება</string>
     <string name="about_resources">Made possible with ↓</string>
     <string name="about_resources_tv">Made possible with →</string>
 

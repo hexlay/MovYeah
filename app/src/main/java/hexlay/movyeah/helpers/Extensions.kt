@@ -6,12 +6,8 @@ import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ShortcutInfo
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.Icon
 import android.net.Uri
-import android.os.Build
+import android.os.Environment
 import android.text.Html
 import android.text.Spanned
 import android.view.View
@@ -20,11 +16,10 @@ import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.annotation.LayoutRes
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
+import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -32,6 +27,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.customview.getCustomView
 import com.faltenreich.skeletonlayout.Skeleton
 import com.faltenreich.skeletonlayout.SkeletonConfig
 import com.faltenreich.skeletonlayout.applySkeleton
@@ -39,12 +37,18 @@ import com.google.android.material.transition.platform.MaterialArcMotion
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 import com.tapadoo.alerter.Alerter
+import hexlay.movyeah.BuildConfig
 import hexlay.movyeah.R
+import hexlay.movyeah.api.models.github.Asset
+import hexlay.movyeah.api.models.github.Release
+import kotlinx.android.synthetic.main.dialog_updater.view.*
 import org.apache.commons.collections4.CollectionUtils
 import java.io.File
 import java.util.*
+
+
+
 
 
 internal fun getContentTransform(context: Context): MaterialContainerTransform {
@@ -56,6 +60,70 @@ internal fun getContentTransform(context: Context): MaterialContainerTransform {
         startElevation = 9f
         endElevation = 9f
         startContainerColor = ContextCompat.getColor(context, R.color.color_primary)
+    }
+}
+
+fun isOutdated(version: String): Boolean {
+    return Integer.valueOf(version) > BuildConfig.VERSION_CODE
+}
+
+fun AppCompatActivity.showUpdateDialog(release: Release) {
+    if (isOutdated(release.tagName)) {
+        MaterialDialog(this).show {
+            title(R.string.new_update)
+            message(text = release.body)
+            cancelable(false)
+            positiveButton(R.string.yes) {
+                update(release.assets.first())
+                dismiss()
+            }
+            negativeButton(R.string.no) {
+                dismiss()
+            }
+        }
+    }
+}
+
+fun AppCompatActivity.update(asset: Asset) {
+    val downloadDir = Environment.DIRECTORY_DOWNLOADS
+    val name = asset.name.split(".").first()
+    val downloadId = downloadFile(asset.browserDownloadUrl, name, downloadDir, "apk")
+    val dialog = MaterialDialog(this)
+        .customView(R.layout.dialog_updater)
+        .title(R.string.loading)
+        .cancelable(false)
+    val view = dialog.getCustomView()
+    dialog.show()
+    val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+    val downloadProgress = DownloadProgress(this, downloadId, view.update_progress, downloadManager) {
+        dialog.dismiss()
+        if (it) {
+            val install = Intent(Intent.ACTION_VIEW)
+            install.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            install.setDataAndType(
+                uriFromFile(this, File(getExternalFilesDir(downloadDir), asset.name)),
+                downloadManager.getMimeTypeForDownloadedFile(downloadId)
+            )
+            if (Constants.isAndroidO) {
+                if (packageManager.canRequestPackageInstalls()) {
+                    startActivity(install)
+                } else {
+                    startActivity(Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:hexlay.movyeah")))
+                }
+            } else {
+                startActivity(install)
+            }
+        }
+    }
+    downloadProgress.start()
+}
+
+fun uriFromFile(context: Context, file: File): Uri? {
+    return if (Constants.isAndroidN) {
+        FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
+    } else {
+        Uri.fromFile(file)
     }
 }
 
@@ -196,35 +264,6 @@ fun ImageView.setUrl(url: String) {
         .into(this)
 }
 
-@RequiresApi(Build.VERSION_CODES.N_MR1)
-fun ShortcutInfo.Builder.buildWithPicassoIcon(url: String?, callback: (item: ShortcutInfo) -> Unit) {
-    Picasso.get()
-        .load(url)
-        .error(R.drawable.no_image)
-        .into(object : Target {
-            override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                if (Constants.isAndroidO) {
-                    setIcon(Icon.createWithAdaptiveBitmap(bitmap))
-                } else {
-                    setIcon(Icon.createWithBitmap(bitmap))
-                }
-                callback(build())
-            }
-
-            override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-                if (Constants.isAndroidO) {
-                    setIcon(Icon.createWithAdaptiveBitmap(errorDrawable?.toBitmap()))
-                } else {
-                    setIcon(Icon.createWithBitmap(errorDrawable?.toBitmap()))
-                }
-                callback(build())
-            }
-
-            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
-
-        })
-}
-
 fun RecyclerView.createSkeleton(@LayoutRes resId: Int, itemCount: Int = 3): Skeleton {
     val config = SkeletonConfig.default(context)
     config.maskColor = ContextCompat.getColor(context, R.color.skeleton_color)
@@ -269,7 +308,7 @@ fun AppCompatActivity.getActionBarSize(): Int {
     return dimension
 }
 
-fun AppCompatActivity.downloadMovie(url: String, title: String): Long {
+fun AppCompatActivity.downloadFile(url: String, title: String, dir: String = Constants.DOWNLOAD_DIRECTORY, extension: String = "mp4"): Long {
     val visibleNotification = if (PreferenceHelper.downloadNotification) {
         DownloadManager.Request.VISIBILITY_VISIBLE
     } else {
@@ -280,7 +319,7 @@ fun AppCompatActivity.downloadMovie(url: String, title: String): Long {
     request.setAllowedOverRoaming(false)
     request.setTitle(title)
     request.setNotificationVisibility(visibleNotification)
-    request.setDestinationInExternalFilesDir(this, Constants.DOWNLOAD_DIRECTORY, "$title.mp4")
+    request.setDestinationInExternalFilesDir(this, dir, "$title.$extension")
     val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
     return downloadManager.enqueue(request)
 }
@@ -299,8 +338,8 @@ fun Fragment.reqActivity(): AppCompatActivity {
     return (requireActivity() as AppCompatActivity)
 }
 
-fun Fragment.downloadMovie(url: String, title: String): Long {
-    return reqActivity().downloadMovie(url, title)
+fun Fragment.downloadFile(url: String, title: String): Long {
+    return reqActivity().downloadFile(url, title)
 }
 
 fun Fragment.getOfflineMovie(id: String): File {

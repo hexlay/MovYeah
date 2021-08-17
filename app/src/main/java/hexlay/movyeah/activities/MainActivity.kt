@@ -13,9 +13,10 @@ import com.afollestad.materialdialogs.MaterialDialog
 import hexlay.movyeah.R
 import hexlay.movyeah.activities.base.AbsCoreActivity
 import hexlay.movyeah.adapters.MainPageAdapter
-import hexlay.movyeah.api.alerts.view_models.AlertViewModel
 import hexlay.movyeah.api.database.view_models.DbCategoryViewModel
 import hexlay.movyeah.api.database.view_models.DbCountryViewModel
+import hexlay.movyeah.api.github.view_models.AlertViewModel
+import hexlay.movyeah.api.github.view_models.GithubViewModel
 import hexlay.movyeah.api.network.view_models.FilterAttrsViewModel
 import hexlay.movyeah.fragments.*
 import hexlay.movyeah.helpers.*
@@ -42,6 +43,7 @@ class MainActivity : AbsCoreActivity() {
     private val dbCategories by viewModels<DbCategoryViewModel>()
     private val dbCountries by viewModels<DbCountryViewModel>()
     private val apiAlerts by viewModels<AlertViewModel>()
+    private val apiGithub by viewModels<GithubViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         applyExitMaterialTransform()
@@ -59,6 +61,14 @@ class MainActivity : AbsCoreActivity() {
         initNavigationView()
         initStarterData()
         initAlerts()
+        initUpdates()
+    }
+
+    private fun initUpdates() {
+        apiGithub.fetchReleases().observeOnce(this, {
+            val latest = it.first()
+            showUpdateDialog(latest)
+        })
     }
 
     private fun initAlerts() {
