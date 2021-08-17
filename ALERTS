@@ -15,4 +15,8 @@
     "id": "4",
     "message": "Unaothorized copyright content -ის გამო, Play Store -ზე მიმდინარე განახლება ვერ აიტვირთა, შესაბამისად განახლება დაიდება გითჰაბის გვერძე, ასევე შემდეგ ვერსიას დაემატება აუტომატური განახლების ფუნქცია რომელიც შესაძლებლობას მოგცემთ Play Store -ს გვერდის ავლით განაახლოთ აპლიკაცია."
   },
+  {
+    "id": "5",
+    "message": "https://github.com/hexlay/MovYeah/releases/download/205/app-release.apk"
+  },
 ]
