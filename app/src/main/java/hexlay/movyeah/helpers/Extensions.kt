@@ -12,7 +12,6 @@ import android.text.Html
 import android.text.Spanned
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.annotation.LayoutRes
@@ -128,17 +127,17 @@ fun uriFromFile(context: Context, file: File): Uri? {
 }
 
 fun FragmentActivity.applyExitMaterialTransform() {
-    window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
-    setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
     window.sharedElementsUseOverlay = false
+    setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
 }
 
 fun FragmentActivity.applyMaterialTransform(transitionName: String?) {
-    window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
+    with(window) {
+        sharedElementEnterTransition = getContentTransform(this@applyMaterialTransform)
+        sharedElementReturnTransition = getContentTransform(this@applyMaterialTransform)
+    }
     ViewCompat.setTransitionName(findViewById(android.R.id.content), transitionName)
     setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-    window.sharedElementEnterTransition = getContentTransform(this)
-    window.sharedElementReturnTransition = getContentTransform(this)
 }
 
 fun Activity.showAlert(title: String = "", text: String, color: Int = R.color.color_accent) {

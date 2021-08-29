@@ -10,7 +10,7 @@ android {
         applicationId 'hexlay.movyeah'
         minSdkVersion min_sdk_app
         targetSdkVersion target_sdk
-        versionCode 205
+        versionCode 206
         versionName "${getDate('YY')}${getDate('M')}${getDate('D')}"
         vectorDrawables.useSupportLibrary = true
     }

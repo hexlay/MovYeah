@@ -38,6 +38,7 @@ import hexlay.movyeah.helpers.*
 import hexlay.movyeah.models.PlayerData
 import hexlay.movyeah.models.events.ChooseEpisodeEvent
 import kotlinx.android.synthetic.main.activity_movie.*
+import kotlinx.android.synthetic.main.fragment_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.jetbrains.anko.browse
@@ -75,9 +76,14 @@ class MovieActivity : AppCompatActivity() {
         initDarkMode()
         initStarterData()
         makeFullscreen()
+        setupMovieInformation()
         initLayout()
         initFavorite()
         initLayoutActions()
+    }
+
+    override fun onEnterAnimationComplete() {
+        super.onEnterAnimationComplete()
         loadData()
     }
 
@@ -116,13 +122,11 @@ class MovieActivity : AppCompatActivity() {
     }
 
     private fun loadData() {
-        setupMovieInformation()
         if (!isNetworkAvailable) {
             showMovieError(R.string.full_error_movie)
         } else {
             if (movie.isTvShow) {
                 watchViewModel.fetchSingleMovie(movie.adjaraId).observeOnce(this, { movieExtend ->
-                    startPostponedEnterTransition()
                     if (movieExtend?.seasons != null) {
                         movie.seasons = movieExtend.seasons
                         watchViewModel.fetchTvShowEpisodes(movie.id, movieExtend.seasons!!.data.size).observeOnce(this, { seasons ->
@@ -139,7 +143,6 @@ class MovieActivity : AppCompatActivity() {
                 })
             } else {
                 watchViewModel.fetchMovieFileData(movie.id).observeOnce(this, { episode ->
-                    startPostponedEnterTransition()
                     if (episode != null) {
                         fileData = episode.files.map { it.lang!! to it.files }.toMap()
                         subtitleData = episode.files.map { it.lang!! to it.subtitles }.toMap()
@@ -206,6 +209,7 @@ class MovieActivity : AppCompatActivity() {
     }
 
     private fun setupCast(actors: List<Actor>) {
+        cast_holder_loading.isGone = true
         if (actors.isNotEmpty()) {
             cast_holder.setup {
                 withDataSource(dataSourceOf(actors))
@@ -256,6 +260,7 @@ class MovieActivity : AppCompatActivity() {
         movie.getTruePoster()?.let { poster.setUrl(it) }
         movie.getCover()?.let { cover.setUrl(it) }
         movie_text.text = movie.getDescription()
+        startPostponedEnterTransition()
     }
 
     @SuppressLint("CheckResult")

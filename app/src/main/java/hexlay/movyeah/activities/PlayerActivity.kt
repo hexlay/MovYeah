@@ -16,7 +16,10 @@ import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.android.exoplayer2.util.MimeTypes
 import hexlay.movyeah.R
-import hexlay.movyeah.helpers.*
+import hexlay.movyeah.helpers.PreferenceHelper
+import hexlay.movyeah.helpers.fade
+import hexlay.movyeah.helpers.getOfflineMovie
+import hexlay.movyeah.helpers.playeExternally
 import hexlay.movyeah.models.PlayerData
 import kotlinx.android.synthetic.main.activity_player.*
 import java.util.*
@@ -49,38 +52,30 @@ class PlayerActivity : AppCompatActivity() {
 
     @SuppressLint("CheckResult")
     private fun initLayoutActions() {
-        val qualities = playerData.fileData.getValue(languageKey).map { it.quality!! }
-        val languages = playerData.fileData.keys.toList()
+        if (playerData.fileData.isNotEmpty()) {
+            val qualities = playerData.fileData.getValue(languageKey).map { it.quality!! }
+            val languages = playerData.fileData.keys.toList()
+            button_quality.setOnClickListener {
+                MaterialDialog(this).show {
+                    title(R.string.full_chquality)
+                    listItemsSingleChoice(items = qualities, initialSelection = qualities.indexOf(qualityKey)) { _, _, text ->
+                        qualityKey = text.toString()
+                        setupSource()
+                    }
+                }
+            }
+            button_lang.setOnClickListener {
+                MaterialDialog(this).show {
+                    title(R.string.full_chlang)
+                    listItemsSingleChoice(items = languages, initialSelection = languages.indexOf(languageKey)) { _, _, text ->
+                        languageKey = text.toString()
+                        setupSource()
+                    }
+                }
+            }
+        }
         button_back.setOnClickListener {
             finish()
-        }
-        button_quality.setOnClickListener {
-            MaterialDialog(this).show {
-                title(R.string.full_chquality)
-                listItemsSingleChoice(items = qualities, initialSelection = qualities.indexOf(qualityKey)) { _, _, text ->
-                    qualityKey = text.toString()
-                    setupSource()
-                }
-            }
-        }
-        button_quality.setOnLongClickListener {
-            val text = getString(R.string.full_show_info).format(qualityKey.translateQuality(this))
-            showAlert(text = text)
-            true
-        }
-        button_lang.setOnClickListener {
-            MaterialDialog(this).show {
-                title(R.string.full_chlang)
-                listItemsSingleChoice(items = languages, initialSelection = languages.indexOf(languageKey)) { _, _, text ->
-                    languageKey = text.toString()
-                    setupSource()
-                }
-            }
-        }
-        button_lang.setOnLongClickListener {
-            val text = getString(R.string.full_show_info).format(languageKey.translateLanguage(this))
-            showAlert(text = text)
-            true
         }
         button_share.setOnClickListener {
             playeExternally(generatePlayerUrl())
